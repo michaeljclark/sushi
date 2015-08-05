@@ -89,7 +89,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0630;
-				ORGANIZATIONNAME = "Michael Clark";
+				ORGANIZATIONNAME = Michael;
 				TargetAttributes = {
 					65670B021B637E200023BD36 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -235,6 +235,7 @@
 				65670B0C1B637E200023BD36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
