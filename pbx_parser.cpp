@@ -811,10 +811,33 @@ struct PBXParserImpl : PBXParser {
 
 void PBXParserImpl::begin_object() {
 	printf("begin_object\n");
+	if (!root) {
+		value_stack.push_back((root = std::make_shared<PBXRoot>()));
+	}
+	else if (value_stack.size() == 0)
+	{
+		log_fatal_exit("value stack empty");
+	}
+	else if (value_stack.back()->type() == PBXTypeRoot ||
+			 value_stack.back()->type() == PBXTypeMap)
+	{
+		PBXMap *map = new PBXMap();
+		PBXValuePtr valptr = PBXValuePtr(map);
+		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+		value_stack.push_back(valptr);
+	}
+	else if (value_stack.back()->type() == PBXTypeArray)
+	{
+		PBXMap *map = new PBXMap();
+		PBXValuePtr valptr = PBXValuePtr(map);
+		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+		value_stack.push_back(valptr);
+	}
 }
 
 void PBXParserImpl::end_object() {
 	printf("end_object\n");
+	value_stack.pop_back();
 }
 
 void PBXParserImpl::object_comment(std::string str) {
@@ -824,6 +847,7 @@ void PBXParserImpl::object_comment(std::string str) {
 void PBXParserImpl::object_attr(std::string str) {
 	printf("object_attr: \"%s\" id=%d\n", str.c_str(),
 		PBXUtil::literal_is_hex_id(str));
+	current_attr_name = str;
 }
 
 void PBXParserImpl::object_attr_comment(std::string str) {
@@ -834,6 +858,23 @@ void PBXParserImpl::object_value_literal(std::string str) {
 	printf("object_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
 		PBXUtil::literal_requires_quotes(str),
 		PBXUtil::literal_is_hex_id(str));
+	if (value_stack.size() == 0)
+	{
+		log_fatal_exit("value stack empty");
+	}
+	else if (value_stack.back()->type() == PBXTypeRoot ||
+			 value_stack.back()->type() == PBXTypeMap)
+	{
+		PBXLiteral *lit = new PBXLiteral();
+		PBXValuePtr valptr = PBXValuePtr(lit);
+		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+	}
+	else if (value_stack.back()->type() == PBXTypeArray)
+	{
+		PBXLiteral *lit = new PBXLiteral();
+		PBXValuePtr valptr = PBXValuePtr(lit);
+		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+	}
 }
 
 void PBXParserImpl::object_value_comment(std::string str) {
@@ -842,16 +883,46 @@ void PBXParserImpl::object_value_comment(std::string str) {
 
 void PBXParserImpl::begin_array() {
 	printf("begin_array\n");
+	if (value_stack.size() == 0)
+	{
+		log_fatal_exit("value stack empty");
+	}
+	else if (value_stack.back()->type() == PBXTypeRoot ||
+			 value_stack.back()->type() == PBXTypeMap)
+	{
+		PBXArray *arr = new PBXArray();
+		PBXValuePtr valptr = PBXValuePtr(arr);
+		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+		value_stack.push_back(valptr);
+	}
+	else if (value_stack.back()->type() == PBXTypeArray)
+	{
+		PBXArray *arr = new PBXArray();
+		PBXValuePtr valptr = PBXValuePtr(arr);
+		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+		value_stack.push_back(valptr);
+	}
 }
 
 void PBXParserImpl::end_array() {
 	printf("end_array\n");
+	value_stack.pop_back();
 }
 
 void PBXParserImpl::array_value_literal(std::string str) {
 	printf("array_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
 		PBXUtil::literal_requires_quotes(str),
 		PBXUtil::literal_is_hex_id(str));
+	if (value_stack.size() == 0)
+	{
+		log_fatal_exit("value stack empty");
+	}
+	else if (value_stack.back()->type() == PBXTypeArray)
+	{
+		PBXLiteral *lit = new PBXLiteral();
+		PBXValuePtr valptr = PBXValuePtr(lit);
+		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+	}
 }
 
 void PBXParserImpl::array_value_comment(std::string str) {
