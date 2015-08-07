@@ -287,25 +287,25 @@ PBXObjectPtr PBXObjectFactory::create(std::string class_name, const PBXId &objec
 
 const std::string pbxproj_slash_bang = "// !$*UTF8*$!";
 
-const std::string PBXAggregateTarget::name =			"PBXAggregateTarget";
-const std::string PBXAppleScriptBuildPhase::name =		"PBXAppleScriptBuildPhase";
-const std::string PBXBuildFile::name =					"PBXBuildFile";
-const std::string PBXBuildStyle::name =					"PBXBuildStyle";
-const std::string PBXContainerItemProxy::name =			"PBXContainerItemProxy";
-const std::string PBXCopyFilesBuildPhase::name =		"PBXCopyFilesBuildPhase";
-const std::string PBXFileReference::name =				"PBXFileReference";
-const std::string PBXFrameworksBuildPhase::name =		"PBXFrameworksBuildPhase";
-const std::string PBXGroup::name =						"PBXGroup";
-const std::string PBXHeadersBuildPhase::name =			"PBXHeadersBuildPhase";
-const std::string PBXNativeTarget::name =				"PBXNativeTarget";
-const std::string PBXProject::name =					"PBXProject";
-const std::string PBXReferenceProxy::name =				"PBXReferenceProxy";
-const std::string PBXResourcesBuildPhase::name =		"PBXResourcesBuildPhase";
-const std::string PBXShellScriptBuildPhase::name =		"PBXShellScriptBuildPhase";
-const std::string PBXSourcesBuildPhase::name =			"PBXSourcesBuildPhase";
-const std::string PBXTargetDependency::name =			"PBXTargetDependency";
-const std::string XCBuildConfiguration::name =			"XCBuildConfiguration";
-const std::string XCConfigurationList::name =			"XCConfigurationList";
+const std::string PBXAggregateTarget::name =            "PBXAggregateTarget";
+const std::string PBXAppleScriptBuildPhase::name =      "PBXAppleScriptBuildPhase";
+const std::string PBXBuildFile::name =                  "PBXBuildFile";
+const std::string PBXBuildStyle::name =                 "PBXBuildStyle";
+const std::string PBXContainerItemProxy::name =         "PBXContainerItemProxy";
+const std::string PBXCopyFilesBuildPhase::name =        "PBXCopyFilesBuildPhase";
+const std::string PBXFileReference::name =              "PBXFileReference";
+const std::string PBXFrameworksBuildPhase::name =       "PBXFrameworksBuildPhase";
+const std::string PBXGroup::name =                      "PBXGroup";
+const std::string PBXHeadersBuildPhase::name =          "PBXHeadersBuildPhase";
+const std::string PBXNativeTarget::name =               "PBXNativeTarget";
+const std::string PBXProject::name =                    "PBXProject";
+const std::string PBXReferenceProxy::name =             "PBXReferenceProxy";
+const std::string PBXResourcesBuildPhase::name =        "PBXResourcesBuildPhase";
+const std::string PBXShellScriptBuildPhase::name =      "PBXShellScriptBuildPhase";
+const std::string PBXSourcesBuildPhase::name =          "PBXSourcesBuildPhase";
+const std::string PBXTargetDependency::name =           "PBXTargetDependency";
+const std::string XCBuildConfiguration::name =          "XCBuildConfiguration";
+const std::string XCConfigurationList::name =           "XCConfigurationList";
 
 std::once_flag PBXObjectFactory::factoryInit;
 std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
