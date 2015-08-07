@@ -20,36 +20,36 @@
 /* PBX parsing state */
 
 enum PBXParseState {
-	PBXParseStateNone						= 0,
-	PBXParseStateSlashBang					= 1,
-	PBXParseStateEatWhitespace				= 2,
-	PBXParseStateObjectComment				= 3,
-	PBXParseStateObjectAttrName				= 4,
-	PBXParseStateObjectAttrComment			= 5,
-	PBXParseStateObjectAttrEquals			= 6,
-	PBXParseStateObjectValue				= 7,
-	PBXParseStateObjectValueQuotedLiteral	= 8,
-	PBXParseStateObjectValueLiteral			= 9,
-	PBXParseStateObjectValueComment			= 10,
-	PBXParseStateObjectValueSemicolon		= 11,
-	PBXParseStateArrayValue					= 12,
-	PBXParseStateArrayValueLiteral			= 13,
-	PBXParseStateArrayValueQuotedLiteral	= 14,
-	PBXParseStateArrayValueComment			= 15,
-	PBXParseStateArrayValueComma			= 16,
-	PBXParseStateFinalSemicolon				= 17,
-	PBXParseStateTrailingWhitespace			= 18,
+	PBXParseStateNone                       = 0,
+	PBXParseStateSlashBang                  = 1,
+	PBXParseStateEatWhitespace              = 2,
+	PBXParseStateObjectComment              = 3,
+	PBXParseStateObjectAttrName             = 4,
+	PBXParseStateObjectAttrComment          = 5,
+	PBXParseStateObjectAttrEquals           = 6,
+	PBXParseStateObjectValue                = 7,
+	PBXParseStateObjectValueQuotedLiteral   = 8,
+	PBXParseStateObjectValueLiteral         = 9,
+	PBXParseStateObjectValueComment         = 10,
+	PBXParseStateObjectValueSemicolon       = 11,
+	PBXParseStateArrayValue                 = 12,
+	PBXParseStateArrayValueLiteral          = 13,
+	PBXParseStateArrayValueQuotedLiteral    = 14,
+	PBXParseStateArrayValueComment          = 15,
+	PBXParseStateArrayValueComma            = 16,
+	PBXParseStateFinalSemicolon             = 17,
+	PBXParseStateTrailingWhitespace         = 18,
 };
 
 enum PBXParseError {
-	PBXParseErrorNone						= 0,
-	PBXParseErrorInvalidSlashBang			= 1,
-	PBXParseErrorExpectedEquals				= 2,
-	PBXParseErrorExpectedSemicolon			= 3,
-	PBXParseErrorUnexpectedBracket			= 4,
-	PBXParseErrorUnexpectedParenthesis		= 5,
-	PBXParseErrorExpectedArraySeparator		= 6, 
-	PBXParseErrorExpectedWhitespace			= 7
+	PBXParseErrorNone                       = 0,
+	PBXParseErrorInvalidSlashBang           = 1,
+	PBXParseErrorExpectedEquals             = 2,
+	PBXParseErrorExpectedSemicolon          = 3,
+	PBXParseErrorUnexpectedBracket          = 4,
+	PBXParseErrorUnexpectedParenthesis      = 5,
+	PBXParseErrorExpectedArraySeparator     = 6,
+	PBXParseErrorExpectedWhitespace         = 7
 };
 
 
