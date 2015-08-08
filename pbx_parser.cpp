@@ -548,12 +548,12 @@ void PBXParserImpl::begin_object() {
 	if (!root) {
 		value_stack.push_back((root = std::make_shared<PBXRoot>()));
 	}
-	else if (value_stack.size() == 0)
-	{
+	else if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
 	else if (value_stack.back()->type() == PBXTypeRoot ||
-			 value_stack.back()->type() == PBXTypeMap)
+			 value_stack.back()->type() == PBXTypeMap ||
+			 value_stack.back()->type() == PBXTypeObject)
 	{
 		valptr = PBXValuePtr(new PBXMap());
 		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, current_attr_comment, valptr);
@@ -601,9 +601,30 @@ void PBXParserImpl::object_value_literal(std::string str) {
 		log_debug("object_value_literal: \"%s\"", str.c_str());
 	}
 	bool is_id = PBXUtil::literal_is_hex_id(str);
-	if (value_stack.size() == 0)
-	{
+	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
+	}
+	else if (value_stack.back()->type() == PBXTypeMap && current_attr_name == "isa")
+	{
+		// pop the previous map off the value stack
+		PBXValuePtr old_map_ptr = value_stack.back();
+		value_stack.pop_back();
+
+		// sanity checking
+		if (value_stack.size() == 0) {
+			log_fatal_exit("value stack empty");
+		} else if (value_stack.back()->type() != PBXTypeMap) {
+			log_fatal_exit("parent is not a map");
+		}
+
+		// reinstantiate with a concrete type
+		const PBXMap &old_map = static_cast<const PBXMap&>(*old_map_ptr);
+		PBXMap &parent_map = static_cast<PBXMap&>(*value_stack.back());
+		PBXKey &last_key = parent_map.key_order.back();
+		PBXId id(last_key.key_val, last_key.comment_val);
+		valptr = PBXValuePtr(PBXObjectFactory::create(str, id, old_map));
+		parent_map.replace(last_key.key_val, valptr);
+		value_stack.push_back(valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeRoot ||
 			 value_stack.back()->type() == PBXTypeMap ||
@@ -634,8 +655,7 @@ void PBXParserImpl::begin_array() {
 	if (debug) {
 		log_debug("begin_array");
 	}
-	if (value_stack.size() == 0)
-	{
+	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
 	else if (value_stack.back()->type() == PBXTypeRoot ||
@@ -666,8 +686,7 @@ void PBXParserImpl::array_value_literal(std::string str) {
 		log_debug("array_value_literal: \"%s\"", str.c_str());
 	}
 	bool is_id = PBXUtil::literal_is_hex_id(str);
-	if (value_stack.size() == 0)
-	{
+	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
