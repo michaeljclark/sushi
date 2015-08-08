@@ -30,7 +30,7 @@ struct PBXUtil {
 };
 
 
-/* PBX Primitives */
+/* PBX primitives */
 
 struct PBXValue;
 typedef std::shared_ptr<PBXValue> PBXValuePtr;
