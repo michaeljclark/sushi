@@ -17,6 +17,192 @@
 #include <sys/stat.h>
 
 
+/* logging */
+
+std::string format_string(const char* fmt, ...);
+void log_prefix(const char* prefix, const char* fmt, va_list arg);
+void log_fatal_exit(const char* fmt, ...);
+void log_error(const char* fmt, ...);
+void log_info(const char* fmt, ...);
+void log_debug(const char* fmt, ...);
+
+static const int INITIAL_LOG_BUFFER_SIZE = 256;
+
+static const char* FATAL_PREFIX = "FATAL";
+static const char* ERROR_PREFIX = "ERROR";
+static const char* DEBUG_PREFIX = "DEBUG";
+static const char* INFO_PREFIX = "INFO";
+
+std::string format_string(const char* fmt, ...)
+{
+    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
+    va_list ap;
+    
+    va_start(ap, fmt);
+    int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+    va_end(ap);
+    
+    std::string str;
+    if (len >= (int)buf.capacity()) {
+        buf.resize(len + 1);
+        va_start(ap, fmt);
+        vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+        va_end(ap);
+    }
+    str = buf.data();
+    
+    return str;
+}
+
+void log_prefix(const char* prefix, const char* fmt, va_list arg)
+{
+    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
+    
+    int len = vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+
+    if (len >= (int)buf.capacity()) {
+        buf.resize(len + 1);
+        vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+    }
+
+	fprintf(stderr, "%s: %s\n", prefix, buf.data());
+}
+
+void log_fatal_exit(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    log_prefix(FATAL_PREFIX, fmt, ap);
+    va_end(ap);
+    exit(9);
+}
+
+void log_error(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    log_prefix(ERROR_PREFIX, fmt, ap);
+    va_end(ap);
+}
+
+void log_info(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    log_prefix(INFO_PREFIX, fmt, ap);
+    va_end(ap);
+}
+
+void log_debug(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    log_prefix(DEBUG_PREFIX, fmt, ap);
+    va_end(ap);
+}
+
+
+/* utility */
+
+struct PBXUtil {
+	static const char* HEX_DIGITS;
+	static const char* LITERAL_CHARS;
+
+	static std::string ltrim(std::string s);
+	static std::string rtrim(std::string s);
+	static std::string trim(std::string s);
+	static std::string hex_encode(const unsigned char *buf, size_t len);
+	static void hex_decode(std::string hex, char *buf, size_t len);
+	static bool literal_requires_quotes(std::string str);
+	static bool literal_is_hex_id(std::string str);
+	static std::vector<char> read_file(std::string filename);
+};
+
+const char* PBXUtil::HEX_DIGITS = "0123456789ABCDEF";
+const char* PBXUtil::LITERAL_CHARS = "/._";
+
+std::string PBXUtil::ltrim(std::string s) {
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))));
+	return s;
+}
+
+std::string PBXUtil::rtrim(std::string s) {
+	s.erase(std::find_if(s.rbegin(), s.rend(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	return s;
+}
+
+std::string PBXUtil::trim(std::string s) {
+	return ltrim(rtrim(s));
+}
+
+
+std::string PBXUtil::hex_encode(const unsigned char *buf, size_t len)
+{
+    std::string hex;
+    for (size_t i = 0; i < len; i++) {
+        unsigned char b = buf[i];
+        hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
+        hex.append(HEX_DIGITS + (b & 0x0F), 1);
+    }
+    return hex;
+}
+
+void PBXUtil::hex_decode(std::string hex, char *buf, size_t len)
+{
+    for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
+        const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
+        *buf++ = (char)strtoul(tmp, NULL, 16);
+    }
+}
+
+bool PBXUtil::literal_requires_quotes(std::string str)
+{
+	if (str.size() == 0) return true;
+    for (size_t i = 0; i < str.length(); i++) {
+    	char c = str[i];
+    	if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
+    }
+    return false;
+}
+
+bool PBXUtil::literal_is_hex_id(std::string str)
+{
+	if (str.size() != 24) return false;
+    for (size_t i = 0; i < str.length(); i++) {
+    	if (strchr(HEX_DIGITS, str[i]) == NULL) return false;
+    }
+    return true;
+}
+
+std::vector<char> PBXUtil::read_file(std::string filename)
+{
+	std::vector<char> buf;
+	struct stat stat_buf;
+
+	int fd = ::open(filename.c_str(), O_RDONLY);
+	if (fd < 0) {
+		log_fatal_exit("error open: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	if (fstat(fd, &stat_buf) < 0) {
+		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	buf.resize(stat_buf.st_size);
+	ssize_t bytes_read = ::read(fd, buf.data(), stat_buf.st_size);
+	if (bytes_read < 0) {
+		log_fatal_exit("error read: %s: %s", filename.c_str(), strerror(errno));
+	} else if (bytes_read != stat_buf.st_size) {
+		log_fatal_exit("error short read: %s: %s", filename.c_str());
+	}
+	::close(fd);
+
+	return buf;
+}
+
+
 /* PBX parsing state */
 
 enum PBXParseState {
@@ -112,12 +298,33 @@ struct PBXIdRef : PBXValue {
 
 struct PBXMap : PBXValue {
 	std::map<std::string,PBXValuePtr> object_val;
+	std::vector<std::string> key_order;
 	virtual PBXType type() { return PBXTypeMap; }
+
+	void put(std::string key, PBXValuePtr &val) {
+		if (object_val.find(key) == object_val.end()) {
+			object_val[key] = val;
+			key_order.push_back(key);
+		} else {
+			log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
+		}
+	}
+
+	void del(std::string key) {
+		if (object_val.find(key) != object_val.end()) {
+			object_val.erase(key);
+			key_order.erase(std::find(key_order.begin(), key_order.end(), key));
+		}
+	}
 };
 
 struct PBXArray : PBXValue {
 	std::vector<PBXValuePtr> array_val;
 	virtual PBXType type() { return PBXTypeArray; }
+
+	void add(PBXValuePtr &val) {
+		array_val.push_back(val);
+	}
 };
 
 struct PBXLiteral : PBXValue {
@@ -311,191 +518,6 @@ const std::string XCConfigurationList::name =           "XCConfigurationList";
 std::once_flag PBXObjectFactory::factoryInit;
 std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
 
-
-/* logging */
-
-std::string format_string(const char* fmt, ...);
-void log_prefix(const char* prefix, const char* fmt, va_list arg);
-void log_fatal_exit(const char* fmt, ...);
-void log_error(const char* fmt, ...);
-void log_info(const char* fmt, ...);
-void log_debug(const char* fmt, ...);
-
-static const int INITIAL_LOG_BUFFER_SIZE = 256;
-
-static const char* FATAL_PREFIX = "FATAL";
-static const char* ERROR_PREFIX = "ERROR";
-static const char* DEBUG_PREFIX = "DEBUG";
-static const char* INFO_PREFIX = "INFO";
-
-std::string format_string(const char* fmt, ...)
-{
-    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
-    va_list ap;
-    
-    va_start(ap, fmt);
-    int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-    va_end(ap);
-    
-    std::string str;
-    if (len >= (int)buf.capacity()) {
-        buf.resize(len + 1);
-        va_start(ap, fmt);
-        vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-        va_end(ap);
-    }
-    str = buf.data();
-    
-    return str;
-}
-
-void log_prefix(const char* prefix, const char* fmt, va_list arg)
-{
-    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
-    
-    int len = vsnprintf(buf.data(), buf.capacity(), fmt, arg);
-
-    if (len >= (int)buf.capacity()) {
-        buf.resize(len + 1);
-        vsnprintf(buf.data(), buf.capacity(), fmt, arg);
-    }
-
-	fprintf(stderr, "%s: %s\n", prefix, buf.data());
-}
-
-void log_fatal_exit(const char* fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(FATAL_PREFIX, fmt, ap);
-    va_end(ap);
-    exit(9);
-}
-
-void log_error(const char* fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(ERROR_PREFIX, fmt, ap);
-    va_end(ap);
-}
-
-void log_info(const char* fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(INFO_PREFIX, fmt, ap);
-    va_end(ap);
-}
-
-void log_debug(const char* fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(DEBUG_PREFIX, fmt, ap);
-    va_end(ap);
-}
-
-
-/* utility */
-
-struct PBXUtil {
-	static const char* HEX_DIGITS;
-	static const char* LITERAL_CHARS;
-
-	static std::string ltrim(std::string s);
-	static std::string rtrim(std::string s);
-	static std::string trim(std::string s);
-	static std::string hex_encode(const unsigned char *buf, size_t len);
-	static void hex_decode(std::string hex, char *buf, size_t len);
-	static bool literal_requires_quotes(std::string str);
-	static bool literal_is_hex_id(std::string str);
-	static std::vector<char> read_file(std::string filename);
-};
-
-const char* PBXUtil::HEX_DIGITS = "0123456789ABCDEF";
-const char* PBXUtil::LITERAL_CHARS = "/._";
-
-std::string PBXUtil::ltrim(std::string s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-			std::not1(std::ptr_fun<int, int>(std::isspace))));
-	return s;
-}
-
-std::string PBXUtil::rtrim(std::string s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(),
-			std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-	return s;
-}
-
-std::string PBXUtil::trim(std::string s) {
-	return ltrim(rtrim(s));
-}
-
-
-std::string PBXUtil::hex_encode(const unsigned char *buf, size_t len)
-{
-    std::string hex;
-    for (size_t i = 0; i < len; i++) {
-        unsigned char b = buf[i];
-        hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
-        hex.append(HEX_DIGITS + (b & 0x0F), 1);
-    }
-    return hex;
-}
-
-void PBXUtil::hex_decode(std::string hex, char *buf, size_t len)
-{
-    for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
-        const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
-        *buf++ = (char)strtoul(tmp, NULL, 16);
-    }
-}
-
-bool PBXUtil::literal_requires_quotes(std::string str)
-{
-	if (str.size() == 0) return true;
-    for (size_t i = 0; i < str.length(); i++) {
-    	char c = str[i];
-    	if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
-    }
-    return false;
-}
-
-bool PBXUtil::literal_is_hex_id(std::string str)
-{
-	if (str.size() != 24) return false;
-    for (size_t i = 0; i < str.length(); i++) {
-    	if (strchr(HEX_DIGITS, str[i]) == NULL) return false;
-    }
-    return true;
-}
-
-std::vector<char> PBXUtil::read_file(std::string filename)
-{
-	std::vector<char> buf;
-	struct stat stat_buf;
-
-	int fd = ::open(filename.c_str(), O_RDONLY);
-	if (fd < 0) {
-		log_fatal_exit("error open: %s: %s", filename.c_str(), strerror(errno));
-	}
-
-	if (fstat(fd, &stat_buf) < 0) {
-		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
-	}
-
-	buf.resize(stat_buf.st_size);
-	ssize_t bytes_read = ::read(fd, buf.data(), stat_buf.st_size);
-	if (bytes_read < 0) {
-		log_fatal_exit("error read: %s: %s", filename.c_str(), strerror(errno));
-	} else if (bytes_read != stat_buf.st_size) {
-		log_fatal_exit("error short read: %s: %s", filename.c_str());
-	}
-	::close(fd);
-
-	return buf;
-}
 
 /* PBX project parser */
 
@@ -827,14 +849,14 @@ void PBXParserImpl::begin_object() {
 	{
 		PBXMap *map = new PBXMap();
 		PBXValuePtr valptr = PBXValuePtr(map);
-		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, valptr);
 		value_stack.push_back(valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
 		PBXMap *map = new PBXMap();
 		PBXValuePtr valptr = PBXValuePtr(map);
-		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 		value_stack.push_back(valptr);
 	}
 }
@@ -871,13 +893,13 @@ void PBXParserImpl::object_value_literal(std::string str) {
 	{
 		PBXLiteral *lit = new PBXLiteral(str);
 		PBXValuePtr valptr = PBXValuePtr(lit);
-		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
 		PBXLiteral *lit = new PBXLiteral(str);
 		PBXValuePtr valptr = PBXValuePtr(lit);
-		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 	}
 }
 
@@ -896,14 +918,14 @@ void PBXParserImpl::begin_array() {
 	{
 		PBXArray *arr = new PBXArray();
 		PBXValuePtr valptr = PBXValuePtr(arr);
-		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
+		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, valptr);
 		value_stack.push_back(valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
 		PBXArray *arr = new PBXArray();
 		PBXValuePtr valptr = PBXValuePtr(arr);
-		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
+		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 		value_stack.push_back(valptr);
 	}
 }
@@ -947,10 +969,9 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 			ss << pbxproj_slash_bang << std::endl;
 			ss << "{" << std::endl;
 			PBXMap &map = static_cast<PBXMap&>(*value);
-			for (auto &ent : map.object_val) {
-				const std::string &name = ent.first;
-				PBXValuePtr &val = ent.second;
-				ss << "\t" << name << " = ";
+			for (const std::string &key : map.key_order) {
+				PBXValuePtr &val = map.object_val[key];
+				ss << "\t" << key << " = ";
 				write(val, ss, indent + 1);
 				ss << ";" << std::endl;
 			}
@@ -962,11 +983,10 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 		{
 			ss << "{" << std::endl;
 			PBXMap &map = static_cast<PBXMap&>(*value);
-			for (auto &ent : map.object_val) {
-				const std::string &name = ent.first;
-				PBXValuePtr &val = ent.second;
+			for (const std::string &key : map.key_order) {
+				PBXValuePtr &val = map.object_val[key];
 				for (int i = 0; i <= indent; i++) ss << "\t";
-				ss << name << " = ";
+				ss << key << " = ";
 				write(val, ss, indent + 1);
 				ss << ";" << std::endl;
 			}
@@ -978,7 +998,7 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 		{
 			ss << "(" << std::endl;
 			PBXArray &arr = static_cast<PBXArray&>(*value);
-			for (auto &val : arr.array_val) {
+			for (PBXValuePtr &val : arr.array_val) {
 				for (int i = 0; i <= indent; i++) ss << "\t";
 				write(val, ss, indent + 1);
 				ss << "," << std::endl;
