@@ -793,9 +793,12 @@ PBXParseError PBXParser::parse(std::vector<char> &buf)
 /* PBX Parser Implementation */
 
 struct PBXParserImpl : PBXParser {
+	bool debug;
 	PBXRootPtr root;
 	std::vector<PBXValuePtr> value_stack;
 	std::string current_attr_name;
+
+	PBXParserImpl() : debug(false) {}
 
 	void begin_object();
 	void end_object();
@@ -811,7 +814,7 @@ struct PBXParserImpl : PBXParser {
 };
 
 void PBXParserImpl::begin_object() {
-	printf("begin_object\n");
+	if (debug) log_debug("begin_object\n");
 	if (!root) {
 		value_stack.push_back((root = std::make_shared<PBXRoot>()));
 	}
@@ -837,26 +840,26 @@ void PBXParserImpl::begin_object() {
 }
 
 void PBXParserImpl::end_object() {
-	printf("end_object\n");
+	if (debug) log_debug("end_object\n");
 	value_stack.pop_back();
 }
 
 void PBXParserImpl::object_comment(std::string str) {
-	printf("object_comment: \"%s\"\n", str.c_str());
+	if (debug) log_debug("object_comment: \"%s\"\n", str.c_str());
 }
 
 void PBXParserImpl::object_attr(std::string str) {
-	printf("object_attr: \"%s\" id=%d\n", str.c_str(),
+	if (debug) log_debug("object_attr: \"%s\" id=%d\n", str.c_str(),
 		PBXUtil::literal_is_hex_id(str));
 	current_attr_name = str;
 }
 
 void PBXParserImpl::object_attr_comment(std::string str) {
-	printf("object_attr_comment: \"%s\"\n", str.c_str());
+	if (debug) log_debug("object_attr_comment: \"%s\"\n", str.c_str());
 }
 
 void PBXParserImpl::object_value_literal(std::string str) {
-	printf("object_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
+	if (debug) log_debug("object_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
 		PBXUtil::literal_requires_quotes(str),
 		PBXUtil::literal_is_hex_id(str));
 	if (value_stack.size() == 0)
@@ -879,11 +882,11 @@ void PBXParserImpl::object_value_literal(std::string str) {
 }
 
 void PBXParserImpl::object_value_comment(std::string str) {
-	printf("object_value_comment: \"%s\"\n", str.c_str());
+	if (debug) log_debug("object_value_comment: \"%s\"\n", str.c_str());
 }
 
 void PBXParserImpl::begin_array() {
-	printf("begin_array\n");
+	if (debug) log_debug("begin_array\n");
 	if (value_stack.size() == 0)
 	{
 		log_fatal_exit("value stack empty");
@@ -906,12 +909,12 @@ void PBXParserImpl::begin_array() {
 }
 
 void PBXParserImpl::end_array() {
-	printf("end_array\n");
+	if (debug) log_debug("end_array\n");
 	value_stack.pop_back();
 }
 
 void PBXParserImpl::array_value_literal(std::string str) {
-	printf("array_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
+	if (debug) log_debug("array_value_literal: \"%s\" quote=%d id=%d\n", str.c_str(),
 		PBXUtil::literal_requires_quotes(str),
 		PBXUtil::literal_is_hex_id(str));
 	if (value_stack.size() == 0)
@@ -927,7 +930,7 @@ void PBXParserImpl::array_value_literal(std::string str) {
 }
 
 void PBXParserImpl::array_value_comment(std::string str) {
-	printf("array_value_comment: \"%s\"\n", str.c_str());
+	if (debug) log_debug("array_value_comment: \"%s\"\n", str.c_str());
 }
 
 
