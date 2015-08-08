@@ -555,15 +555,13 @@ void PBXParserImpl::begin_object() {
 	else if (value_stack.back()->type() == PBXTypeRoot ||
 			 value_stack.back()->type() == PBXTypeMap)
 	{
-		PBXMap *map = new PBXMap();
-		valptr = PBXValuePtr(map);
+		valptr = PBXValuePtr(new PBXMap());
 		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, current_attr_comment, valptr);
 		value_stack.push_back(valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		PBXMap *map = new PBXMap();
-		valptr = PBXValuePtr(map);
+		valptr = PBXValuePtr(new PBXMap());
 		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 		value_stack.push_back(valptr);
 	}
@@ -611,24 +609,14 @@ void PBXParserImpl::object_value_literal(std::string str) {
 			 value_stack.back()->type() == PBXTypeMap ||
 			 value_stack.back()->type() == PBXTypeObject)
 	{
-		if (is_id) {
-			PBXId *id = new PBXId(str);
-			valptr = PBXValuePtr(id);
-		} else {
-			PBXLiteral *lit = new PBXLiteral(str);
-			valptr = PBXValuePtr(lit);
-		}
+		valptr = PBXValuePtr(is_id ?
+			(PBXValue*)new PBXId(str) : (PBXValue*)new PBXLiteral(str));
 		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, current_attr_comment, valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		if (is_id) {
-			PBXId *id = new PBXId(str);
-			valptr = PBXValuePtr(id);
-		} else {
-			PBXLiteral *lit = new PBXLiteral(str);
-			valptr = PBXValuePtr(lit);
-		}
+		valptr = PBXValuePtr(is_id ?
+			(PBXValue*)new PBXId(str) : (PBXValue*)new PBXLiteral(str));
 		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 	}
 }
@@ -654,15 +642,13 @@ void PBXParserImpl::begin_array() {
 			 value_stack.back()->type() == PBXTypeMap ||
 			 value_stack.back()->type() == PBXTypeObject)
 	{
-		PBXArray *arr = new PBXArray();
-		valptr = PBXValuePtr(arr);
+		valptr = PBXValuePtr(new PBXArray());
 		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, current_attr_comment, valptr);
 		value_stack.push_back(valptr);
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		PBXArray *arr = new PBXArray();
-		valptr = PBXValuePtr(arr);
+		valptr = PBXValuePtr(new PBXArray());
 		static_cast<PBXArray&>(*value_stack.back()).add(valptr);
 		value_stack.push_back(valptr);
 	}
@@ -686,13 +672,8 @@ void PBXParserImpl::array_value_literal(std::string str) {
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		if (is_id) {
-			PBXId *id = new PBXId(str);
-			valptr = PBXValuePtr(id);
-		} else {
-			PBXLiteral *lit = new PBXLiteral(str);
-			valptr = PBXValuePtr(lit);
-		}
+		valptr = PBXValuePtr(is_id ?
+			(PBXValue*)new PBXId(str) : (PBXValue*)new PBXLiteral(str));
 		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
 	}
 }
