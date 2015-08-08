@@ -33,13 +33,16 @@ struct PBXUtil {
 /* PBX primitives */
 
 struct PBXValue;
-typedef std::shared_ptr<PBXValue> PBXValuePtr;
-
 struct PBXObject;
-typedef std::shared_ptr<PBXObject> PBXObjectPtr;
-
 struct PBXRoot;
+struct PBXMap;
+struct PBXArray;
+
+typedef std::shared_ptr<PBXValue> PBXValuePtr;
+typedef std::shared_ptr<PBXObject> PBXObjectPtr;
 typedef std::shared_ptr<PBXRoot> PBXRootPtr;
+typedef std::shared_ptr<PBXMap> PBXMapPtr;
+typedef std::shared_ptr<PBXArray> PBXArrayPtr;
 
 enum PBXType {
 	PBXTypeRoot,
@@ -66,6 +69,7 @@ struct PBXKey {
 	std::string key_val;
 	std::string comment_val;
 
+	PBXKey(const std::string &key_val) : key_val(key_val) {}
 	PBXKey(const std::string &key_val, const std::string &comment_val) : key_val(key_val), comment_val(comment_val) {}
 
 	bool operator<(const PBXKey &o) const { return key_val < o.key_val; }
@@ -100,22 +104,20 @@ struct PBXMap : PBXValue {
 		key_order.clear();
 	}
 
-	void put(std::string key, std::string comment, PBXValuePtr &val) {
-		if (object_val.find(key) == object_val.end()) {
-			object_val[key] = val;
-			key_order.push_back(PBXKey(key, comment));
-		} else {
-			log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
-		}
-	}
+	void put(std::string key, std::string comment, PBXValuePtr &val);
+	void replace(std::string key, PBXValuePtr &val);
 
-	void replace(std::string key, PBXValuePtr &val) {
-		if (object_val.find(key) != object_val.end()) {
-			object_val[key] = val;
-		} else {
-			log_fatal_exit("missing key \"%s\" in object", key.c_str());
-		}
-	}
+	std::string getString(std::string key, std::string default_str = "");
+	uint64_t getInteger(std::string key, uint64_t default_int = 0);
+	bool getBoolean(std::string key, bool default_bool = false);
+	PBXArray* getArray(std::string key);
+	PBXMap* getMap(std::string key);
+
+	void setString(std::string key, std::string str_val);
+	void setInteger(std::string key, uint64_t int_val);
+	void setBoolean(std::string key, bool bool_val);
+	void setArray(std::string key, PBXArray* arr);
+	void setMap(std::string key, PBXMap* map);
 };
 
 struct PBXArray : PBXValue {
@@ -151,6 +153,7 @@ struct PBXObject : PBXMap {
 
 	virtual void sync_from_map() {}
 	virtual void sync_to_map() {}
+	virtual std::string to_string() { return "PBXObject"; }
 };
 
 
@@ -169,6 +172,10 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 };
 
 struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
+	static const std::string name;
+};
+
+struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 	static const std::string name;
 };
 
@@ -200,6 +207,10 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 	static const std::string name;
 };
 
+struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
+	static const std::string name;
+};
+
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 	static const std::string name;
 };
@@ -228,11 +239,19 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 	static const std::string name;
 };
 
+struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
+	static const std::string name;
+};
+
 struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
 	static const std::string name;
 };
 
 struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
+	static const std::string name;
+};
+
+struct XCVersionGroup : PBXObjectImpl<XCVersionGroup> {
 	static const std::string name;
 };
 

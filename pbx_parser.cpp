@@ -195,6 +195,137 @@ std::vector<char> PBXUtil::read_file(std::string filename)
 }
 
 
+/* PBX Map */
+
+void PBXMap::put(std::string key, std::string comment, PBXValuePtr &val)
+{
+	if (object_val.find(key) == object_val.end()) {
+		object_val[key] = val;
+		key_order.push_back(PBXKey(key, comment));
+	} else {
+		log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
+	}
+}
+
+void PBXMap::replace(std::string key, PBXValuePtr &val) {
+	if (object_val.find(key) != object_val.end()) {
+		object_val[key] = val;
+	} else {
+		log_fatal_exit("missing key \"%s\" in object", key.c_str());
+	}
+}
+
+
+std::string PBXMap::getString(std::string key, std::string default_str)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return default_str;
+	} else if (i->second->type() == PBXTypeLiteral) {
+		return static_cast<const PBXLiteral&>(*i->second).literal_val;
+	} else {
+		return std::string();
+	}
+}
+
+uint64_t PBXMap::getInteger(std::string key, uint64_t default_int)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return default_int;
+	} else if (i->second->type() == PBXTypeLiteral) {
+		return strtoull(static_cast<const PBXLiteral&>(*i->second).literal_val.c_str(), nullptr, 10);
+	} else {
+		log_fatal_exit("value is not a literal");
+		return 0;
+	}
+}
+
+bool PBXMap::getBoolean(std::string key, bool default_bool)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return default_bool;
+	} else if (i->second->type() == PBXTypeLiteral) {
+		std::string val = static_cast<const PBXLiteral&>(*i->second).literal_val;
+		return (val == "0" || val == "NO") ? false : true;
+	} else {
+		return false;
+	}
+}
+
+PBXArray* PBXMap::getArray(std::string key)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return nullptr;
+	} else if (i->second->type() == PBXTypeArray) {
+		return static_cast<PBXArray*>(i->second.get());
+	} else {
+		return nullptr;
+	}
+}
+
+PBXMap* PBXMap::getMap(std::string key)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return nullptr;
+	} else if (i->second->type() == PBXTypeMap) {
+		return static_cast<PBXMap*>(i->second.get());
+	} else {
+		return nullptr;
+	}
+}
+
+void PBXMap::setString(std::string key, std::string str_val)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	object_val[key] = PBXValuePtr(new PBXLiteral(str_val));
+}
+
+void PBXMap::setInteger(std::string key, uint64_t int_val)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	std::stringstream ss;
+	ss << int_val;
+	object_val[key] = PBXValuePtr(new PBXLiteral(ss.str()));
+}
+
+void PBXMap::setBoolean(std::string key, bool bool_val)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	object_val[key] = PBXValuePtr(new PBXLiteral(bool_val ? "YES" : "NO"));
+}
+
+void PBXMap::setArray(std::string key, PBXArray* arr)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	object_val[key] = PBXValuePtr(arr);
+}
+
+void PBXMap::setMap(std::string key, PBXMap* map)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	object_val[key] = PBXValuePtr(map);
+}
+
+
 /* PBX object factory */
 
 void PBXObjectFactory::init()
@@ -242,6 +373,7 @@ std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
 const std::string PBXAggregateTarget::name =            "PBXAggregateTarget";
 const std::string PBXAppleScriptBuildPhase::name =      "PBXAppleScriptBuildPhase";
 const std::string PBXBuildFile::name =                  "PBXBuildFile";
+const std::string PBXBuildRule::name =                  "PBXBuildRule";
 const std::string PBXBuildStyle::name =                 "PBXBuildStyle";
 const std::string PBXContainerItemProxy::name =         "PBXContainerItemProxy";
 const std::string PBXCopyFilesBuildPhase::name =        "PBXCopyFilesBuildPhase";
@@ -249,6 +381,7 @@ const std::string PBXFileReference::name =              "PBXFileReference";
 const std::string PBXFrameworksBuildPhase::name =       "PBXFrameworksBuildPhase";
 const std::string PBXGroup::name =                      "PBXGroup";
 const std::string PBXHeadersBuildPhase::name =          "PBXHeadersBuildPhase";
+const std::string PBXLegacyTarget::name =               "PBXLegacyTarget";
 const std::string PBXNativeTarget::name =               "PBXNativeTarget";
 const std::string PBXProject::name =                    "PBXProject";
 const std::string PBXReferenceProxy::name =             "PBXReferenceProxy";
@@ -256,8 +389,10 @@ const std::string PBXResourcesBuildPhase::name =        "PBXResourcesBuildPhase"
 const std::string PBXShellScriptBuildPhase::name =      "PBXShellScriptBuildPhase";
 const std::string PBXSourcesBuildPhase::name =          "PBXSourcesBuildPhase";
 const std::string PBXTargetDependency::name =           "PBXTargetDependency";
+const std::string PBXVariantGroup::name =               "PBXVariantGroup";
 const std::string XCBuildConfiguration::name =          "XCBuildConfiguration";
 const std::string XCConfigurationList::name =           "XCConfigurationList";
+const std::string XCVersionGroup::name =                "XCVersionGroup";
 
 
 /* PBX project parser */
