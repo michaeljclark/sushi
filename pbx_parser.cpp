@@ -677,7 +677,7 @@ void PBXParserImpl::end_array() {
 
 void PBXParserImpl::array_value_literal(std::string str) {
 	if (debug) {
-		log_debug("array_value_literal: \"%s\"");
+		log_debug("array_value_literal: \"%s\"", str.c_str());
 	}
 	bool is_id = PBXUtil::literal_is_hex_id(str);
 	if (value_stack.size() == 0)
