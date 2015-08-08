@@ -317,7 +317,7 @@ struct PBXParser {
 /* PBX parser implementation */
 
 struct PBXParserImpl : PBXParser {
-	static const bool debug = true;
+	static const bool debug = false;
 
 	PBXRootPtr root;
 	PBXValuePtr valptr;
