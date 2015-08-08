@@ -370,6 +370,7 @@ std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
 
 /* PBX classes */
 
+const std::string Xcodeproj::name =                     "Xcodeproj";
 const std::string PBXAggregateTarget::name =            "PBXAggregateTarget";
 const std::string PBXAppleScriptBuildPhase::name =      "PBXAppleScriptBuildPhase";
 const std::string PBXBuildFile::name =                  "PBXBuildFile";
@@ -680,13 +681,13 @@ void PBXParserImpl::begin_object() {
 	if (debug) {
 		log_debug("begin_object");
 	}
-	if (!root) {
-		value_stack.push_back((root = std::make_shared<PBXRoot>()));
+	if (!xcodeproj) {
+		value_stack.push_back((xcodeproj = std::make_shared<Xcodeproj>()));
 	}
 	else if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
-	else if (value_stack.back()->type() == PBXTypeRoot ||
+	else if (value_stack.back()->type() == PBXTypeXcodeproj ||
 			 value_stack.back()->type() == PBXTypeMap ||
 			 value_stack.back()->type() == PBXTypeObject)
 	{
@@ -709,7 +710,8 @@ void PBXParserImpl::end_object() {
 	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
-	if (value_stack.back()->type() == PBXTypeObject) {
+	if (value_stack.back()->type() == PBXTypeObject ||
+		value_stack.back()->type() == PBXTypeXcodeproj) {
 		static_cast<PBXObject&>(*value_stack.back()).sync_from_map();
 	}
 	value_stack.pop_back();
@@ -767,7 +769,7 @@ void PBXParserImpl::object_value_literal(std::string str) {
 		parent_map.replace(last_key.key_val, valptr);
 		value_stack.push_back(valptr);
 	}
-	else if (value_stack.back()->type() == PBXTypeRoot ||
+	else if (value_stack.back()->type() == PBXTypeXcodeproj ||
 			 value_stack.back()->type() == PBXTypeMap ||
 			 value_stack.back()->type() == PBXTypeObject)
 	{
@@ -799,7 +801,7 @@ void PBXParserImpl::begin_array() {
 	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
-	else if (value_stack.back()->type() == PBXTypeRoot ||
+	else if (value_stack.back()->type() == PBXTypeXcodeproj ||
 			 value_stack.back()->type() == PBXTypeMap ||
 			 value_stack.back()->type() == PBXTypeObject)
 	{
@@ -852,7 +854,7 @@ void PBXParserImpl::array_value_comment(std::string str) {
 
 void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 	switch (value->type()) {
-		case PBXTypeRoot:
+		case PBXTypeXcodeproj:
 		{
 			ss << pbxproj_slash_bang << std::endl;
 			ss << "{" << std::endl;
@@ -940,6 +942,6 @@ int main(int argc, char **argv) {
 	}
 
 	std::stringstream ss;
-	PBXWriter::write(pbx.root, ss, 0);
+	PBXWriter::write(pbx.xcodeproj, ss, 0);
 	printf("%s", ss.str().c_str());
 }

@@ -34,18 +34,18 @@ struct PBXUtil {
 
 struct PBXValue;
 struct PBXObject;
-struct PBXRoot;
+struct Xcodeproj;
 struct PBXMap;
 struct PBXArray;
 
 typedef std::shared_ptr<PBXValue> PBXValuePtr;
 typedef std::shared_ptr<PBXObject> PBXObjectPtr;
-typedef std::shared_ptr<PBXRoot> PBXRootPtr;
+typedef std::shared_ptr<Xcodeproj> XcodeprojPtr;
 typedef std::shared_ptr<PBXMap> PBXMapPtr;
 typedef std::shared_ptr<PBXArray> PBXArrayPtr;
 
 enum PBXType {
-	PBXTypeRoot,
+	PBXTypeXcodeproj,
 	PBXTypeId,
 	PBXTypeMap, 
 	PBXTypeArray,
@@ -138,22 +138,22 @@ struct PBXLiteral : PBXValue {
 	virtual PBXType type() { return PBXTypeLiteral; }
 };
 
-struct PBXRoot: PBXMap {
-	virtual PBXType type() { return PBXTypeRoot; }
-};
-
 struct PBXObject : PBXMap {
 	PBXId object_id;
 
 	virtual ~PBXObject() {}
 
-	PBXType type() { return PBXTypeObject; }
+	virtual PBXType type() { return PBXTypeObject; }
 
 	virtual std::string class_name() { return std::string(); };
 
 	virtual void sync_from_map() {}
 	virtual void sync_to_map() {}
-	virtual std::string to_string() { return "PBXObject"; }
+	virtual std::string to_string() {
+		std::stringstream ss;
+		ss << class_name() << "-" << object_id.id_val;
+		return ss.str();
+	}
 };
 
 
@@ -161,6 +161,11 @@ struct PBXObject : PBXMap {
 
 template <typename T> struct PBXObjectImpl : PBXObject {
 	std::string class_name() { return T::name; }
+};
+
+struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
+	static const std::string name;
+	virtual PBXType type() { return PBXTypeXcodeproj; }
 };
 
 struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
@@ -341,7 +346,7 @@ struct PBXParser {
 struct PBXParserImpl : PBXParser {
 	static const bool debug = false;
 
-	PBXRootPtr root;
+	XcodeprojPtr xcodeproj;
 	PBXValuePtr valptr;
 	std::vector<PBXValuePtr> value_stack;
 	std::string current_attr_name;
