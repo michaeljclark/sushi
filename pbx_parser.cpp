@@ -122,6 +122,7 @@ struct PBXArray : PBXValue {
 
 struct PBXLiteral : PBXValue {
 	std::string literal_val;
+	PBXLiteral(std::string literal_val) : literal_val(literal_val) {}
 	virtual PBXType type() { return PBXTypeLiteral; }
 };
 
@@ -865,13 +866,13 @@ void PBXParserImpl::object_value_literal(std::string str) {
 	else if (value_stack.back()->type() == PBXTypeRoot ||
 			 value_stack.back()->type() == PBXTypeMap)
 	{
-		PBXLiteral *lit = new PBXLiteral();
+		PBXLiteral *lit = new PBXLiteral(str);
 		PBXValuePtr valptr = PBXValuePtr(lit);
 		static_cast<PBXMap&>(*value_stack.back()).object_val[current_attr_name] = valptr;
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		PBXLiteral *lit = new PBXLiteral();
+		PBXLiteral *lit = new PBXLiteral(str);
 		PBXValuePtr valptr = PBXValuePtr(lit);
 		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
 	}
@@ -919,7 +920,7 @@ void PBXParserImpl::array_value_literal(std::string str) {
 	}
 	else if (value_stack.back()->type() == PBXTypeArray)
 	{
-		PBXLiteral *lit = new PBXLiteral();
+		PBXLiteral *lit = new PBXLiteral(str);
 		PBXValuePtr valptr = PBXValuePtr(lit);
 		static_cast<PBXArray&>(*value_stack.back()).array_val.push_back(valptr);
 	}
@@ -929,6 +930,83 @@ void PBXParserImpl::array_value_comment(std::string str) {
 	printf("array_value_comment: \"%s\"\n", str.c_str());
 }
 
+
+/* PBXWriter */
+
+struct PBXWriter {
+	static void write(PBXValuePtr value, std::stringstream &ss, int indent);
+};
+
+void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
+	switch (value->type()) {
+		case PBXTypeRoot:
+		{
+			ss << pbxproj_slash_bang << std::endl;
+			ss << "{" << std::endl;
+			PBXMap &map = static_cast<PBXMap&>(*value);
+			for (auto &ent : map.object_val) {
+				const std::string &name = ent.first;
+				PBXValuePtr &val = ent.second;
+				ss << "\t" << name << " = ";
+				write(val, ss, indent + 1);
+				ss << ";" << std::endl;
+			}
+			ss << "}" << std::endl;
+			break;
+		}
+		case PBXTypeMap:
+		case PBXTypeObject:
+		{
+			ss << "{" << std::endl;
+			PBXMap &map = static_cast<PBXMap&>(*value);
+			for (auto &ent : map.object_val) {
+				const std::string &name = ent.first;
+				PBXValuePtr &val = ent.second;
+				for (int i = 0; i <= indent; i++) ss << "\t";
+				ss << name << " = ";
+				write(val, ss, indent + 1);
+				ss << ";" << std::endl;
+			}
+			for (int i = 0; i < indent; i++) ss << "\t";
+			ss << "}";
+			break;
+		}
+		case PBXTypeArray:
+		{
+			ss << "(" << std::endl;
+			PBXArray &arr = static_cast<PBXArray&>(*value);
+			for (auto &val : arr.array_val) {
+				for (int i = 0; i <= indent; i++) ss << "\t";
+				write(val, ss, indent + 1);
+				ss << "," << std::endl;
+			}
+			for (int i = 0; i < indent; i++) ss << "\t";
+			ss << ")";
+			break;
+		}
+		case PBXTypeLiteral:
+		{
+			PBXLiteral &lit = static_cast<PBXLiteral&>(*value);
+			if (PBXUtil::literal_requires_quotes(lit.literal_val)) {
+				// TODO - escape quotes
+				ss << "\"" << lit.literal_val << "\"";
+			} else {
+				ss << lit.literal_val;
+			}
+			break;
+		}
+		case PBXTypeId:
+		{
+			PBXId &lit = static_cast<PBXId&>(*value);
+			break;
+		}
+		case PBXTypeIdRef:
+		{
+			PBXIdRef &lit = static_cast<PBXIdRef&>(*value);
+			break;
+		}
+	}
+}
 
 /* main */
 
@@ -943,4 +1021,8 @@ int main(int argc, char **argv) {
 	if (error != PBXParseErrorNone) {
 		log_fatal_exit("error parsing project: %d\n", error);
 	}
+
+	std::stringstream ss;
+	PBXWriter::write(pbx.root, ss, 0);
+	printf("%s", ss.str().c_str());
 }
