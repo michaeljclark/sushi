@@ -148,6 +148,9 @@ struct PBXObject : PBXMap {
 	PBXType type() { return PBXTypeObject; }
 
 	virtual std::string class_name() { return std::string(); };
+
+	virtual void sync_from_map() {}
+	virtual void sync_to_map() {}
 };
 
 

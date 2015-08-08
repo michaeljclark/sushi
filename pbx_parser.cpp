@@ -571,6 +571,12 @@ void PBXParserImpl::end_object() {
 	if (debug) {
 		log_debug("end_object");
 	}
+	if (value_stack.size() == 0) {
+		log_fatal_exit("value stack empty");
+	}
+	if (value_stack.back()->type() == PBXTypeObject) {
+		static_cast<PBXObject&>(*value_stack.back()).sync_from_map();
+	}
 	value_stack.pop_back();
 }
 
