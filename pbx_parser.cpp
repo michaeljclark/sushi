@@ -254,10 +254,16 @@ bool PBXMap::getBoolean(std::string key, bool default_bool)
 	}
 }
 
-PBXArray* PBXMap::getArray(std::string key)
+PBXArray* PBXMap::getArray(std::string key, bool default_create)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
+		if (default_create) {
+			PBXArray *arr = new PBXArray();
+			PBXValuePtr valptr(arr);
+			put(key, "", valptr);
+			return arr;
+		}
 		return nullptr;
 	} else if (i->second->type() == PBXTypeArray) {
 		return static_cast<PBXArray*>(i->second.get());
@@ -266,10 +272,16 @@ PBXArray* PBXMap::getArray(std::string key)
 	}
 }
 
-PBXMap* PBXMap::getMap(std::string key)
+PBXMap* PBXMap::getMap(std::string key, bool default_create)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
+		if (default_create) {
+			PBXMap *map = new PBXMap();
+			PBXValuePtr valptr(map);
+			put(key, "", valptr);
+			return map;
+		}
 		return nullptr;
 	} else if (i->second->type() == PBXTypeMap) {
 		return static_cast<PBXMap*>(i->second.get());

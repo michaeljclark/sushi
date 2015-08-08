@@ -110,8 +110,8 @@ struct PBXMap : PBXValue {
 	std::string getString(std::string key, std::string default_str = "");
 	uint64_t getInteger(std::string key, uint64_t default_int = 0);
 	bool getBoolean(std::string key, bool default_bool = false);
-	PBXArray* getArray(std::string key);
-	PBXMap* getMap(std::string key);
+	PBXArray* getArray(std::string key, bool default_create = true);
+	PBXMap* getMap(std::string key, bool default_create = true);
 
 	void setString(std::string key, std::string str_val);
 	void setInteger(std::string key, uint64_t int_val);
