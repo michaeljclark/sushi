@@ -83,6 +83,7 @@ struct PBXId : PBXValue {
 
 	PBXId() {}
 	PBXId(std::string id_val) : id_val(id_val) {}
+	PBXId(std::string id_val, std::string comment_val) : id_val(id_val), comment_val(comment_val) {}
 	PBXId(const PBXId& o) : id_val(o.id_val), comment_val(o.comment_val) {}
 
 	virtual PBXType type() { return PBXTypeId; }
@@ -105,6 +106,14 @@ struct PBXMap : PBXValue {
 			key_order.push_back(PBXKey(key, comment));
 		} else {
 			log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
+		}
+	}
+
+	void replace(std::string key, PBXValuePtr &val) {
+		if (object_val.find(key) != object_val.end()) {
+			object_val[key] = val;
+		} else {
+			log_fatal_exit("missing key \"%s\" in object", key.c_str());
 		}
 	}
 };
@@ -241,15 +250,15 @@ struct PBXObjectFactory {
 	}
 
 	static void init();
-	static PBXObjectPtr create(std::string class_name, const PBXId &object_id, const PBXMap &map);
+	static PBXObject* create(std::string class_name, const PBXId &object_id, const PBXMap &map);
 
 	virtual ~PBXObjectFactory() {}
-	virtual PBXObjectPtr make() = 0;
+	virtual PBXObject* create() = 0;
 };
 
 template <typename T>
 struct PBXObjectFactoryImpl : PBXObjectFactory {
-	PBXObjectPtr make() { return std::make_shared<T>(); }
+	PBXObject* create() { return new T(); }
 };
 
 
@@ -308,14 +317,13 @@ struct PBXParser {
 /* PBX parser implementation */
 
 struct PBXParserImpl : PBXParser {
-	bool debug;
+	static const bool debug = false;
+
 	PBXRootPtr root;
 	PBXValuePtr valptr;
 	std::vector<PBXValuePtr> value_stack;
 	std::string current_attr_name;
 	std::string current_attr_comment;
-
-	PBXParserImpl() : debug(false) {}
 
 	void begin_object();
 	void end_object();

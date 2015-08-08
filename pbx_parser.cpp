@@ -222,12 +222,11 @@ void PBXObjectFactory::init()
 	});
 }
 
-PBXObjectPtr PBXObjectFactory::create(std::string class_name, const PBXId &object_id, const PBXMap &map)
+PBXObject* PBXObjectFactory::create(std::string class_name, const PBXId &object_id, const PBXMap &map)
 {
 	init();
 	auto it = factoryMap.find(class_name);
-	PBXObjectPtr ptr = it != factoryMap.end() ?
-		it->second->make() : std::make_shared<PBXObject>();
+	PBXObject *ptr = it != factoryMap.end() ? it->second->create() : new PBXObject();
 	ptr->object_id = object_id;
 	ptr->object_val = map.object_val;
 	ptr->key_order = map.key_order;
@@ -544,7 +543,7 @@ PBXParseError PBXParser::parse(std::vector<char> &buf)
 
 void PBXParserImpl::begin_object() {
 	if (debug) {
-		log_debug("begin_object\n");
+		log_debug("begin_object");
 	}
 	if (!root) {
 		value_stack.push_back((root = std::make_shared<PBXRoot>()));
@@ -572,21 +571,21 @@ void PBXParserImpl::begin_object() {
 
 void PBXParserImpl::end_object() {
 	if (debug) {
-		log_debug("end_object\n");
+		log_debug("end_object");
 	}
 	value_stack.pop_back();
 }
 
 void PBXParserImpl::object_comment(std::string str) {
 	if (debug) {
-		log_debug("object_comment: \"%s\"\n", str.c_str());
+		log_debug("object_comment: \"%s\"", str.c_str());
 	}
 	current_attr_comment = str;
 }
 
 void PBXParserImpl::object_attr(std::string str) {
 	if (debug) {
-		log_debug("object_attr: \"%s\"\n");
+		log_debug("object_attr: \"%s\"", str.c_str());
 	}
 	current_attr_name = str;
 	current_attr_comment = std::string();
@@ -594,14 +593,14 @@ void PBXParserImpl::object_attr(std::string str) {
 
 void PBXParserImpl::object_attr_comment(std::string str) {
 	if (debug) {
-		log_debug("object_attr_comment: \"%s\"\n", str.c_str());
+		log_debug("object_attr_comment: \"%s\"", str.c_str());
 	}
 	current_attr_comment = str;
 }
 
 void PBXParserImpl::object_value_literal(std::string str) {
 	if (debug) {
-		log_debug("object_value_literal: \"%s\"");
+		log_debug("object_value_literal: \"%s\"", str.c_str());
 	}
 	bool is_id = PBXUtil::literal_is_hex_id(str);
 	if (value_stack.size() == 0)
@@ -636,7 +635,7 @@ void PBXParserImpl::object_value_literal(std::string str) {
 
 void PBXParserImpl::object_value_comment(std::string str) {
 	if (debug) {
-		log_debug("object_value_comment: \"%s\"\n", str.c_str());
+		log_debug("object_value_comment: \"%s\"", str.c_str());
 	}
 	if (valptr->type() == PBXTypeId) {
 		static_cast<PBXId&>(*valptr).comment_val = str;
@@ -645,7 +644,7 @@ void PBXParserImpl::object_value_comment(std::string str) {
 
 void PBXParserImpl::begin_array() {
 	if (debug) {
-		log_debug("begin_array\n");
+		log_debug("begin_array");
 	}
 	if (value_stack.size() == 0)
 	{
@@ -671,7 +670,7 @@ void PBXParserImpl::begin_array() {
 
 void PBXParserImpl::end_array() {
 	if (debug) {
-		log_debug("end_array\n");
+		log_debug("end_array");
 	}
 	value_stack.pop_back();
 }
@@ -700,7 +699,7 @@ void PBXParserImpl::array_value_literal(std::string str) {
 
 void PBXParserImpl::array_value_comment(std::string str) {
 	if (debug) {
-		log_debug("array_value_comment: \"%s\"\n", str.c_str());
+		log_debug("array_value_comment: \"%s\"", str.c_str());
 	}
 	if (valptr->type() == PBXTypeId) {
 		static_cast<PBXId&>(*valptr).comment_val = str;
@@ -796,7 +795,7 @@ int main(int argc, char **argv) {
 	std::vector<char> buf = PBXUtil::read_file(argv[1]);
 	PBXParseError error = pbx.parse(buf);
 	if (error != PBXParseErrorNone) {
-		log_fatal_exit("error parsing project: %d\n", error);
+		log_fatal_exit("error parsing project: %d", error);
 	}
 
 	std::stringstream ss;
