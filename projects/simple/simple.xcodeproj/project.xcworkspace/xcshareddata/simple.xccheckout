@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>9B61EF27-D314-45EE-9486-D0E2E214E34A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>simple</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</key>
+		<string>https://github.com/michaeljclark/pbx_parser.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>simple.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/michaeljclark/pbx_parser.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>simple</string>
+		</dict>
+	</array>
+</dict>
+</plist>
