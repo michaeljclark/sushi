@@ -53,18 +53,6 @@ enum PBXType {
 	PBXTypeObject
 };
 
-union PBXIdUnion {
-	char id_val[12];
-	struct {
-		uint32_t id_local;
-		uint32_t id_project_1;
-		uint32_t id_project_2;
-	} id_comp;
-
-	bool operator<(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == -1; }
-	bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }
-};
-
 struct PBXKey {
 	std::string key_val;
 	std::string comment_val;
