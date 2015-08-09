@@ -113,6 +113,7 @@ struct PBXMap : PBXValue {
 	bool getBoolean(std::string key, bool default_bool = false);
 	PBXArrayPtr getArray(std::string key, bool default_create = true);
 	PBXMapPtr getMap(std::string key, bool default_create = true);
+	PBXObjectPtr getObject(PBXId id);
 
 	void setId(std::string key, PBXId id);
 	void setString(std::string key, std::string str_val);
@@ -147,19 +148,22 @@ struct PBXObject : PBXMap {
 
 	virtual PBXType type() { return PBXTypeObject; }
 
-	virtual std::string class_name() { return std::string(); };
+	virtual std::string type_name() { return std::string(); };
 
 	virtual void sync_from_map() {}
 	virtual void sync_to_map() {}
 	virtual std::string to_string() {
 		std::stringstream ss;
-		ss << class_name() << "-" << object_id.id_val;
+		ss << type_name() << "-" << object_id.id_val;
 		return ss.str();
 	}
 };
 
 
 /* PBX classes */
+
+struct PBXProject;
+typedef std::shared_ptr<PBXProject> PBXProjectPtr;
 
 template <typename T> struct PBXObjectImpl : PBXObject {
 	std::string type_name() { return T::type_name; }
@@ -177,6 +181,14 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	void sync_from_map();
 	void sync_to_map();
+
+	PBXProjectPtr getProject() {
+		return std::static_pointer_cast<PBXProject>(objects->getObject(rootObject));
+	}
+
+	template<typename T> std::shared_ptr<T> getObject(PBXId id) {
+		return std::static_pointer_cast<T>(objects->getObject(id));
+	}
 };
 
 struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
@@ -271,6 +283,21 @@ struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 
 struct PBXProject : PBXObjectImpl<PBXProject> {
 	static const std::string type_name;
+
+	PBXMapPtr attributes;
+	PBXId buildConfigurationList;
+	std::string compatibilityVersion;
+	std::string developmentRegion;
+	bool hasScannedForEncodings;
+	PBXArrayPtr knownRegions;
+	PBXId mainGroup;
+	PBXId productRefGroup;
+	std::string projectDirPath;
+	std::string projectRoot;
+	PBXArrayPtr targets;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {

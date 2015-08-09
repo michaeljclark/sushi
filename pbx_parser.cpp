@@ -274,11 +274,11 @@ PBXArrayPtr PBXMap::getArray(std::string key, bool default_create)
 			put(key, "", valptr);
 			return valptr;
 		}
-		return nullptr;
+		return PBXArrayPtr();
 	} else if (i->second->type() == PBXTypeArray) {
 		return std::static_pointer_cast<PBXArray>(i->second);
 	} else {
-		return nullptr;
+		return PBXArrayPtr();
 	}
 }
 
@@ -291,13 +291,26 @@ PBXMapPtr PBXMap::getMap(std::string key, bool default_create)
 			put(key, "", valptr);
 			return valptr;
 		}
-		return nullptr;
+		return PBXMapPtr();
 	} else if (i->second->type() == PBXTypeMap) {
 		return std::static_pointer_cast<PBXMap>(i->second);
 	} else {
-		return nullptr;
+		return PBXMapPtr();
 	}
 }
+
+PBXObjectPtr PBXMap::getObject(PBXId id)
+{
+	auto i = object_val.find(id.id_val);
+	if (i == object_val.end()) {
+		return PBXObjectPtr();
+	} else if (i->second->type() == PBXTypeObject) {
+		return std::static_pointer_cast<PBXObject>(i->second);
+	} else {
+		return PBXObjectPtr();
+	}
+}
+
 
 void PBXMap::setId(std::string key, PBXId id)
 {
@@ -552,8 +565,40 @@ void PBXGroup::sync_to_map()
 }
 
 
-/* PBXSourcesBuildPhase */
+/* PBXProject */
 
+void PBXProject::sync_from_map()
+{
+	attributes = getMap("attributes");
+	buildConfigurationList = getId("buildConfigurationList");
+	compatibilityVersion = getString("compatibilityVersion");
+	developmentRegion = getString("developmentRegion");
+	hasScannedForEncodings = getInteger("hasScannedForEncodings");
+	knownRegions = getArray("knownRegions");
+	mainGroup = getId("mainGroup");
+	productRefGroup = getId("productRefGroup");
+	projectDirPath = getString("projectDirPath");
+	projectRoot = getString("projectRoot");
+	targets = getArray("targets");
+}
+
+void PBXProject::sync_to_map()
+{
+	setMap("attributes", attributes);
+	setId("buildConfigurationList", buildConfigurationList);
+	setString("compatibilityVersion", compatibilityVersion);
+	setString("developmentRegion", developmentRegion);
+	setInteger("hasScannedForEncodings", hasScannedForEncodings);
+	setArray("knownRegions", knownRegions);
+	setId("mainGroup", mainGroup);
+	setId("productRefGroup", productRefGroup);
+	setString("projectDirPath", projectDirPath);
+	setString("projectRoot", projectRoot);
+	setArray("targets", targets);
+}
+
+
+/* PBXSourcesBuildPhase */
 
 void PBXSourcesBuildPhase::sync_from_map()
 {
@@ -1150,4 +1195,7 @@ int main(int argc, char **argv) {
 	std::stringstream ss;
 	PBXWriter::write(pbx.xcodeproj, ss, 0);
 	printf("%s", ss.str().c_str());
+
+	auto project = pbx.xcodeproj->getProject();
+	log_debug("loaded project: %s", project->to_string().c_str());
 }
