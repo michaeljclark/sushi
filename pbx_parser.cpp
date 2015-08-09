@@ -569,6 +569,7 @@ void PBXGroup::sync_to_map()
 
 void PBXNativeTarget::sync_from_map()
 {
+	buildConfigurationList = getId("buildConfigurationList");
 	buildPhases = getArray("buildPhases");
 	buildRules = getArray("buildRules");
 	dependencies = getArray("dependencies");
@@ -580,6 +581,7 @@ void PBXNativeTarget::sync_from_map()
 
 void PBXNativeTarget::sync_to_map()
 {
+	setId("buildConfigurationList", buildConfigurationList);
 	setArray("buildPhases", buildPhases);
 	setArray("buildRules", buildRules);
 	setArray("dependencies", dependencies);
