@@ -565,6 +565,30 @@ void PBXGroup::sync_to_map()
 }
 
 
+/* PBXNativeTarget */
+
+void PBXNativeTarget::sync_from_map()
+{
+	buildPhases = getArray("buildPhases");
+	buildRules = getArray("buildRules");
+	dependencies = getArray("dependencies");
+	name = getString("name");
+	productName = getString("productName");
+	productReference = getId("productReference");
+	productType = getString("productType");
+}
+
+void PBXNativeTarget::sync_to_map()
+{
+	setArray("buildPhases", buildPhases);
+	setArray("buildRules", buildRules);
+	setArray("dependencies", dependencies);
+	setString("name", name);
+	setString("productName", productName);
+	setId("productReference", productReference);
+	setString("productType", productType);
+}
+
 /* PBXProject */
 
 void PBXProject::sync_from_map()

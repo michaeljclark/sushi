@@ -267,6 +267,17 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 	static const std::string type_name;
+
+	PBXArrayPtr buildPhases;
+	PBXArrayPtr buildRules;
+	PBXArrayPtr dependencies;
+	std::string name;
+	std::string productName;
+	PBXId productReference;
+	std::string productType;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXProject : PBXObjectImpl<PBXProject> {
