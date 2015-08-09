@@ -525,7 +525,6 @@ void PBXFileReference::sync_to_map()
 
 /* PBXFrameworksBuildPhase */
 
-
 void PBXFrameworksBuildPhase::sync_from_map()
 {
 	buildActionMask = getInteger("buildActionMask");
@@ -541,8 +540,24 @@ void PBXFrameworksBuildPhase::sync_to_map()
 }
 
 
-/* PBXGroup */
+/* PBXHeadersBuildPhase */
 
+void PBXHeadersBuildPhase::sync_from_map()
+{
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXHeadersBuildPhase::sync_to_map()
+{
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
+/* PBXGroup */
 
 void PBXGroup::sync_from_map()
 {
@@ -1204,6 +1219,13 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 	}
 }
 
+void print_project_summary(XcodeprojPtr xcodeproj)
+{
+	auto project = xcodeproj->getProject();
+	log_debug("project: %s", project->to_string().c_str());
+	PBXGroupPtr mainGroup = xcodeproj->getObject<PBXGroup>(project->mainGroup);
+}
+
 /* main */
 
 int main(int argc, char **argv) {
@@ -1221,7 +1243,5 @@ int main(int argc, char **argv) {
 	std::stringstream ss;
 	PBXWriter::write(pbx.xcodeproj, ss, 0);
 	printf("%s", ss.str().c_str());
-
-	auto project = pbx.xcodeproj->getProject();
-	log_debug("loaded project: %s", project->to_string().c_str());
+	print_project_summary(pbx.xcodeproj);
 }

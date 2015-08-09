@@ -150,8 +150,53 @@ struct PBXObject : PBXMap {
 
 /* PBX classes */
 
+struct PBXAggregateTarget;
+struct PBXAppleScriptBuildPhase;
+struct PBXBuildFile;
+struct PBXBuildRule;
+struct PBXBuildStyle;
+struct PBXContainerItemProxy;
+struct PBXCopyFilesBuildPhase;
+struct PBXFileReference;
+struct PBXFrameworksBuildPhase;
+struct PBXGroup;
+struct PBXHeadersBuildPhase;
+struct PBXLegacyTarget;
+struct PBXNativeTarget;
 struct PBXProject;
+struct PBXReferenceProxy;
+struct PBXResourcesBuildPhase;
+struct PBXShellScriptBuildPhase;
+struct PBXSourcesBuildPhase;
+struct PBXTargetDependency;
+struct PBXVariantGroup;
+struct XCBuildConfiguration;
+struct XCConfigurationList;
+struct XCVersionGroup;
+
+typedef std::shared_ptr<PBXAggregateTarget> PBXAggregateTargetPtr;
+typedef std::shared_ptr<PBXAppleScriptBuildPhase> PBXAppleScriptBuildPhasePtr;
+typedef std::shared_ptr<PBXBuildFile> PBXBuildFilePtr;
+typedef std::shared_ptr<PBXBuildRule> PBXBuildRulePtr;
+typedef std::shared_ptr<PBXBuildStyle> PBXBuildStylePtr;
+typedef std::shared_ptr<PBXContainerItemProxy> PBXContainerItemProxyPtr;
+typedef std::shared_ptr<PBXCopyFilesBuildPhase> PBXCopyFilesBuildPhasePtr;
+typedef std::shared_ptr<PBXFileReference> PBXFileReferencePtr;
+typedef std::shared_ptr<PBXFrameworksBuildPhase> PBXFrameworksBuildPhasePtr;
+typedef std::shared_ptr<PBXGroup> PBXGroupPtr;
+typedef std::shared_ptr<PBXHeadersBuildPhase> PBXHeadersBuildPhasePtr;
+typedef std::shared_ptr<PBXLegacyTarget> PBXLegacyTargetPtr;
+typedef std::shared_ptr<PBXNativeTarget> PBXNativeTargetPtr;
 typedef std::shared_ptr<PBXProject> PBXProjectPtr;
+typedef std::shared_ptr<PBXReferenceProxy> PBXReferenceProxyPtr;
+typedef std::shared_ptr<PBXResourcesBuildPhase> PBXResourcesBuildPhasePtr;
+typedef std::shared_ptr<PBXShellScriptBuildPhase> PBXShellScriptBuildPhasePtr;
+typedef std::shared_ptr<PBXSourcesBuildPhase> PBXSourcesBuildPhasePtr;
+typedef std::shared_ptr<PBXTargetDependency> PBXTargetDependencyPtr;
+typedef std::shared_ptr<PBXVariantGroup> PBXVariantGroupPtr;
+typedef std::shared_ptr<XCBuildConfiguration> XCBuildConfigurationPtr;
+typedef std::shared_ptr<XCConfigurationList> XCConfigurationListPtr;
+typedef std::shared_ptr<XCVersionGroup> XCVersionGroupPtr;
 
 template <typename T> struct PBXObjectImpl : PBXObject {
 	std::string type_name() { return T::type_name; }
@@ -259,6 +304,13 @@ struct PBXGroup : PBXObjectImpl<PBXGroup> {
 
 struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 	static const std::string type_name;
+	
+	int buildActionMask;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
