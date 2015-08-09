@@ -197,7 +197,7 @@ std::vector<char> PBXUtil::read_file(std::string filename)
 
 /* PBX Map */
 
-void PBXMap::put(std::string key, std::string comment, PBXValuePtr &val)
+void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
 {
 	if (object_val.find(key) == object_val.end()) {
 		object_val[key] = val;
@@ -207,7 +207,7 @@ void PBXMap::put(std::string key, std::string comment, PBXValuePtr &val)
 	}
 }
 
-void PBXMap::replace(std::string key, PBXValuePtr &val) {
+void PBXMap::replace(std::string key, PBXValuePtr val) {
 	if (object_val.find(key) != object_val.end()) {
 		object_val[key] = val;
 	} else {
@@ -215,6 +215,17 @@ void PBXMap::replace(std::string key, PBXValuePtr &val) {
 	}
 }
 
+PBXId PBXMap::getId(std::string key)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		return PBXId();
+	} else if (i->second->type() == PBXTypeId) {
+		return static_cast<const PBXId&>(*i->second);
+	} else {
+		return PBXId();
+	}
+}
 
 std::string PBXMap::getString(std::string key, std::string default_str)
 {
@@ -228,13 +239,13 @@ std::string PBXMap::getString(std::string key, std::string default_str)
 	}
 }
 
-uint64_t PBXMap::getInteger(std::string key, uint64_t default_int)
+int PBXMap::getInteger(std::string key, int default_int)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
 		return default_int;
 	} else if (i->second->type() == PBXTypeLiteral) {
-		return strtoull(static_cast<const PBXLiteral&>(*i->second).literal_val.c_str(), nullptr, 10);
+		return (int)strtoul(static_cast<const PBXLiteral&>(*i->second).literal_val.c_str(), nullptr, 10);
 	} else {
 		log_fatal_exit("value is not a literal");
 		return 0;
@@ -254,40 +265,47 @@ bool PBXMap::getBoolean(std::string key, bool default_bool)
 	}
 }
 
-PBXArray* PBXMap::getArray(std::string key, bool default_create)
+PBXArrayPtr PBXMap::getArray(std::string key, bool default_create)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
 		if (default_create) {
-			PBXArray *arr = new PBXArray();
-			PBXValuePtr valptr(arr);
+			auto valptr = std::make_shared<PBXArray>();
 			put(key, "", valptr);
-			return arr;
+			return valptr;
 		}
 		return nullptr;
 	} else if (i->second->type() == PBXTypeArray) {
-		return static_cast<PBXArray*>(i->second.get());
+		return std::static_pointer_cast<PBXArray>(i->second);
 	} else {
 		return nullptr;
 	}
 }
 
-PBXMap* PBXMap::getMap(std::string key, bool default_create)
+PBXMapPtr PBXMap::getMap(std::string key, bool default_create)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
 		if (default_create) {
-			PBXMap *map = new PBXMap();
-			PBXValuePtr valptr(map);
+			auto valptr = std::make_shared<PBXMap>();
 			put(key, "", valptr);
-			return map;
+			return valptr;
 		}
 		return nullptr;
 	} else if (i->second->type() == PBXTypeMap) {
-		return static_cast<PBXMap*>(i->second.get());
+		return std::static_pointer_cast<PBXMap>(i->second);
 	} else {
 		return nullptr;
 	}
+}
+
+void PBXMap::setId(std::string key, PBXId id)
+{
+	auto i = object_val.find(key);
+	if (i == object_val.end()) {
+		key_order.push_back(PBXKey(key));
+	}
+	object_val[key] = PBXValuePtr(new PBXId(id.id_val, id.comment_val));
 }
 
 void PBXMap::setString(std::string key, std::string str_val)
@@ -299,7 +317,7 @@ void PBXMap::setString(std::string key, std::string str_val)
 	object_val[key] = PBXValuePtr(new PBXLiteral(str_val));
 }
 
-void PBXMap::setInteger(std::string key, uint64_t int_val)
+void PBXMap::setInteger(std::string key, int int_val)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
@@ -319,22 +337,22 @@ void PBXMap::setBoolean(std::string key, bool bool_val)
 	object_val[key] = PBXValuePtr(new PBXLiteral(bool_val ? "YES" : "NO"));
 }
 
-void PBXMap::setArray(std::string key, PBXArray* arr)
+void PBXMap::setArray(std::string key, PBXArrayPtr arr)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
 		key_order.push_back(PBXKey(key));
 	}
-	object_val[key] = PBXValuePtr(arr);
+	object_val[key] = arr;
 }
 
-void PBXMap::setMap(std::string key, PBXMap* map)
+void PBXMap::setMap(std::string key, PBXMapPtr map)
 {
 	auto i = object_val.find(key);
 	if (i == object_val.end()) {
 		key_order.push_back(PBXKey(key));
 	}
-	object_val[key] = PBXValuePtr(map);
+	object_val[key] = map;
 }
 
 
@@ -382,30 +400,206 @@ std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
 
 /* PBX classes */
 
-const std::string Xcodeproj::name =                     "Xcodeproj";
-const std::string PBXAggregateTarget::name =            "PBXAggregateTarget";
-const std::string PBXAppleScriptBuildPhase::name =      "PBXAppleScriptBuildPhase";
-const std::string PBXBuildFile::name =                  "PBXBuildFile";
-const std::string PBXBuildRule::name =                  "PBXBuildRule";
-const std::string PBXBuildStyle::name =                 "PBXBuildStyle";
-const std::string PBXContainerItemProxy::name =         "PBXContainerItemProxy";
-const std::string PBXCopyFilesBuildPhase::name =        "PBXCopyFilesBuildPhase";
-const std::string PBXFileReference::name =              "PBXFileReference";
-const std::string PBXFrameworksBuildPhase::name =       "PBXFrameworksBuildPhase";
-const std::string PBXGroup::name =                      "PBXGroup";
-const std::string PBXHeadersBuildPhase::name =          "PBXHeadersBuildPhase";
-const std::string PBXLegacyTarget::name =               "PBXLegacyTarget";
-const std::string PBXNativeTarget::name =               "PBXNativeTarget";
-const std::string PBXProject::name =                    "PBXProject";
-const std::string PBXReferenceProxy::name =             "PBXReferenceProxy";
-const std::string PBXResourcesBuildPhase::name =        "PBXResourcesBuildPhase";
-const std::string PBXShellScriptBuildPhase::name =      "PBXShellScriptBuildPhase";
-const std::string PBXSourcesBuildPhase::name =          "PBXSourcesBuildPhase";
-const std::string PBXTargetDependency::name =           "PBXTargetDependency";
-const std::string PBXVariantGroup::name =               "PBXVariantGroup";
-const std::string XCBuildConfiguration::name =          "XCBuildConfiguration";
-const std::string XCConfigurationList::name =           "XCConfigurationList";
-const std::string XCVersionGroup::name =                "XCVersionGroup";
+const std::string Xcodeproj::type_name =                     "Xcodeproj";
+const std::string PBXAggregateTarget::type_name =            "PBXAggregateTarget";
+const std::string PBXAppleScriptBuildPhase::type_name =      "PBXAppleScriptBuildPhase";
+const std::string PBXBuildFile::type_name =                  "PBXBuildFile";
+const std::string PBXBuildRule::type_name =                  "PBXBuildRule";
+const std::string PBXBuildStyle::type_name =                 "PBXBuildStyle";
+const std::string PBXContainerItemProxy::type_name =         "PBXContainerItemProxy";
+const std::string PBXCopyFilesBuildPhase::type_name =        "PBXCopyFilesBuildPhase";
+const std::string PBXFileReference::type_name =              "PBXFileReference";
+const std::string PBXFrameworksBuildPhase::type_name =       "PBXFrameworksBuildPhase";
+const std::string PBXGroup::type_name =                      "PBXGroup";
+const std::string PBXHeadersBuildPhase::type_name =          "PBXHeadersBuildPhase";
+const std::string PBXLegacyTarget::type_name =               "PBXLegacyTarget";
+const std::string PBXNativeTarget::type_name =               "PBXNativeTarget";
+const std::string PBXProject::type_name =                    "PBXProject";
+const std::string PBXReferenceProxy::type_name =             "PBXReferenceProxy";
+const std::string PBXResourcesBuildPhase::type_name =        "PBXResourcesBuildPhase";
+const std::string PBXShellScriptBuildPhase::type_name =      "PBXShellScriptBuildPhase";
+const std::string PBXSourcesBuildPhase::type_name =          "PBXSourcesBuildPhase";
+const std::string PBXTargetDependency::type_name =           "PBXTargetDependency";
+const std::string PBXVariantGroup::type_name =               "PBXVariantGroup";
+const std::string XCBuildConfiguration::type_name =          "XCBuildConfiguration";
+const std::string XCConfigurationList::type_name =           "XCConfigurationList";
+const std::string XCVersionGroup::type_name =                "XCVersionGroup";
+
+
+/* Xcodeproj */
+
+void Xcodeproj::sync_from_map()
+{
+	archiveVersion = getInteger("archiveVersion");
+	classes = getMap("classes");
+	objectVersion = getInteger("objectVersion");
+	objects = getMap("objects");
+	rootObject = getId("rootObject");
+}
+
+void Xcodeproj::sync_to_map()
+{
+	setInteger("archiveVersion", archiveVersion);
+	setMap("classes", classes);
+	setInteger("objectVersion", objectVersion);
+	setMap("objects", objects);
+	setId("rootObject", rootObject);
+}
+
+
+/* PBXBuildFile */
+
+void PBXBuildFile::sync_from_map()
+{
+	fileRef = getId("fileRef");
+}
+
+void PBXBuildFile::sync_to_map()
+{
+	setId("fileRef", fileRef);
+}
+
+
+/* PBXCopyFilesBuildPhase */
+
+void PBXCopyFilesBuildPhase::sync_from_map()
+{
+	buildActionMask = getInteger("buildActionMask");
+	dstPath = getString("dstPath");
+	dstSubfolderSpec = getInteger("dstSubfolderSpec");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXCopyFilesBuildPhase::sync_to_map()
+{
+	setInteger("buildActionMask", buildActionMask);	
+	if (dstPath.length() > 0) {
+		setString("dstPath", dstPath);
+	}
+	setInteger("dstSubfolderSpec", dstSubfolderSpec);
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
+/* PBXFileReference */
+
+void PBXFileReference::sync_from_map()
+{
+	explicitFileType = getString("explicitFileType");
+	lastKnownFileType = getString("lastKnownFileType");
+	includeInIndex = (bool)getInteger("includeInIndex", 1);
+	path = getString("path");
+	sourceTree = getString("sourceTree");
+}
+
+void PBXFileReference::sync_to_map()
+{
+	if (explicitFileType.length() > 0) {
+		setString("explicitFileType", explicitFileType);
+	}
+	if (lastKnownFileType.length() > 0) {
+		setString("lastKnownFileType", lastKnownFileType);
+	}
+	if (includeInIndex == 0) {
+		setInteger("includeInIndex", includeInIndex);
+	}
+	setString("path", path);
+	setString("sourceTree", sourceTree);
+}
+
+
+/* PBXFrameworksBuildPhase */
+
+
+void PBXFrameworksBuildPhase::sync_from_map()
+{
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXFrameworksBuildPhase::sync_to_map()
+{
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
+/* PBXGroup */
+
+
+void PBXGroup::sync_from_map()
+{
+	children = getArray("children");
+	name = getString("name");
+	path = getString("path");
+	sourceTree = getString("sourceTree");
+}
+
+void PBXGroup::sync_to_map()
+{
+	setArray("children", children);
+	if (name.length() > 0) {
+		setString("name", name);
+	}
+	if (path.length() > 0) {
+		setString("path", path);
+	}
+	setString("sourceTree", sourceTree);
+}
+
+
+/* PBXSourcesBuildPhase */
+
+
+void PBXSourcesBuildPhase::sync_from_map()
+{
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXSourcesBuildPhase::sync_to_map()
+{
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
+/* XCBuildConfiguration */
+
+void XCBuildConfiguration::sync_from_map()
+{
+	buildSettings = getArray("buildSettings");
+	name = getString("name");
+}
+
+void XCBuildConfiguration::sync_to_map()
+{
+	setArray("buildSettings", buildSettings);
+	setString("name", name);
+}
+
+
+/* XCConfigurationList */
+
+void XCConfigurationList::sync_from_map()
+{
+	buildConfigurations = getArray("buildConfigurations");
+	defaultConfigurationIsVisible = getInteger("defaultConfigurationIsVisible");
+	defaultConfigurationName = getString("defaultConfigurationName");
+}
+
+void XCConfigurationList::sync_to_map()
+{
+	setArray("buildConfigurations", buildConfigurations);
+	setInteger("defaultConfigurationIsVisible", defaultConfigurationIsVisible);
+	setString("defaultConfigurationName", defaultConfigurationName);
+}
 
 
 /* PBX project parser */

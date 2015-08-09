@@ -32,15 +32,15 @@ struct PBXUtil {
 
 /* PBX primitives */
 
+struct Xcodeproj;
 struct PBXValue;
 struct PBXObject;
-struct Xcodeproj;
 struct PBXMap;
 struct PBXArray;
 
+typedef std::shared_ptr<Xcodeproj> XcodeprojPtr;
 typedef std::shared_ptr<PBXValue> PBXValuePtr;
 typedef std::shared_ptr<PBXObject> PBXObjectPtr;
-typedef std::shared_ptr<Xcodeproj> XcodeprojPtr;
 typedef std::shared_ptr<PBXMap> PBXMapPtr;
 typedef std::shared_ptr<PBXArray> PBXArrayPtr;
 
@@ -104,20 +104,22 @@ struct PBXMap : PBXValue {
 		key_order.clear();
 	}
 
-	void put(std::string key, std::string comment, PBXValuePtr &val);
-	void replace(std::string key, PBXValuePtr &val);
+	void put(std::string key, std::string comment, PBXValuePtr val);
+	void replace(std::string key, PBXValuePtr val);
 
+	PBXId getId(std::string key);
 	std::string getString(std::string key, std::string default_str = "");
-	uint64_t getInteger(std::string key, uint64_t default_int = 0);
+	int getInteger(std::string key, int default_int = 0);
 	bool getBoolean(std::string key, bool default_bool = false);
-	PBXArray* getArray(std::string key, bool default_create = true);
-	PBXMap* getMap(std::string key, bool default_create = true);
+	PBXArrayPtr getArray(std::string key, bool default_create = true);
+	PBXMapPtr getMap(std::string key, bool default_create = true);
 
+	void setId(std::string key, PBXId id);
 	void setString(std::string key, std::string str_val);
-	void setInteger(std::string key, uint64_t int_val);
+	void setInteger(std::string key, int int_val);
 	void setBoolean(std::string key, bool bool_val);
-	void setArray(std::string key, PBXArray* arr);
-	void setMap(std::string key, PBXMap* map);
+	void setArray(std::string key, PBXArrayPtr arr);
+	void setMap(std::string key, PBXMapPtr map);
 };
 
 struct PBXArray : PBXValue {
@@ -160,104 +162,171 @@ struct PBXObject : PBXMap {
 /* PBX classes */
 
 template <typename T> struct PBXObjectImpl : PBXObject {
-	std::string class_name() { return T::name; }
+	std::string type_name() { return T::type_name; }
 };
 
 struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
-	static const std::string name;
+	static const std::string type_name;
 	virtual PBXType type() { return PBXTypeXcodeproj; }
+
+	int archiveVersion;
+	PBXMapPtr classes;
+	int objectVersion;
+	PBXMapPtr objects;
+	PBXId rootObject;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
-	static const std::string name;
+	static const std::string type_name;
+
+	PBXId fileRef;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
+
+	int buildActionMask;
+	std::string dstPath;
+	bool dstSubfolderSpec;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
-	static const std::string name;
+	static const std::string type_name;
+
+	std::string explicitFileType;
+	std::string lastKnownFileType;
+	bool includeInIndex;
+	std::string path;
+	std::string sourceTree;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
+
+	int buildActionMask;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXGroup : PBXObjectImpl<PBXGroup> {
-	static const std::string name;
+	static const std::string type_name;
+
+	PBXArrayPtr children;
+	std::string name;
+	std::string path;
+	std::string sourceTree;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXProject : PBXObjectImpl<PBXProject> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
-	static const std::string name;
+	static const std::string type_name;
+
+	int buildActionMask;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
-	static const std::string name;
+	static const std::string type_name;
+
+	PBXArrayPtr buildSettings;
+	std::string name;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
-	static const std::string name;
+	static const std::string type_name;
+
+	PBXArrayPtr buildConfigurations;
+	int defaultConfigurationIsVisible;
+	std::string defaultConfigurationName;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct XCVersionGroup : PBXObjectImpl<XCVersionGroup> {
-	static const std::string name;
+	static const std::string type_name;
 };
 
 
@@ -273,7 +342,7 @@ struct PBXObjectFactory {
 
 	template <typename T> static void registerFactory() {
 		factoryMap.insert(std::pair<std::string,PBXObjectFactoryPtr>
-			(T::name, PBXObjectFactoryPtr(new PBXObjectFactoryImpl<T>())));
+			(T::type_name, PBXObjectFactoryPtr(new PBXObjectFactoryImpl<T>())));
 	}
 
 	static void init();
