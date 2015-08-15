@@ -688,7 +688,7 @@ void XCConfigurationList::sync_to_map()
 }
 
 
-/* PBX project parser */
+/* PBX parser state machine */
 
 const std::string pbxproj_slash_bang = "// !$*UTF8*$!";
 

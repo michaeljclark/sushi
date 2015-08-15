@@ -1,5 +1,5 @@
-#ifndef pbxparser_h
-#define pbxparser_h
+#ifndef pbx_io_h
+#define pbx_io_h
 
 
 /* logging */
@@ -437,7 +437,7 @@ struct PBXObjectFactoryImpl : PBXObjectFactory {
 };
 
 
-/* PBX project parser */
+/* PBX parser state machine */
 
 enum PBXParseState {
 	PBXParseStateNone                       = 0,
