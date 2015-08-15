@@ -1,7 +1,12 @@
-all: pbx_io
+all: bin bin/pbx_io
+
+.phony: bin clean
 
 clean:
-	rm -f pbx_io
+	rm -rf bin
 
-pbx_io: pbx_io.cpp
+bin:
+	mkdir -p bin
+
+bin/pbx_io: pbx_io.cpp
 	c++ -O3 -Wall -Wpedantic -std=c++11 $< -o $@
