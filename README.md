@@ -1,3 +1,3 @@
-# pbx_parser
+# pbx_io
 
-Xcode project file parser
+Xcode project parser and object model

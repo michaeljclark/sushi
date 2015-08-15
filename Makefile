@@ -1,7 +1,7 @@
-all: pbx_parser
+all: pbx_io
 
 clean:
-	rm -f pbx_parser
+	rm -f pbx_io
 
-pbx_parser: pbx_parser.cpp
+pbx_io: pbx_io.cpp
 	c++ -O3 -Wall -Wpedantic -std=c++11 $< -o $@

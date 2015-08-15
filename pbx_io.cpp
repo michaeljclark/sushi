@@ -16,7 +16,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "pbx_parser.h"
+#include "pbx_io.h"
 
 
 /* logging */
@@ -187,7 +187,7 @@ std::vector<char> PBXUtil::read_file(std::string filename)
 	if (bytes_read < 0) {
 		log_fatal_exit("error read: %s: %s", filename.c_str(), strerror(errno));
 	} else if (bytes_read != stat_buf.st_size) {
-		log_fatal_exit("error short read: %s: %s", filename.c_str());
+		log_fatal_exit("error short read: %s", filename.c_str());
 	}
 	::close(fd);
 
