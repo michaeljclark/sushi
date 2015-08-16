@@ -485,11 +485,15 @@ void Xcodeproj::sync_to_map()
 
 void PBXBuildFile::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	fileRef = getId("fileRef");
 }
 
 void PBXBuildFile::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setId("fileRef", fileRef);
 }
 
@@ -498,6 +502,8 @@ void PBXBuildFile::sync_to_map()
 
 void PBXCopyFilesBuildPhase::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildActionMask = getInteger("buildActionMask");
 	dstPath = getString("dstPath");
 	dstSubfolderSpec = getInteger("dstSubfolderSpec");
@@ -507,6 +513,8 @@ void PBXCopyFilesBuildPhase::sync_from_map()
 
 void PBXCopyFilesBuildPhase::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setInteger("buildActionMask", buildActionMask);	
 	if (dstPath.length() > 0) {
 		setString("dstPath", dstPath);
@@ -521,6 +529,8 @@ void PBXCopyFilesBuildPhase::sync_to_map()
 
 void PBXFileReference::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	explicitFileType = getString("explicitFileType");
 	lastKnownFileType = getString("lastKnownFileType");
 	includeInIndex = (bool)getInteger("includeInIndex", 1);
@@ -530,6 +540,8 @@ void PBXFileReference::sync_from_map()
 
 void PBXFileReference::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	if (explicitFileType.length() > 0) {
 		setString("explicitFileType", explicitFileType);
 	}
@@ -548,6 +560,8 @@ void PBXFileReference::sync_to_map()
 
 void PBXFrameworksBuildPhase::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildActionMask = getInteger("buildActionMask");
 	files = getArray("files");
 	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
@@ -555,6 +569,8 @@ void PBXFrameworksBuildPhase::sync_from_map()
 
 void PBXFrameworksBuildPhase::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setInteger("buildActionMask", buildActionMask);	
 	setArray("files", files);
 	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
@@ -565,6 +581,8 @@ void PBXFrameworksBuildPhase::sync_to_map()
 
 void PBXHeadersBuildPhase::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildActionMask = getInteger("buildActionMask");
 	files = getArray("files");
 	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
@@ -572,6 +590,8 @@ void PBXHeadersBuildPhase::sync_from_map()
 
 void PBXHeadersBuildPhase::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setInteger("buildActionMask", buildActionMask);	
 	setArray("files", files);
 	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
@@ -582,6 +602,8 @@ void PBXHeadersBuildPhase::sync_to_map()
 
 void PBXGroup::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	children = getArray("children");
 	name = getString("name");
 	path = getString("path");
@@ -590,6 +612,8 @@ void PBXGroup::sync_from_map()
 
 void PBXGroup::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setArray("children", children);
 	if (name.length() > 0) {
 		setString("name", name);
@@ -605,6 +629,8 @@ void PBXGroup::sync_to_map()
 
 void PBXNativeTarget::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildConfigurationList = getId("buildConfigurationList");
 	buildPhases = getArray("buildPhases");
 	buildRules = getArray("buildRules");
@@ -617,6 +643,8 @@ void PBXNativeTarget::sync_from_map()
 
 void PBXNativeTarget::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setId("buildConfigurationList", buildConfigurationList);
 	setArray("buildPhases", buildPhases);
 	setArray("buildRules", buildRules);
@@ -631,6 +659,8 @@ void PBXNativeTarget::sync_to_map()
 
 void PBXProject::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	attributes = getMap("attributes");
 	buildConfigurationList = getId("buildConfigurationList");
 	compatibilityVersion = getString("compatibilityVersion");
@@ -646,6 +676,8 @@ void PBXProject::sync_from_map()
 
 void PBXProject::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setMap("attributes", attributes);
 	setId("buildConfigurationList", buildConfigurationList);
 	setString("compatibilityVersion", compatibilityVersion);
@@ -664,6 +696,8 @@ void PBXProject::sync_to_map()
 
 void PBXSourcesBuildPhase::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildActionMask = getInteger("buildActionMask");
 	files = getArray("files");
 	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
@@ -671,6 +705,8 @@ void PBXSourcesBuildPhase::sync_from_map()
 
 void PBXSourcesBuildPhase::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setInteger("buildActionMask", buildActionMask);	
 	setArray("files", files);
 	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
@@ -681,12 +717,16 @@ void PBXSourcesBuildPhase::sync_to_map()
 
 void XCBuildConfiguration::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildSettings = getMap("buildSettings");
 	name = getString("name");
 }
 
 void XCBuildConfiguration::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setMap("buildSettings", buildSettings);
 	setString("name", name);
 }
@@ -696,6 +736,8 @@ void XCBuildConfiguration::sync_to_map()
 
 void XCConfigurationList::sync_from_map()
 {
+	PBXObject::sync_from_map();
+
 	buildConfigurations = getArray("buildConfigurations");
 	defaultConfigurationIsVisible = getInteger("defaultConfigurationIsVisible");
 	defaultConfigurationName = getString("defaultConfigurationName");
@@ -703,6 +745,8 @@ void XCConfigurationList::sync_from_map()
 
 void XCConfigurationList::sync_to_map()
 {
+	PBXObject::sync_to_map();
+
 	setArray("buildConfigurations", buildConfigurations);
 	setInteger("defaultConfigurationIsVisible", defaultConfigurationIsVisible);
 	setString("defaultConfigurationName", defaultConfigurationName);

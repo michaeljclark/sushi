@@ -177,7 +177,9 @@ struct PBXObject : PBXMap {
 	virtual std::string type_name() { return std::string(); };
 
 	virtual void sync_from_map() {}
-	virtual void sync_to_map() {}
+	virtual void sync_to_map() {
+		setString("isa", type_name());
+	}
 
 	virtual std::string to_string() {
 		std::stringstream ss;
