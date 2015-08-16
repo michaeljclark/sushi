@@ -403,8 +403,10 @@ void PBXObjectFactory::init()
 		registerFactory<PBXShellScriptBuildPhase>();
 		registerFactory<PBXSourcesBuildPhase>();
 		registerFactory<PBXTargetDependency>();
+		registerFactory<PBXVariantGroup>();
 		registerFactory<XCBuildConfiguration>();
 		registerFactory<XCConfigurationList>();
+		registerFactory<XCVersionGroup>();
 	});
 }
 
@@ -495,6 +497,29 @@ void PBXBuildFile::sync_to_map()
 	PBXObject::sync_to_map();
 
 	setId("fileRef", fileRef);
+}
+
+
+/* PBXContainerItemProxy */
+
+void PBXContainerItemProxy::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	containerPortal = getId("containerPortal");
+	proxyType = getInteger("proxyType");
+	remoteGlobalIDString = getId("remoteGlobalIDString");
+	remoteInfo = getString("remoteInfo");
+}
+
+void PBXContainerItemProxy::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setId("containerPortal", containerPortal);
+	setInteger("proxyType", proxyType);
+	setId("remoteGlobalIDString", remoteGlobalIDString);
+	setString("remoteInfo", remoteInfo);
 }
 
 
@@ -749,7 +774,9 @@ void XCConfigurationList::sync_to_map()
 
 	setArray("buildConfigurations", buildConfigurations);
 	setInteger("defaultConfigurationIsVisible", defaultConfigurationIsVisible);
-	setString("defaultConfigurationName", defaultConfigurationName);
+	if (defaultConfigurationName.size() > 0) {
+		setString("defaultConfigurationName", defaultConfigurationName);
+	}
 }
 
 

@@ -294,6 +294,14 @@ struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
 
 struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
 	static const std::string type_name;
+
+	PBXId containerPortal;
+	int proxyType;
+	PBXId remoteGlobalIDString;
+	std::string remoteInfo;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
