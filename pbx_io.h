@@ -427,7 +427,7 @@ struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
 struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
 	static const std::string type_name;
 
-	PBXArrayPtr buildSettings;
+	PBXMapPtr buildSettings;
 	std::string name;
 
 	void sync_from_map();
@@ -558,7 +558,7 @@ struct PBXParserImpl : PBXParser {
 /* PBX writer */
 
 struct PBXWriter {
-	static void write(PBXValuePtr value, std::stringstream &ss, int indent);
+	static void write(PBXValuePtr value, std::ostream &out, int indent);
 };
 
 #endif

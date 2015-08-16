@@ -7,8 +7,9 @@
 #include <cerrno>
 #include <string>
 #include <sstream>
-#include <memory>
+#include <iostream>
 #include <algorithm>
+#include <memory>
 #include <vector>
 #include <map>
 #include <mutex>
@@ -680,13 +681,13 @@ void PBXSourcesBuildPhase::sync_to_map()
 
 void XCBuildConfiguration::sync_from_map()
 {
-	buildSettings = getArray("buildSettings");
+	buildSettings = getMap("buildSettings");
 	name = getString("name");
 }
 
 void XCBuildConfiguration::sync_to_map()
 {
-	setArray("buildSettings", buildSettings);
+	setMap("buildSettings", buildSettings);
 	setString("name", name);
 }
 
@@ -1164,60 +1165,60 @@ void PBXParserImpl::array_value_comment(std::string str) {
 
 /* PBX writer */
 
-void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
+void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
 	switch (value->type()) {
 		case PBXTypeXcodeproj:
-			ss << pbxproj_slash_bang << std::endl;
+			out << pbxproj_slash_bang << std::endl;
 		case PBXTypeObject:
-			// static_cast<PBXObject&>(*value).sync_to_map();
+			static_cast<PBXObject&>(*value).sync_to_map();
 		case PBXTypeMap:
 		{
-			ss << "{" << std::endl;
+			out << "{" << std::endl;
 			PBXMap &map = static_cast<PBXMap&>(*value);
 			for (const PBXKey &key : map.key_order) {
 				PBXValuePtr &val = map.object_val[key.key_val];
-				for (int i = 0; i <= indent; i++) ss << "\t";
-				ss << key.key_val;
+				for (int i = 0; i <= indent; i++) out << "\t";
+				out << key.key_val;
 				if (key.comment_val.length() > 0) {
-					ss << " /* " << key.comment_val << " */";
+					out << " /* " << key.comment_val << " */";
 				}
-				ss << " = ";
-				write(val, ss, indent + 1);
-				ss << ";" << std::endl;
+				out << " = ";
+				write(val, out, indent + 1);
+				out << ";" << std::endl;
 			}
-			for (int i = 0; i < indent; i++) ss << "\t";
-			ss << "}";
+			for (int i = 0; i < indent; i++) out << "\t";
+			out << "}";
 			break;
 		}
 		case PBXTypeArray:
 		{
-			ss << "(" << std::endl;
+			out << "(" << std::endl;
 			PBXArray &arr = static_cast<PBXArray&>(*value);
 			for (PBXValuePtr &val : arr.array_val) {
-				for (int i = 0; i <= indent; i++) ss << "\t";
-				write(val, ss, indent + 1);
-				ss << "," << std::endl;
+				for (int i = 0; i <= indent; i++) out << "\t";
+				write(val, out, indent + 1);
+				out << "," << std::endl;
 			}
-			for (int i = 0; i < indent; i++) ss << "\t";
-			ss << ")";
+			for (int i = 0; i < indent; i++) out << "\t";
+			out << ")";
 			break;
 		}
 		case PBXTypeLiteral:
 		{
 			PBXLiteral &lit = static_cast<PBXLiteral&>(*value);
 			if (PBXUtil::literal_requires_quotes(lit.literal_val)) {
-				ss << "\"" << PBXUtil::escape_quotes(lit.literal_val) << "\"";
+				out << "\"" << PBXUtil::escape_quotes(lit.literal_val) << "\"";
 			} else {
-				ss << lit.literal_val;
+				out << lit.literal_val;
 			}
 			break;
 		}
 		case PBXTypeId:
 		{
 			PBXId &id = static_cast<PBXId&>(*value);
-			ss << id.id_val();
+			out << id.id_val();
 			if (id.comment_val.length() > 0) {
-				ss << " /* " << id.comment_val << " */";
+				out << " /* " << id.comment_val << " */";
 			}
 			break;
 		}
@@ -1239,7 +1240,6 @@ int main(int argc, char **argv) {
 		log_fatal_exit("error parsing project: %d", error);
 	}
 
-	std::stringstream ss;
-	PBXWriter::write(pbx.xcodeproj, ss, 0);
-	printf("%s\n", ss.str().c_str());
+	PBXWriter::write(pbx.xcodeproj, std::cout, 0);
+	std::cout << std::endl;
 }
