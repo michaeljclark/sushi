@@ -882,7 +882,10 @@ void PBXNativeTarget::sync_to_map()
 PBXProject::PBXProject()
 {
 	attributes = std::make_shared<PBXMap>();
+	compatibilityVersion = "Xcode 3.2";
+	developmentRegion = "English";
 	knownRegions = std::make_shared<PBXArray>();
+	knownRegions->add(std::make_shared<PBXLiteral>("en"));
 	projectReferences = std::make_shared<PBXArray>();
 	targets = std::make_shared<PBXArray>();
 }
