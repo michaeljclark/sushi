@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstdint>
+#include <ctime>
 #include <cerrno>
 #include <string>
 #include <sstream>
@@ -145,9 +146,10 @@ void PBXUtil::generate_random(unsigned char *buf, size_t len)
 {
 	static std::default_random_engine generator;
 	static std::uniform_int_distribution<unsigned char> distribution(0, 255);
-    for (size_t i = 0; i < len; i++) {
+	generator.seed(time(NULL));
+	for (size_t i = 0; i < len; i++) {
 		buf[i] = distribution(generator);
-    }
+	}
 }
 
 bool PBXUtil::literal_requires_quotes(std::string str)
@@ -205,6 +207,10 @@ std::vector<char> PBXUtil::read_file(std::string filename)
 
 	return buf;
 }
+
+/* PBX Id */
+
+uint32_t PBXId::next_id = 0;
 
 
 /* PBX Map */
@@ -464,48 +470,50 @@ Xcodeproj::Xcodeproj()
 	objects = std::make_shared<PBXMap>();
 }
 
-void Xcodeproj::createEmptyProject(std::string projectName)
+void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
 	auto project = std::make_shared<PBXProject>();
-	project->object_id = PBXId::create_root_id();
+	project->object_id = PBXId::createRootId();
 	rootObject = project->object_id;
 	rootObject.comment_val = "Project Object";
 	objects->put(project->object_id.id_val(), rootObject.comment_val, project);
 
 	// Create Build Configuration List
 	auto configurationList = std::make_shared<XCConfigurationList>();
-	configurationList->object_id = PBXId::create_id(project->object_id);
+	configurationList->object_id = PBXId::createId(project->object_id);
 	configurationList->object_id.comment_val = "Build configuration list for PBXProject \"" + projectName + "\"";
 	objects->put(configurationList->object_id.id_val(), configurationList->object_id.comment_val, configurationList);
 	project->buildConfigurationList = configurationList->object_id;
 
 	// Create Debug Build Configuration
 	auto debugBuildConfiguration = std::make_shared<XCBuildConfiguration>();
-	debugBuildConfiguration->object_id = PBXId::create_id(project->object_id);
+	debugBuildConfiguration->object_id = PBXId::createId(project->object_id);
 	debugBuildConfiguration->name = "Debug";
 	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name;
+	debugBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
 	objects->put(debugBuildConfiguration->object_id.id_val(), debugBuildConfiguration->object_id.comment_val, debugBuildConfiguration);
 	configurationList->buildConfigurations->add(std::make_shared<PBXId>(debugBuildConfiguration->object_id));
 
 	// Create Release Build Configuration
 	auto releaseBuildConfiguration = std::make_shared<XCBuildConfiguration>();
-	releaseBuildConfiguration->object_id = PBXId::create_id(project->object_id);
+	releaseBuildConfiguration->object_id = PBXId::createId(project->object_id);
 	releaseBuildConfiguration->name = "Release";
 	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name;
+	releaseBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
 	objects->put(releaseBuildConfiguration->object_id.id_val(), releaseBuildConfiguration->object_id.comment_val, releaseBuildConfiguration);
 	configurationList->buildConfigurations->add(std::make_shared<PBXId>(releaseBuildConfiguration->object_id));
 
 	// Create main group
 	auto mainGroup = std::make_shared<PBXGroup>();
-	mainGroup->object_id = PBXId::create_id(project->object_id);
+	mainGroup->object_id = PBXId::createId(project->object_id);
 	mainGroup->sourceTree = "<group>";
 	objects->put(mainGroup->object_id.id_val(), mainGroup->object_id.comment_val, mainGroup);
 	project->mainGroup = mainGroup->object_id;
 
 	// Create products group
 	auto productsGroup = std::make_shared<PBXGroup>();
-	productsGroup->object_id = PBXId::create_id(project->object_id);
+	productsGroup->object_id = PBXId::createId(project->object_id);
 	productsGroup->sourceTree = "<group>";
 	productsGroup->name = "Products";
 	productsGroup->object_id.comment_val = productsGroup->name;

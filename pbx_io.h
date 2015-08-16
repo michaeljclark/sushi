@@ -76,6 +76,7 @@ union PBXIdUnion {
                 unsigned char id_local[4];
                 unsigned char id_project[8];
         } id_comp;
+        uint32_t id_obj;
 
         bool operator<(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == -1; }
         bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }
@@ -84,6 +85,8 @@ union PBXIdUnion {
 struct PBXId : PBXValue {
 	PBXIdUnion id;
 	std::string comment_val;
+
+	static uint32_t next_id;
 
 	PBXId() : id(), comment_val() {}
 
@@ -103,16 +106,17 @@ struct PBXId : PBXValue {
 		return PBXUtil::hex_encode(id.id_val, sizeof(id.id_val));
 	}
 
-	static PBXId create_root_id() {
+	static PBXId createRootId() {
 		PBXId newid;
-		PBXUtil::generate_random(newid.id.id_val, sizeof(newid.id.id_val));
+		newid.id.id_obj = next_id++;
+		PBXUtil::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
 		return newid;
 	}
 
-	static PBXId create_id(const PBXId &o) {
+	static PBXId createId(const PBXId &o) {
 		PBXId newid;
-		memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
-		PBXUtil::generate_random(newid.id.id_comp.id_local, sizeof(newid.id.id_comp.id_local));
+		newid.id.id_obj = next_id++;
+		memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));;
 		return newid;
 	}
 
@@ -255,7 +259,7 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	Xcodeproj();
 
-	void createEmptyProject(std::string projectName);
+	void createEmptyProject(std::string projectName, std::string sdkRoot);
 
 	void syncFromMap();
 	void syncToMap();
