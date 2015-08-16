@@ -509,6 +509,27 @@ void PBXAggregateTarget::sync_to_map()
 }
 
 
+/* PBXAppleScriptBuildPhase */
+
+void PBXAppleScriptBuildPhase::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXAppleScriptBuildPhase::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setInteger("buildActionMask", buildActionMask);
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
 /* PBXBuildFile */
 
 void PBXBuildFile::sync_from_map()
@@ -550,6 +571,25 @@ void PBXBuildRule::sync_to_map()
 	setInteger("isEditable", isEditable);
 	setArray("outputFiles", outputFiles);
 	setString("script", script);
+}
+
+
+/* PBXBuildStyle */
+
+void PBXBuildStyle::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildSettings = getMap("buildSettings");
+	name = getString("name");
+}
+
+void PBXBuildStyle::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setMap("buildSettings", buildSettings);
+	setString("name", name);
 }
 
 

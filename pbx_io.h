@@ -282,6 +282,13 @@ struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
 
 struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 	static const std::string type_name;
+
+	int buildActionMask;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
@@ -309,6 +316,12 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 
 struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
 	static const std::string type_name;
+
+	PBXMapPtr buildSettings;
+	std::string name;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
