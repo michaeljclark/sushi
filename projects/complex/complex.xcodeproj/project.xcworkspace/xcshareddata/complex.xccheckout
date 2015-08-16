@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>B0F65E58-8C05-4F6D-864F-859722C83254</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>complex</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</key>
 		<string>https://github.com/michaeljclark/pbx_io.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>projects/complex/complex.xcodeproj/project.xcworkspace</string>
+	<string>projects/complex/complex.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>5E25CA9D8D125B311106CEC279BE7DAB44E851E4</key>

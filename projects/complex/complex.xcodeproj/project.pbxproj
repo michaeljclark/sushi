@@ -29,6 +29,19 @@
 		657F6F6C1B802BDB000A571E /* frameworkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 657F6F6B1B802BDB000A571E /* frameworkTests.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		657F6FA21B803634000A571E /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.plist";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# builtin-copyPlist\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXContainerItemProxy section */
 		657F6F661B802BDB000A571E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -203,6 +216,7 @@
 				657F6F831B802DD5000A571E /* ShellScript */,
 			);
 			buildRules = (
+				657F6FA21B803634000A571E /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -608,6 +622,7 @@
 				657F6F541B802BA6000A571E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		657F6F6D1B802BDB000A571E /* Build configuration list for PBXNativeTarget "framework" */ = {
 			isa = XCConfigurationList;
@@ -616,6 +631,7 @@
 				657F6F6F1B802BDB000A571E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		657F6F701B802BDB000A571E /* Build configuration list for PBXNativeTarget "frameworkTests" */ = {
 			isa = XCConfigurationList;
@@ -624,6 +640,7 @@
 				657F6F721B802BDB000A571E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		657F6F741B802BF6000A571E /* Build configuration list for PBXLegacyTarget "external" */ = {
 			isa = XCConfigurationList;
@@ -632,6 +649,7 @@
 				657F6F761B802BF6000A571E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		657F6F781B802C65000A571E /* Build configuration list for PBXAggregateTarget "aggregate" */ = {
 			isa = XCConfigurationList;
@@ -640,6 +658,7 @@
 				657F6F7A1B802C65000A571E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
