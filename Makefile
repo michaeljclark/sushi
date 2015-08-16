@@ -9,4 +9,4 @@ bin:
 	mkdir -p bin
 
 bin/pbx_io: pbx_io.cpp
-	c++ -O3 -Wall -Wpedantic -std=c++11 $< -o $@
+	c++ -g -O3 -Wall -Wpedantic -std=c++11 $< -o $@
