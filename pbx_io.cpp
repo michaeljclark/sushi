@@ -1216,6 +1216,12 @@ PBXParseError PBXParser::parse(std::vector<char> &buf)
 						offset++;
 						stack.pop_back();
 					}
+				} else if (c == '{') {
+					begin_object();
+					saved_state = PBXParseStateObjectAttrName;
+					state = PBXParseStateEatWhitespace;
+					stack.push_back(PBXParseStateArrayValueComma);
+					offset++;
 				} else {
 					state = PBXParseStateArrayValueLiteral;
 				}
