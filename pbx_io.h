@@ -22,7 +22,8 @@ struct PBXUtil {
 	static std::string rtrim(std::string s);
 	static std::string trim(std::string s);
 	static std::string hex_encode(const unsigned char *buf, size_t len);
-	static void hex_decode(std::string hex, char *buf, size_t len);
+	static void hex_decode(std::string hex, unsigned char *buf, size_t len);
+	static std::string generate_hex_id();
 	static bool literal_requires_quotes(std::string str);
 	static std::string escape_quotes(std::string str);
 	static bool literal_is_hex_id(std::string str);
@@ -211,6 +212,8 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 	int objectVersion;
 	PBXMapPtr objects;
 	PBXId rootObject;
+
+	Xcodeproj();
 
 	void sync_from_map();
 	void sync_to_map();

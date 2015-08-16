@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <mutex>
+#include <random>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -123,19 +124,30 @@ std::string PBXUtil::hex_encode(const unsigned char *buf, size_t len)
 {
     std::string hex;
     for (size_t i = 0; i < len; i++) {
-        unsigned char b = buf[i];
+        char b = buf[i];
         hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
         hex.append(HEX_DIGITS + (b & 0x0F), 1);
     }
     return hex;
 }
 
-void PBXUtil::hex_decode(std::string hex, char *buf, size_t len)
+void PBXUtil::hex_decode(std::string hex, unsigned char *buf, size_t len)
 {
     for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
         const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
         *buf++ = (char)strtoul(tmp, NULL, 16);
     }
+}
+
+std::string PBXUtil::generate_hex_id()
+{
+	unsigned char buf[12];
+	std::default_random_engine generator;
+	std::uniform_int_distribution<unsigned char> distribution(0, 255);
+    for (size_t i = 0; i < 12; i++) {
+		buf[i] = distribution(generator);
+    }
+	return PBXUtil::hex_encode(buf, sizeof(buf));
 }
 
 bool PBXUtil::literal_requires_quotes(std::string str)
@@ -440,6 +452,15 @@ const std::string XCVersionGroup::type_name =                "XCVersionGroup";
 
 
 /* Xcodeproj */
+
+Xcodeproj::Xcodeproj()
+{
+	archiveVersion = 1;
+	classes = std::make_shared<PBXMap>();
+	objectVersion = 46;
+	objects = std::make_shared<PBXMap>();
+	rootObject = PBXId(PBXUtil::generate_hex_id());
+}
 
 void Xcodeproj::sync_from_map()
 {
