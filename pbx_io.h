@@ -295,6 +295,16 @@ struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
 
 struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 	static const std::string type_name;
+
+	std::string compilerSpec;
+	std::string filePatterns;
+	std::string fileType;
+	bool isEditable;
+	PBXArrayPtr outputFiles;
+	std::string script;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {

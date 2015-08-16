@@ -389,6 +389,7 @@ void PBXObjectFactory::init()
 		registerFactory<PBXAggregateTarget>();
 		registerFactory<PBXAppleScriptBuildPhase>();
 		registerFactory<PBXBuildFile>();
+		registerFactory<PBXBuildRule>();
 		registerFactory<PBXBuildStyle>();
 		registerFactory<PBXContainerItemProxy>();
 		registerFactory<PBXCopyFilesBuildPhase>();
@@ -522,6 +523,33 @@ void PBXBuildFile::sync_to_map()
 	PBXObject::sync_to_map();
 
 	setId("fileRef", fileRef);
+}
+
+
+/* PBXBuildRule */
+
+void PBXBuildRule::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	compilerSpec = getString("compilerSpec");
+	filePatterns = getString("filePatterns");
+	fileType = getString("fileType");
+	isEditable = getInteger("isEditable");
+	outputFiles = getArray("outputFiles");
+	script = getString("script");
+}
+
+void PBXBuildRule::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setString("compilerSpec", compilerSpec);
+	setString("filePatterns", filePatterns);
+	setString("fileType", fileType);
+	setInteger("isEditable", isEditable);
+	setArray("outputFiles", outputFiles);
+	setString("script", script);
 }
 
 
