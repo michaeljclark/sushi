@@ -486,6 +486,12 @@ void Xcodeproj::sync_to_map()
 
 /* PBXAggregateTarget */
 
+PBXAggregateTarget::PBXAggregateTarget()
+{
+	buildPhases = std::make_shared<PBXArray>();
+	dependencies = std::make_shared<PBXArray>();
+}
+
 void PBXAggregateTarget::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -511,6 +517,11 @@ void PBXAggregateTarget::sync_to_map()
 
 /* PBXAppleScriptBuildPhase */
 
+PBXAppleScriptBuildPhase::PBXAppleScriptBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
+
 void PBXAppleScriptBuildPhase::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -532,6 +543,11 @@ void PBXAppleScriptBuildPhase::sync_to_map()
 
 /* PBXBuildFile */
 
+PBXBuildFile::PBXBuildFile()
+{
+
+}
+
 void PBXBuildFile::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -548,6 +564,11 @@ void PBXBuildFile::sync_to_map()
 
 
 /* PBXBuildRule */
+
+PBXBuildRule::PBXBuildRule()
+{
+	outputFiles = std::make_shared<PBXArray>();
+}
 
 void PBXBuildRule::sync_from_map()
 {
@@ -576,6 +597,11 @@ void PBXBuildRule::sync_to_map()
 
 /* PBXBuildStyle */
 
+PBXBuildStyle::PBXBuildStyle()
+{
+	buildSettings = std::make_shared<PBXMap>();
+}
+
 void PBXBuildStyle::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -594,6 +620,11 @@ void PBXBuildStyle::sync_to_map()
 
 
 /* PBXContainerItemProxy */
+
+PBXContainerItemProxy::PBXContainerItemProxy()
+{
+
+}
 
 void PBXContainerItemProxy::sync_from_map()
 {
@@ -617,6 +648,11 @@ void PBXContainerItemProxy::sync_to_map()
 
 
 /* PBXCopyFilesBuildPhase */
+
+PBXCopyFilesBuildPhase::PBXCopyFilesBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
 
 void PBXCopyFilesBuildPhase::sync_from_map()
 {
@@ -645,13 +681,18 @@ void PBXCopyFilesBuildPhase::sync_to_map()
 
 /* PBXFileReference */
 
+PBXFileReference::PBXFileReference()
+{
+
+}
+
 void PBXFileReference::sync_from_map()
 {
 	PBXObject::sync_from_map();
 
 	explicitFileType = getString("explicitFileType");
 	lastKnownFileType = getString("lastKnownFileType");
-	includeInIndex = (bool)getInteger("includeInIndex", 1);
+	includeInIndex = getInteger("includeInIndex", 1);
 	path = getString("path");
 	sourceTree = getString("sourceTree");
 }
@@ -676,6 +717,11 @@ void PBXFileReference::sync_to_map()
 
 /* PBXFrameworksBuildPhase */
 
+PBXFrameworksBuildPhase::PBXFrameworksBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
+
 void PBXFrameworksBuildPhase::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -695,28 +741,12 @@ void PBXFrameworksBuildPhase::sync_to_map()
 }
 
 
-/* PBXHeadersBuildPhase */
-
-void PBXHeadersBuildPhase::sync_from_map()
-{
-	PBXObject::sync_from_map();
-
-	buildActionMask = getInteger("buildActionMask");
-	files = getArray("files");
-	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
-}
-
-void PBXHeadersBuildPhase::sync_to_map()
-{
-	PBXObject::sync_to_map();
-
-	setInteger("buildActionMask", buildActionMask);	
-	setArray("files", files);
-	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
-}
-
-
 /* PBXGroup */
+
+PBXGroup::PBXGroup()
+{
+	children = std::make_shared<PBXArray>();
+}
 
 void PBXGroup::sync_from_map()
 {
@@ -743,7 +773,39 @@ void PBXGroup::sync_to_map()
 }
 
 
+/* PBXHeadersBuildPhase */
+
+PBXHeadersBuildPhase::PBXHeadersBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
+
+void PBXHeadersBuildPhase::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXHeadersBuildPhase::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
 /* PBXLegacyTarget */
+
+PBXLegacyTarget::PBXLegacyTarget()
+{
+	buildPhases = std::make_shared<PBXArray>();
+	dependencies = std::make_shared<PBXArray>();
+}
 
 void PBXLegacyTarget::sync_from_map()
 {
@@ -776,6 +838,13 @@ void PBXLegacyTarget::sync_to_map()
 
 /* PBXNativeTarget */
 
+PBXNativeTarget::PBXNativeTarget()
+{
+	buildPhases = std::make_shared<PBXArray>();
+	buildRules = std::make_shared<PBXArray>();
+	dependencies = std::make_shared<PBXArray>();
+}
+
 void PBXNativeTarget::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -805,6 +874,13 @@ void PBXNativeTarget::sync_to_map()
 }
 
 /* PBXProject */
+
+PBXProject::PBXProject()
+{
+	attributes = std::make_shared<PBXMap>();
+	knownRegions = std::make_shared<PBXArray>();
+	projectReferences = std::make_shared<PBXArray>();
+}
 
 void PBXProject::sync_from_map()
 {
@@ -845,6 +921,11 @@ void PBXProject::sync_to_map()
 
 /* PBXReferenceProxy */
 
+PBXReferenceProxy::PBXReferenceProxy()
+{
+
+}
+
 void PBXReferenceProxy::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -868,6 +949,11 @@ void PBXReferenceProxy::sync_to_map()
 
 /* PBXResourcesBuildPhase */
 
+PBXResourcesBuildPhase::PBXResourcesBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
+
 void PBXResourcesBuildPhase::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -888,6 +974,13 @@ void PBXResourcesBuildPhase::sync_to_map()
 
 
 /* PBXShellScriptBuildPhase */
+
+PBXShellScriptBuildPhase::PBXShellScriptBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+	inputPaths = std::make_shared<PBXArray>();
+	outputPaths = std::make_shared<PBXArray>();
+}
 
 void PBXShellScriptBuildPhase::sync_from_map()
 {
@@ -918,6 +1011,11 @@ void PBXShellScriptBuildPhase::sync_to_map()
 
 /* PBXSourcesBuildPhase */
 
+PBXSourcesBuildPhase::PBXSourcesBuildPhase()
+{
+	files = std::make_shared<PBXArray>();
+}
+
 void PBXSourcesBuildPhase::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -939,6 +1037,11 @@ void PBXSourcesBuildPhase::sync_to_map()
 
 /* PBXTargetDependency */
 
+PBXTargetDependency::PBXTargetDependency()
+{
+
+}
+
 void PBXTargetDependency::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -957,6 +1060,11 @@ void PBXTargetDependency::sync_to_map()
 
 
 /* PBXVariantGroup */
+
+PBXVariantGroup::PBXVariantGroup()
+{
+	children = std::make_shared<PBXArray>();
+}
 
 void PBXVariantGroup::sync_from_map()
 {
@@ -985,6 +1093,11 @@ void PBXVariantGroup::sync_to_map()
 
 /* XCBuildConfiguration */
 
+XCBuildConfiguration::XCBuildConfiguration()
+{
+	buildSettings = std::make_shared<PBXMap>();
+}
+
 void XCBuildConfiguration::sync_from_map()
 {
 	PBXObject::sync_from_map();
@@ -1003,6 +1116,11 @@ void XCBuildConfiguration::sync_to_map()
 
 
 /* XCConfigurationList */
+
+XCConfigurationList::XCConfigurationList()
+{
+	buildConfigurations = std::make_shared<PBXArray>();
+}
 
 void XCConfigurationList::sync_from_map()
 {

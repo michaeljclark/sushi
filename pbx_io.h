@@ -276,6 +276,8 @@ struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
 	std::string name;
 	std::string productName;
 
+	PBXAggregateTarget();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -287,6 +289,8 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
 
+	PBXAppleScriptBuildPhase();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -295,6 +299,8 @@ struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
 	static const std::string type_name;
 
 	PBXId fileRef;
+
+	PBXBuildFile();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -310,6 +316,8 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 	PBXArrayPtr outputFiles;
 	std::string script;
 
+	PBXBuildRule();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -319,6 +327,8 @@ struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
 
 	PBXMapPtr buildSettings;
 	std::string name;
+
+	PBXBuildStyle();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -331,6 +341,8 @@ struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
 	int proxyType;
 	PBXId remoteGlobalIDString;
 	std::string remoteInfo;
+
+	PBXContainerItemProxy();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -345,6 +357,8 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
 
+	PBXCopyFilesBuildPhase();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -358,6 +372,8 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	std::string path;
 	std::string sourceTree;
 
+	PBXFileReference();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -368,6 +384,8 @@ struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
 	int buildActionMask;
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
+
+	PBXFrameworksBuildPhase();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -381,16 +399,20 @@ struct PBXGroup : PBXObjectImpl<PBXGroup> {
 	std::string path;
 	std::string sourceTree;
 
+	PBXGroup();
+
 	void sync_from_map();
 	void sync_to_map();
 };
 
 struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 	static const std::string type_name;
-	
+
 	int buildActionMask;
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
+
+	PBXHeadersBuildPhase();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -408,6 +430,8 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 	bool passBuildSettingsInEnvironment;
 	std::string productName;
 
+	PBXLegacyTarget();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -423,6 +447,8 @@ struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 	std::string productName;
 	PBXId productReference;
 	std::string productType;
+
+	PBXNativeTarget();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -444,6 +470,8 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 	std::string projectRoot;
 	PBXArrayPtr targets;
 
+	PBXProject();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -456,6 +484,8 @@ struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 	PBXId remoteRef;
 	std::string sourceTree;
 
+	PBXReferenceProxy();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -466,6 +496,8 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 	int buildActionMask;
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
+
+	PBXResourcesBuildPhase();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -482,6 +514,8 @@ struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
 	std::string shellPath;
 	std::string shellScript;
 
+	PBXShellScriptBuildPhase();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -493,6 +527,8 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
 	PBXArrayPtr files;
 	bool runOnlyForDeploymentPostprocessing;
 
+	PBXSourcesBuildPhase();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -502,6 +538,8 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 
 	PBXId target;
 	PBXId targetProxy;
+
+	PBXTargetDependency();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -515,6 +553,8 @@ struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
 	std::string path;
 	std::string sourceTree;
 
+	PBXVariantGroup();
+
 	void sync_from_map();
 	void sync_to_map();
 };
@@ -524,6 +564,8 @@ struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
 
 	PBXMapPtr buildSettings;
 	std::string name;
+
+	XCBuildConfiguration();
 
 	void sync_from_map();
 	void sync_to_map();
@@ -535,6 +577,8 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 	PBXArrayPtr buildConfigurations;
 	int defaultConfigurationIsVisible;
 	std::string defaultConfigurationName;
+
+	XCConfigurationList();
 
 	void sync_from_map();
 	void sync_to_map();
