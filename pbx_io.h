@@ -70,14 +70,38 @@ struct PBXValue {
 	virtual PBXType type() = 0;
 };
 
+union PBXIdUnion {
+        unsigned char id_val[12];
+        struct {
+                unsigned char id_local[4];
+                unsigned char id_project[8];
+        } id_comp;
+
+        bool operator<(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == -1; }
+        bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }
+};
+
 struct PBXId : PBXValue {
-	std::string id_val;
+	PBXIdUnion id;
 	std::string comment_val;
 
 	PBXId() {}
-	PBXId(std::string id_val) : id_val(id_val) {}
-	PBXId(std::string id_val, std::string comment_val) : id_val(id_val), comment_val(comment_val) {}
-	PBXId(const PBXId& o) : id_val(o.id_val), comment_val(o.comment_val) {}
+
+	PBXId(std::string id_val) : comment_val() {
+		PBXUtil::hex_decode(id_val, id.id_val, sizeof(id.id_val));
+	}
+
+	PBXId(std::string id_val, std::string comment_val) : comment_val(comment_val) {
+		PBXUtil::hex_decode(id_val, id.id_val, sizeof(id.id_val));
+	}
+
+	PBXId(const PBXId& o) : comment_val(o.comment_val) {
+		memcpy(id.id_val, o.id.id_val, sizeof(id.id_val));
+	}
+
+	std::string id_val() {
+		return PBXUtil::hex_encode(id.id_val, sizeof(id.id_val));
+	}
 
 	virtual PBXType type() { return PBXTypeId; }
 };
@@ -141,9 +165,10 @@ struct PBXObject : PBXMap {
 
 	virtual void sync_from_map() {}
 	virtual void sync_to_map() {}
+	
 	virtual std::string to_string() {
 		std::stringstream ss;
-		ss << type_name() << "-" << object_id.id_val;
+		ss << type_name() << "-" << object_id.id_val();
 		return ss.str();
 	}
 };

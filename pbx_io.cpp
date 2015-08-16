@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdarg>
+#include <cstdint>
 #include <cerrno>
 #include <string>
 #include <sstream>
@@ -313,7 +314,7 @@ PBXMapPtr PBXMap::getMap(std::string key, bool default_create)
 
 PBXObjectPtr PBXMap::getObject(PBXId id)
 {
-	auto i = object_val.find(id.id_val);
+	auto i = object_val.find(id.id_val());
 	if (i == object_val.end()) {
 		return PBXObjectPtr();
 	} else if (i->second->type() == PBXTypeObject) {
@@ -330,7 +331,7 @@ void PBXMap::setId(std::string key, PBXId id)
 	if (i == object_val.end()) {
 		key_order.push_back(PBXKey(key));
 	}
-	object_val[key] = PBXValuePtr(new PBXId(id.id_val, id.comment_val));
+	object_val[key] = PBXValuePtr(new PBXId(id.id_val(), id.comment_val));
 }
 
 void PBXMap::setString(std::string key, std::string str_val)
@@ -1231,7 +1232,7 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 		case PBXTypeId:
 		{
 			PBXId &id = static_cast<PBXId&>(*value);
-			ss << id.id_val;
+			ss << id.id_val();
 			if (id.comment_val.length() > 0) {
 				ss << " /* " << id.comment_val << " */";
 			}
