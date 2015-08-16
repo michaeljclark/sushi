@@ -154,7 +154,7 @@ struct PBXArray : PBXValue {
 
 	virtual PBXType type() { return PBXTypeArray; }
 
-	void add(PBXValuePtr &val) {
+	void add(PBXValuePtr val) {
 		array_val.push_back(val);
 	}
 };
