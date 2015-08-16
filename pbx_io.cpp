@@ -844,6 +844,25 @@ void PBXSourcesBuildPhase::sync_to_map()
 }
 
 
+/* PBXTargetDependency */
+
+void PBXTargetDependency::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	target = getId("target");
+	targetProxy = getId("targetProxy");
+}
+
+void PBXTargetDependency::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setId("target", target);
+	setId("targetProxy", targetProxy);
+}
+
+
 /* XCBuildConfiguration */
 
 void XCBuildConfiguration::sync_from_map()

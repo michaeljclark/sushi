@@ -467,6 +467,12 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
 
 struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 	static const std::string type_name;
+
+	PBXId target;
+	PBXId targetProxy;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
