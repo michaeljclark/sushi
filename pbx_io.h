@@ -441,6 +441,17 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 
 struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
 	static const std::string type_name;
+
+	int buildActionMask;
+	PBXArrayPtr files;
+	PBXArrayPtr inputPaths;
+	PBXArrayPtr outputPaths;
+	bool runOnlyForDeploymentPostprocessing;
+	std::string shellPath;
+	std::string shellScript;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {

@@ -794,6 +794,35 @@ void PBXResourcesBuildPhase::sync_to_map()
 }
 
 
+/* PBXShellScriptBuildPhase */
+
+void PBXShellScriptBuildPhase::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	inputPaths = getArray("inputPaths");
+	outputPaths = getArray("outputPaths");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+	shellPath = getString("shellPath");
+	shellScript = getString("shellScript");
+}
+
+void PBXShellScriptBuildPhase::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setArray("inputPaths", inputPaths);
+	setArray("outputPaths", outputPaths);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+	setString("shellPath", shellPath);
+	setString("shellScript", shellScript);
+}
+
+
 /* PBXSourcesBuildPhase */
 
 void PBXSourcesBuildPhase::sync_from_map()
