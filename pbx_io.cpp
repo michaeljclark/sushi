@@ -773,6 +773,27 @@ void PBXProject::sync_to_map()
 }
 
 
+/* PBXResourcesBuildPhase */
+
+void PBXResourcesBuildPhase::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildActionMask = getInteger("buildActionMask");
+	files = getArray("files");
+	runOnlyForDeploymentPostprocessing = getInteger("runOnlyForDeploymentPostprocessing");
+}
+
+void PBXResourcesBuildPhase::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setInteger("buildActionMask", buildActionMask);	
+	setArray("files", files);
+	setInteger("runOnlyForDeploymentPostprocessing", runOnlyForDeploymentPostprocessing);
+}
+
+
 /* PBXSourcesBuildPhase */
 
 void PBXSourcesBuildPhase::sync_from_map()

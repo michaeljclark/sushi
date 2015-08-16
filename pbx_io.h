@@ -430,6 +430,13 @@ struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 
 struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 	static const std::string type_name;
+
+	int buildActionMask;
+	PBXArrayPtr files;
+	bool runOnlyForDeploymentPostprocessing;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
