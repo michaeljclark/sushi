@@ -575,7 +575,7 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 	static const std::string type_name;
 
 	PBXArrayPtr buildConfigurations;
-	int defaultConfigurationIsVisible;
+	bool defaultConfigurationIsVisible;
 	std::string defaultConfigurationName;
 
 	XCConfigurationList();
