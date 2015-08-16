@@ -176,8 +176,8 @@ struct PBXObject : PBXMap {
 
 	virtual std::string type_name() { return std::string(); };
 
-	virtual void sync_from_map() {}
-	virtual void sync_to_map() {
+	virtual void syncFromMap() {}
+	virtual void syncToMap() {
 		setString("isa", type_name());
 	}
 
@@ -255,8 +255,10 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	Xcodeproj();
 
-	void sync_from_map();
-	void sync_to_map();
+	void createEmptyProject(std::string projectName);
+
+	void syncFromMap();
+	void syncToMap();
 
 	PBXProjectPtr getProject() {
 		return std::static_pointer_cast<PBXProject>(objects->getObject(rootObject));
@@ -278,8 +280,8 @@ struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
 
 	PBXAggregateTarget();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
@@ -291,8 +293,8 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 
 	PBXAppleScriptBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
@@ -302,8 +304,8 @@ struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
 
 	PBXBuildFile();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
@@ -318,8 +320,8 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 
 	PBXBuildRule();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
@@ -330,8 +332,8 @@ struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
 
 	PBXBuildStyle();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
@@ -344,8 +346,8 @@ struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
 
 	PBXContainerItemProxy();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
@@ -359,8 +361,8 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 
 	PBXCopyFilesBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
@@ -374,8 +376,8 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 
 	PBXFileReference();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
@@ -387,8 +389,8 @@ struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
 
 	PBXFrameworksBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXGroup : PBXObjectImpl<PBXGroup> {
@@ -401,8 +403,8 @@ struct PBXGroup : PBXObjectImpl<PBXGroup> {
 
 	PBXGroup();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
@@ -414,8 +416,8 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 
 	PBXHeadersBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
@@ -432,8 +434,8 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 
 	PBXLegacyTarget();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
@@ -450,8 +452,8 @@ struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 
 	PBXNativeTarget();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXProject : PBXObjectImpl<PBXProject> {
@@ -472,8 +474,8 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 
 	PBXProject();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
@@ -486,8 +488,8 @@ struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 
 	PBXReferenceProxy();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
@@ -499,8 +501,8 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 
 	PBXResourcesBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
@@ -516,8 +518,8 @@ struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
 
 	PBXShellScriptBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
@@ -529,8 +531,8 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
 
 	PBXSourcesBuildPhase();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
@@ -541,8 +543,8 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 
 	PBXTargetDependency();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
@@ -555,8 +557,8 @@ struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
 
 	PBXVariantGroup();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
@@ -567,8 +569,8 @@ struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
 
 	XCBuildConfiguration();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
@@ -580,8 +582,8 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 
 	XCConfigurationList();
 
-	void sync_from_map();
-	void sync_to_map();
+	void syncFromMap();
+	void syncToMap();
 };
 
 struct XCVersionGroup : PBXObjectImpl<XCVersionGroup> {
