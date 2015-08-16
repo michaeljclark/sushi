@@ -801,6 +801,29 @@ void PBXProject::sync_to_map()
 }
 
 
+/* PBXReferenceProxy */
+
+void PBXReferenceProxy::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	fileType = getString("fileType");
+	path = getString("path");
+	remoteRef = getId("remoteRef");
+	sourceTree = getString("sourceTree");
+}
+
+void PBXReferenceProxy::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setString("fileType", fileType);
+	setString("path", path);
+	setId("remoteRef", remoteRef);
+	setString("sourceTree", sourceTree);
+}
+
+
 /* PBXResourcesBuildPhase */
 
 void PBXResourcesBuildPhase::sync_from_map()

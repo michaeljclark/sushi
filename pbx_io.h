@@ -436,6 +436,14 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 
 struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 	static const std::string type_name;
+
+	std::string fileType;
+	std::string path;
+	PBXId remoteRef;
+	std::string sourceTree;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
