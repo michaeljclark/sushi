@@ -462,7 +462,11 @@ Xcodeproj::Xcodeproj()
 	classes = std::make_shared<PBXMap>();
 	objectVersion = 46;
 	objects = std::make_shared<PBXMap>();
-	rootObject = PBXId::create_root_id();
+	PBXProjectPtr project = std::make_shared<PBXProject>();
+	project->object_id = PBXId::create_root_id();
+	rootObject = project->object_id;
+	rootObject.comment_val = "Project Object";
+	objects->put(project->object_id.id_val(), rootObject.comment_val, project);
 }
 
 void Xcodeproj::sync_from_map()
@@ -880,6 +884,7 @@ PBXProject::PBXProject()
 	attributes = std::make_shared<PBXMap>();
 	knownRegions = std::make_shared<PBXArray>();
 	projectReferences = std::make_shared<PBXArray>();
+	targets = std::make_shared<PBXArray>();
 }
 
 void PBXProject::sync_from_map()
@@ -1668,21 +1673,3 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
 	}
 }
 
-
-/* main */
-
-int main(int argc, char **argv) {
-	if (argc != 2) {
-		fprintf(stderr, "usage: %s <xcodeproj>\n", argv[0]);
-		exit(1);
-	}
-	PBXParserImpl pbx;
-	std::vector<char> buf = PBXUtil::read_file(argv[1]);
-	PBXParseError error = pbx.parse(buf);
-	if (error != PBXParseErrorNone) {
-		log_fatal_exit("error parsing project: %d", error);
-	}
-
-	PBXWriter::write(pbx.xcodeproj, std::cout, 0);
-	std::cout << std::endl;
-}
