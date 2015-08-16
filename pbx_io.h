@@ -477,6 +477,14 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 
 struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
 	static const std::string type_name;
+
+	PBXArrayPtr children;
+	std::string name;
+	std::string path;
+	std::string sourceTree;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {

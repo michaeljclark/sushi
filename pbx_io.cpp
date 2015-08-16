@@ -863,6 +863,33 @@ void PBXTargetDependency::sync_to_map()
 }
 
 
+/* PBXVariantGroup */
+
+void PBXVariantGroup::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	children = getArray("children");
+	name = getString("name");
+	path = getString("path");
+	sourceTree = getString("sourceTree");
+}
+
+void PBXVariantGroup::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setArray("children", children);
+	if (name.length() > 0) {
+		setString("name", name);
+	}
+	if (path.length() > 0) {
+		setString("path", path);
+	}
+	setString("sourceTree", sourceTree);
+}
+
+
 /* XCBuildConfiguration */
 
 void XCBuildConfiguration::sync_from_map()
