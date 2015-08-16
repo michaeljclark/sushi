@@ -675,6 +675,37 @@ void PBXGroup::sync_to_map()
 }
 
 
+/* PBXLegacyTarget */
+
+void PBXLegacyTarget::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildArgumentsString = getString("buildArgumentsString");
+	buildConfigurationList = getId("buildConfigurationList");
+	buildPhases = getArray("buildPhases");
+	buildToolPath = getString("buildToolPath");
+	dependencies = getArray("dependencies");
+	name = getString("name");
+	passBuildSettingsInEnvironment = getInteger("passBuildSettingsInEnvironment");
+	productName = getString("productName");
+}
+
+void PBXLegacyTarget::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setString("buildArgumentsString", buildArgumentsString);
+	setId("buildConfigurationList", buildConfigurationList);
+	setArray("buildPhases", buildPhases);
+	setString("buildToolPath", buildToolPath);
+	setArray("dependencies", dependencies);
+	setString("name", name);
+	setInteger("passBuildSettingsInEnvironment", passBuildSettingsInEnvironment);
+	setString("productName", productName);
+}
+
+
 /* PBXNativeTarget */
 
 void PBXNativeTarget::sync_from_map()

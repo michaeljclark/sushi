@@ -375,6 +375,18 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 
 struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 	static const std::string type_name;
+
+	std::string buildArgumentsString;
+	PBXId buildConfigurationList;
+	PBXArrayPtr buildPhases;
+	std::string buildToolPath;
+	PBXArrayPtr dependencies;
+	std::string name;
+	bool passBuildSettingsInEnvironment;
+	std::string productName;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
