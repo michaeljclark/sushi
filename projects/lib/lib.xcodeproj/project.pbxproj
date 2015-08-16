@@ -6,7 +6,14 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		657F6F1C1B800AE7000A571E /* lib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657F6F1A1B800AE7000A571E /* lib.cpp */; };
+		657F6F1D1B800AE7000A571E /* lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 657F6F1B1B800AE7000A571E /* lib.h */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		657F6F1A1B800AE7000A571E /* lib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lib.cpp; path = lib/lib.cpp; sourceTree = "<group>"; };
+		657F6F1B1B800AE7000A571E /* lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lib.h; path = lib/lib.h; sourceTree = "<group>"; };
 		658DE2E71B76D36600AE8F55 /* liblib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -21,9 +28,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		657F6F191B800AC6000A571E /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				657F6F1A1B800AE7000A571E /* lib.cpp */,
+				657F6F1B1B800AE7000A571E /* lib.h */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
 		658DE2DE1B76D36600AE8F55 = {
 			isa = PBXGroup;
 			children = (
+				657F6F191B800AC6000A571E /* lib */,
 				658DE2E81B76D36600AE8F55 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +60,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				657F6F1D1B800AE7000A571E /* lib.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +120,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				657F6F1C1B800AE7000A571E /* lib.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +239,7 @@
 				658DE2ED1B76D36600AE8F55 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
