@@ -1081,6 +1081,9 @@ void PBXParserImpl::object_value_literal(std::string str) {
 		valptr = PBXValuePtr(PBXObjectFactory::create(str, id, old_map));
 		parent_map.replace(last_key.key_val, valptr);
 		value_stack.push_back(valptr);
+
+		// add isa
+		static_cast<PBXMap&>(*value_stack.back()).put(current_attr_name, current_attr_comment, PBXValuePtr(new PBXLiteral(str)));
 	}
 	else if (value_stack.back()->type() == PBXTypeXcodeproj ||
 			 value_stack.back()->type() == PBXTypeMap ||
