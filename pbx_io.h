@@ -23,7 +23,7 @@ struct PBXUtil {
 	static std::string trim(std::string s);
 	static std::string hex_encode(const unsigned char *buf, size_t len);
 	static void hex_decode(std::string hex, unsigned char *buf, size_t len);
-	static std::string generate_hex_id();
+	static void generate_random(unsigned char *buf, size_t len);
 	static bool literal_requires_quotes(std::string str);
 	static std::string escape_quotes(std::string str);
 	static bool literal_is_hex_id(std::string str);
@@ -85,7 +85,7 @@ struct PBXId : PBXValue {
 	PBXIdUnion id;
 	std::string comment_val;
 
-	PBXId() {}
+	PBXId() : id(), comment_val() {}
 
 	PBXId(std::string id_val) : comment_val() {
 		PBXUtil::hex_decode(id_val, id.id_val, sizeof(id.id_val));
@@ -101,6 +101,19 @@ struct PBXId : PBXValue {
 
 	std::string id_val() {
 		return PBXUtil::hex_encode(id.id_val, sizeof(id.id_val));
+	}
+
+	static PBXId create_root_id() {
+		PBXId newid;
+		PBXUtil::generate_random(newid.id.id_val, sizeof(newid.id.id_val));
+		return newid;
+	}
+
+	static PBXId create_id(const PBXId &o) {
+		PBXId newid;
+		memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
+		PBXUtil::generate_random(newid.id.id_comp.id_local, sizeof(newid.id.id_comp.id_local));
+		return newid;
 	}
 
 	virtual PBXType type() { return PBXTypeId; }
@@ -165,7 +178,7 @@ struct PBXObject : PBXMap {
 
 	virtual void sync_from_map() {}
 	virtual void sync_to_map() {}
-	
+
 	virtual std::string to_string() {
 		std::stringstream ss;
 		ss << type_name() << "-" << object_id.id_val();

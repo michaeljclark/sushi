@@ -140,15 +140,13 @@ void PBXUtil::hex_decode(std::string hex, unsigned char *buf, size_t len)
     }
 }
 
-std::string PBXUtil::generate_hex_id()
+void PBXUtil::generate_random(unsigned char *buf, size_t len)
 {
-	unsigned char buf[12];
 	std::default_random_engine generator;
 	std::uniform_int_distribution<unsigned char> distribution(0, 255);
-    for (size_t i = 0; i < 12; i++) {
+    for (size_t i = 0; i < len; i++) {
 		buf[i] = distribution(generator);
     }
-	return PBXUtil::hex_encode(buf, sizeof(buf));
 }
 
 bool PBXUtil::literal_requires_quotes(std::string str)
@@ -460,7 +458,7 @@ Xcodeproj::Xcodeproj()
 	classes = std::make_shared<PBXMap>();
 	objectVersion = 46;
 	objects = std::make_shared<PBXMap>();
-	rootObject = PBXId(PBXUtil::generate_hex_id());
+	rootObject = PBXId::create_root_id();
 }
 
 void Xcodeproj::sync_from_map()
@@ -1169,25 +1167,10 @@ void PBXParserImpl::array_value_comment(std::string str) {
 void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 	switch (value->type()) {
 		case PBXTypeXcodeproj:
-		{
 			ss << pbxproj_slash_bang << std::endl;
-			ss << "{" << std::endl;
-			PBXMap &map = static_cast<PBXMap&>(*value);
-			for (const PBXKey &key : map.key_order) {
-				PBXValuePtr &val = map.object_val[key.key_val];
-				ss << "\t" << key.key_val;
-				if (key.comment_val.length() > 0) {
-					ss << " /* " << key.comment_val << " */";
-				}
-				ss << " = ";
-				write(val, ss, indent + 1);
-				ss << ";" << std::endl;
-			}
-			ss << "}" << std::endl;
-			break;
-		}
-		case PBXTypeMap:
 		case PBXTypeObject:
+			// static_cast<PBXObject&>(*value).sync_to_map();
+		case PBXTypeMap:
 		{
 			ss << "{" << std::endl;
 			PBXMap &map = static_cast<PBXMap&>(*value);
@@ -1241,12 +1224,6 @@ void PBXWriter::write(PBXValuePtr value, std::stringstream &ss, int indent) {
 	}
 }
 
-void print_project_summary(XcodeprojPtr xcodeproj)
-{
-	auto project = xcodeproj->getProject();
-	log_debug("project: %s", project->to_string().c_str());
-	PBXGroupPtr mainGroup = xcodeproj->getObject<PBXGroup>(project->mainGroup);
-}
 
 /* main */
 
@@ -1264,6 +1241,5 @@ int main(int argc, char **argv) {
 
 	std::stringstream ss;
 	PBXWriter::write(pbx.xcodeproj, ss, 0);
-	printf("%s", ss.str().c_str());
-	print_project_summary(pbx.xcodeproj);
+	printf("%s\n", ss.str().c_str());
 }
