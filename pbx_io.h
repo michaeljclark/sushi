@@ -440,6 +440,7 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 	PBXId mainGroup;
 	PBXId productRefGroup;
 	std::string projectDirPath;
+	PBXArrayPtr projectReferences;
 	std::string projectRoot;
 	PBXArrayPtr targets;
 

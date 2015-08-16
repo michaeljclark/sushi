@@ -818,6 +818,7 @@ void PBXProject::sync_from_map()
 	knownRegions = getArray("knownRegions");
 	mainGroup = getId("mainGroup");
 	productRefGroup = getId("productRefGroup");
+	projectReferences = getArray("projectReferences");
 	projectDirPath = getString("projectDirPath");
 	projectRoot = getString("projectRoot");
 	targets = getArray("targets");
@@ -836,6 +837,7 @@ void PBXProject::sync_to_map()
 	setId("mainGroup", mainGroup);
 	setId("productRefGroup", productRefGroup);
 	setString("projectDirPath", projectDirPath);
+	setArray("projectReferences", projectReferences);
 	setString("projectRoot", projectRoot);
 	setArray("targets", targets);
 }
