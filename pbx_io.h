@@ -269,6 +269,15 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
 	static const std::string type_name;
+
+	PBXId buildConfigurationList;
+	PBXArrayPtr buildPhases;
+	PBXArrayPtr dependencies;
+	std::string name;
+	std::string productName;
+
+	void sync_from_map();
+	void sync_to_map();
 };
 
 struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {

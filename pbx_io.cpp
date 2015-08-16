@@ -483,6 +483,31 @@ void Xcodeproj::sync_to_map()
 }
 
 
+/* PBXAggregateTarget */
+
+void PBXAggregateTarget::sync_from_map()
+{
+	PBXObject::sync_from_map();
+
+	buildConfigurationList = getId("buildConfigurationList");
+	buildPhases = getArray("buildPhases");
+	dependencies = getArray("dependencies");
+	name = getString("name");
+	productName = getString("productName");
+}
+
+void PBXAggregateTarget::sync_to_map()
+{
+	PBXObject::sync_to_map();
+
+	setId("buildConfigurationList", buildConfigurationList);
+	setArray("buildPhases", buildPhases);
+	setArray("dependencies", dependencies);
+	setString("name", name);
+	setString("productName", productName);
+}
+
+
 /* PBXBuildFile */
 
 void PBXBuildFile::sync_from_map()
