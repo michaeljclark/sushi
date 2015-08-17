@@ -55,14 +55,14 @@ enum PBXType {
 };
 
 struct PBXKey {
-	std::string key_val;
-	std::string comment_val;
+	std::string str;
+	std::string comment;
 
-	PBXKey(const std::string &key_val) : key_val(key_val) {}
-	PBXKey(const std::string &key_val, const std::string &comment_val) : key_val(key_val), comment_val(comment_val) {}
+	PBXKey(const std::string &str) : str(str) {}
+	PBXKey(const std::string &str, const std::string &comment) : str(str), comment(comment) {}
 
-	bool operator<(const PBXKey &o) const { return key_val < o.key_val; }
-	bool operator==(const PBXKey &o) const { return key_val == o.key_val; }
+	bool operator<(const PBXKey &o) const { return str < o.str; }
+	bool operator==(const PBXKey &o) const { return str == o.str; }
 };
 
 struct PBXValue {
@@ -84,25 +84,25 @@ union PBXIdUnion {
 
 struct PBXId : PBXValue {
 	PBXIdUnion id;
-	std::string comment_val;
+	std::string comment;
 
 	static uint32_t next_id;
 
-	PBXId() : id(), comment_val() {}
+	PBXId() : id(), comment() {}
 
-	PBXId(std::string id_val) : comment_val() {
-		PBXUtil::hex_decode(id_val, id.id_val, sizeof(id.id_val));
+	PBXId(std::string id_str) : comment() {
+		PBXUtil::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 	}
 
-	PBXId(std::string id_val, std::string comment_val) : comment_val(comment_val) {
-		PBXUtil::hex_decode(id_val, id.id_val, sizeof(id.id_val));
+	PBXId(std::string id_str, std::string comment) : comment(comment) {
+		PBXUtil::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 	}
 
-	PBXId(const PBXId& o) : comment_val(o.comment_val) {
+	PBXId(const PBXId& o) : comment(o.comment) {
 		memcpy(id.id_val, o.id.id_val, sizeof(id.id_val));
 	}
 
-	std::string id_val() {
+	std::string str() {
 		return PBXUtil::hex_encode(id.id_val, sizeof(id.id_val));
 	}
 
@@ -172,7 +172,7 @@ struct PBXLiteral : PBXValue {
 };
 
 struct PBXObject : PBXMap {
-	PBXId object_id;
+	PBXId id;
 
 	virtual ~PBXObject() {}
 
@@ -187,7 +187,7 @@ struct PBXObject : PBXMap {
 
 	virtual std::string to_string() {
 		std::stringstream ss;
-		ss << type_name() << "-" << object_id.id_val();
+		ss << type_name() << "-" << id.str();
 		return ss.str();
 	}
 };
@@ -611,7 +611,7 @@ struct PBXObjectFactory {
 	}
 
 	static void init();
-	static PBXObject* create(std::string class_name, const PBXId &object_id, const PBXMap &map);
+	static PBXObject* create(std::string class_name, const PBXId &id, const PBXMap &map);
 
 	virtual ~PBXObjectFactory() {}
 	virtual PBXObject* create() = 0;

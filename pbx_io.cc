@@ -220,7 +220,7 @@ void PBXArray::add(PBXValuePtr val) {
 }
 
 void PBXArray::addIdRef(PBXObjectPtr obj) {
-	array_val.push_back(std::make_shared<PBXId>(obj->object_id));
+	array_val.push_back(std::make_shared<PBXId>(obj->id));
 }
 
 
@@ -238,7 +238,7 @@ void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
 
 void PBXMap::putObject(PBXObjectPtr obj)
 {
-	put(obj->object_id.id_val(), obj->object_id.comment_val, obj);
+	put(obj->id.str(), obj->id.comment, obj);
 }
 
 void PBXMap::replace(std::string key, PBXValuePtr val) {
@@ -335,7 +335,7 @@ PBXMapPtr PBXMap::getMap(std::string key, bool default_create)
 
 PBXObjectPtr PBXMap::getObject(PBXId id)
 {
-	auto i = object_val.find(id.id_val());
+	auto i = object_val.find(id.str());
 	if (i == object_val.end()) {
 		return PBXObjectPtr();
 	} else if (i->second->type() == PBXTypeObject) {
@@ -352,7 +352,7 @@ void PBXMap::setId(std::string key, PBXId id)
 	if (i == object_val.end()) {
 		key_order.push_back(PBXKey(key));
 	}
-	object_val[key] = PBXValuePtr(new PBXId(id.id_val(), id.comment_val));
+	object_val[key] = PBXValuePtr(new PBXId(id.str(), id.comment));
 }
 
 void PBXMap::setString(std::string key, std::string str_val)
@@ -433,12 +433,12 @@ void PBXObjectFactory::init()
 	});
 }
 
-PBXObject* PBXObjectFactory::create(std::string class_name, const PBXId &object_id, const PBXMap &map)
+PBXObject* PBXObjectFactory::create(std::string class_name, const PBXId &id, const PBXMap &map)
 {
 	init();
 	auto it = factoryMap.find(class_name);
 	PBXObject *ptr = it != factoryMap.end() ? it->second->create() : new PBXObject();
-	ptr->object_id = object_id;
+	ptr->id = id;
 	ptr->object_val = map.object_val;
 	ptr->key_order = map.key_order;
 	return ptr;
@@ -490,49 +490,49 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
 	auto project = std::make_shared<PBXProject>();
-	project->object_id = PBXId::createRootId();
-	rootObject = project->object_id;
-	rootObject.comment_val = "Project Object";
+	project->id = PBXId::createRootId();
+	rootObject = project->id;
+	rootObject.comment = "Project Object";
 	objects->putObject(project);
 
 	// Create Build Configuration List
 	auto configurationList = std::make_shared<XCConfigurationList>();
-	configurationList->object_id = PBXId::createId(project->object_id);
-	configurationList->object_id.comment_val = "Build configuration list for PBXProject \"" + projectName + "\"";
+	configurationList->id = PBXId::createId(project->id);
+	configurationList->id.comment = "Build configuration list for PBXProject \"" + projectName + "\"";
 	objects->putObject(configurationList);
-	project->buildConfigurationList = configurationList->object_id;
+	project->buildConfigurationList = configurationList->id;
 
 	// Create Debug Build Configuration
-	auto debugBuildConfiguration = std::make_shared<XCBuildConfiguration>();
-	debugBuildConfiguration->object_id = PBXId::createId(project->object_id);
-	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name = "Debug";
-	debugBuildConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
-	objects->putObject(debugBuildConfiguration);
-	configurationList->buildConfigurations->addIdRef(debugBuildConfiguration);
+	auto debugConfiguration = std::make_shared<XCBuildConfiguration>();
+	debugConfiguration->id = PBXId::createId(project->id);
+	debugConfiguration->id.comment = debugConfiguration->name = "Debug";
+	debugConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
+	objects->putObject(debugConfiguration);
+	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
-	auto releaseBuildConfiguration = std::make_shared<XCBuildConfiguration>();
-	releaseBuildConfiguration->object_id = PBXId::createId(project->object_id);
-	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name = "Release";
-	releaseBuildConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
-	objects->putObject(releaseBuildConfiguration);
-	configurationList->buildConfigurations->addIdRef(releaseBuildConfiguration);
+	auto releaseConfiguration = std::make_shared<XCBuildConfiguration>();
+	releaseConfiguration->id = PBXId::createId(project->id);
+	releaseConfiguration->id.comment = releaseConfiguration->name = "Release";
+	releaseConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
+	objects->putObject(releaseConfiguration);
+	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group
 	auto mainGroup = std::make_shared<PBXGroup>();
-	mainGroup->object_id = PBXId::createId(project->object_id);
+	mainGroup->id = PBXId::createId(project->id);
 	mainGroup->sourceTree = "<group>";
 	objects->putObject(mainGroup);
-	project->mainGroup = mainGroup->object_id;
+	project->mainGroup = mainGroup->id;
 
 	// Create products group
 	auto productsGroup = std::make_shared<PBXGroup>();
-	productsGroup->object_id = PBXId::createId(project->object_id);
+	productsGroup->id = PBXId::createId(project->id);
 	productsGroup->sourceTree = "<group>";
-	productsGroup->object_id.comment_val = productsGroup->name = "Products";
+	productsGroup->id.comment = productsGroup->name = "Products";
 	objects->putObject(productsGroup);
 	mainGroup->children->addIdRef(productsGroup);
-	project->productRefGroup = productsGroup->object_id;
+	project->productRefGroup = productsGroup->id;
 }
 
 void Xcodeproj::syncFromMap()
@@ -1592,9 +1592,9 @@ void PBXParserImpl::object_value_literal(std::string str) {
 		const PBXMap &old_map = static_cast<const PBXMap&>(*old_map_ptr);
 		PBXMap &parent_map = static_cast<PBXMap&>(*value_stack.back());
 		PBXKey &last_key = parent_map.key_order.back();
-		PBXId id(last_key.key_val, last_key.comment_val);
+		PBXId id(last_key.str, last_key.comment);
 		valptr = PBXValuePtr(PBXObjectFactory::create(str, id, old_map));
-		parent_map.replace(last_key.key_val, valptr);
+		parent_map.replace(last_key.str, valptr);
 		value_stack.push_back(valptr);
 
 		// add isa
@@ -1621,7 +1621,7 @@ void PBXParserImpl::object_value_comment(std::string str) {
 		log_debug("object_value_comment: \"%s\"", str.c_str());
 	}
 	if (valptr->type() == PBXTypeId) {
-		static_cast<PBXId&>(*valptr).comment_val = str;
+		static_cast<PBXId&>(*valptr).comment = str;
 	}
 }
 
@@ -1676,7 +1676,7 @@ void PBXParserImpl::array_value_comment(std::string str) {
 		log_debug("array_value_comment: \"%s\"", str.c_str());
 	}
 	if (valptr->type() == PBXTypeId) {
-		static_cast<PBXId&>(*valptr).comment_val = str;
+		static_cast<PBXId&>(*valptr).comment = str;
 	}
 }
 
@@ -1694,11 +1694,11 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
 			out << "{" << std::endl;
 			PBXMap &map = static_cast<PBXMap&>(*value);
 			for (const PBXKey &key : map.key_order) {
-				PBXValuePtr &val = map.object_val[key.key_val];
+				PBXValuePtr &val = map.object_val[key.str];
 				for (int i = 0; i <= indent; i++) out << "\t";
-				out << key.key_val;
-				if (key.comment_val.length() > 0) {
-					out << " /* " << key.comment_val << " */";
+				out << key.str;
+				if (key.comment.length() > 0) {
+					out << " /* " << key.comment << " */";
 				}
 				out << " = ";
 				write(val, out, indent + 1);
@@ -1734,9 +1734,9 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
 		case PBXTypeId:
 		{
 			PBXId &id = static_cast<PBXId&>(*value);
-			out << id.id_val();
-			if (id.comment_val.length() > 0) {
-				out << " /* " << id.comment_val << " */";
+			out << id.str();
+			if (id.comment.length() > 0) {
+				out << " /* " << id.comment << " */";
 			}
 			break;
 		}
