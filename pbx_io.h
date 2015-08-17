@@ -135,6 +135,7 @@ struct PBXMap : PBXValue {
 	}
 
 	void put(std::string key, std::string comment, PBXValuePtr val);
+	void putObject(PBXObjectPtr obj);
 	void replace(std::string key, PBXValuePtr val);
 
 	PBXId getId(std::string key);
@@ -158,9 +159,8 @@ struct PBXArray : PBXValue {
 
 	virtual PBXType type() { return PBXTypeArray; }
 
-	void add(PBXValuePtr val) {
-		array_val.push_back(val);
-	}
+	void add(PBXValuePtr val);
+	void addIdRef(PBXObjectPtr obj);
 };
 
 struct PBXLiteral : PBXValue {

@@ -213,6 +213,17 @@ std::vector<char> PBXUtil::read_file(std::string filename)
 uint32_t PBXId::next_id = 0;
 
 
+/* PBX Array */
+
+void PBXArray::add(PBXValuePtr val) {
+	array_val.push_back(val);
+}
+
+void PBXArray::addIdRef(PBXObjectPtr obj) {
+	array_val.push_back(std::make_shared<PBXId>(obj->object_id));
+}
+
+
 /* PBX Map */
 
 void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
@@ -223,6 +234,10 @@ void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
 	} else {
 		log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
 	}
+}
+void PBXMap::putObject(PBXObjectPtr obj)
+{
+	put(obj->object_id.id_val(), obj->object_id.comment_val, obj);
 }
 
 void PBXMap::replace(std::string key, PBXValuePtr val) {
@@ -477,13 +492,13 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	project->object_id = PBXId::createRootId();
 	rootObject = project->object_id;
 	rootObject.comment_val = "Project Object";
-	objects->put(project->object_id.id_val(), rootObject.comment_val, project);
+	objects->putObject(project);
 
 	// Create Build Configuration List
 	auto configurationList = std::make_shared<XCConfigurationList>();
 	configurationList->object_id = PBXId::createId(project->object_id);
 	configurationList->object_id.comment_val = "Build configuration list for PBXProject \"" + projectName + "\"";
-	objects->put(configurationList->object_id.id_val(), configurationList->object_id.comment_val, configurationList);
+	objects->putObject(configurationList);
 	project->buildConfigurationList = configurationList->object_id;
 
 	// Create Debug Build Configuration
@@ -492,8 +507,8 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	debugBuildConfiguration->name = "Debug";
 	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name;
 	debugBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
-	objects->put(debugBuildConfiguration->object_id.id_val(), debugBuildConfiguration->object_id.comment_val, debugBuildConfiguration);
-	configurationList->buildConfigurations->add(std::make_shared<PBXId>(debugBuildConfiguration->object_id));
+	objects->putObject(debugBuildConfiguration);
+	configurationList->buildConfigurations->addIdRef(debugBuildConfiguration);
 
 	// Create Release Build Configuration
 	auto releaseBuildConfiguration = std::make_shared<XCBuildConfiguration>();
@@ -501,14 +516,14 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	releaseBuildConfiguration->name = "Release";
 	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name;
 	releaseBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
-	objects->put(releaseBuildConfiguration->object_id.id_val(), releaseBuildConfiguration->object_id.comment_val, releaseBuildConfiguration);
-	configurationList->buildConfigurations->add(std::make_shared<PBXId>(releaseBuildConfiguration->object_id));
+	objects->putObject(releaseBuildConfiguration);
+	configurationList->buildConfigurations->addIdRef(releaseBuildConfiguration);
 
 	// Create main group
 	auto mainGroup = std::make_shared<PBXGroup>();
 	mainGroup->object_id = PBXId::createId(project->object_id);
 	mainGroup->sourceTree = "<group>";
-	objects->put(mainGroup->object_id.id_val(), mainGroup->object_id.comment_val, mainGroup);
+	objects->putObject(mainGroup);
 	project->mainGroup = mainGroup->object_id;
 
 	// Create products group
@@ -517,9 +532,9 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	productsGroup->sourceTree = "<group>";
 	productsGroup->name = "Products";
 	productsGroup->object_id.comment_val = productsGroup->name;
-	objects->put(productsGroup->object_id.id_val(), productsGroup->object_id.comment_val, productsGroup);
+	objects->putObject(productsGroup);
+	mainGroup->children->addIdRef(productsGroup);
 	project->productRefGroup = productsGroup->object_id;
-	mainGroup->children->add(std::make_shared<PBXId>(productsGroup->object_id));
 }
 
 void Xcodeproj::syncFromMap()
