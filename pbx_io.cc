@@ -504,8 +504,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	// Create Debug Build Configuration
 	auto debugBuildConfiguration = std::make_shared<XCBuildConfiguration>();
 	debugBuildConfiguration->object_id = PBXId::createId(project->object_id);
-	debugBuildConfiguration->name = "Debug";
-	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name;
+	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name = "Debug";
 	debugBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
 	objects->putObject(debugBuildConfiguration);
 	configurationList->buildConfigurations->addIdRef(debugBuildConfiguration);
@@ -513,8 +512,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	// Create Release Build Configuration
 	auto releaseBuildConfiguration = std::make_shared<XCBuildConfiguration>();
 	releaseBuildConfiguration->object_id = PBXId::createId(project->object_id);
-	releaseBuildConfiguration->name = "Release";
-	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name;
+	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name = "Release";
 	releaseBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
 	objects->putObject(releaseBuildConfiguration);
 	configurationList->buildConfigurations->addIdRef(releaseBuildConfiguration);
@@ -530,8 +528,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	auto productsGroup = std::make_shared<PBXGroup>();
 	productsGroup->object_id = PBXId::createId(project->object_id);
 	productsGroup->sourceTree = "<group>";
-	productsGroup->name = "Products";
-	productsGroup->object_id.comment_val = productsGroup->name;
+	productsGroup->object_id.comment_val = productsGroup->name = "Products";
 	objects->putObject(productsGroup);
 	mainGroup->children->addIdRef(productsGroup);
 	project->productRefGroup = productsGroup->object_id;
