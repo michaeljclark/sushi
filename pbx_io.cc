@@ -235,6 +235,7 @@ void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
 		log_fatal_exit("duplicate key \"%s\" in object", key.c_str());
 	}
 }
+
 void PBXMap::putObject(PBXObjectPtr obj)
 {
 	put(obj->object_id.id_val(), obj->object_id.comment_val, obj);
@@ -505,7 +506,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	auto debugBuildConfiguration = std::make_shared<XCBuildConfiguration>();
 	debugBuildConfiguration->object_id = PBXId::createId(project->object_id);
 	debugBuildConfiguration->object_id.comment_val = debugBuildConfiguration->name = "Debug";
-	debugBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
+	debugBuildConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
 	objects->putObject(debugBuildConfiguration);
 	configurationList->buildConfigurations->addIdRef(debugBuildConfiguration);
 
@@ -513,7 +514,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	auto releaseBuildConfiguration = std::make_shared<XCBuildConfiguration>();
 	releaseBuildConfiguration->object_id = PBXId::createId(project->object_id);
 	releaseBuildConfiguration->object_id.comment_val = releaseBuildConfiguration->name = "Release";
-	releaseBuildConfiguration->buildSettings->put("SDKROOT", "", std::make_shared<PBXLiteral>(sdkRoot));
+	releaseBuildConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
 	objects->putObject(releaseBuildConfiguration);
 	configurationList->buildConfigurations->addIdRef(releaseBuildConfiguration);
 
