@@ -751,6 +751,18 @@ void PBXCopyFilesBuildPhase::syncToMap()
 
 /* PBXFileReference */
 
+// ".mm",          "sourcecode.cpp.objcpp"
+// ".cc", ".cpp"   "sourcecode.cpp.cpp"
+// ".m",           "sourcecode.c.objc"
+// ".h",           "sourcecode.c.h"
+// ".c",           "sourcecode.c.c"
+// ".plist",       "text.plist.xml"
+// ".a",           "archive.ar"
+// ".app",         "wrapper.application"
+// ".bundle",      "wrapper.cfbundle"
+// ".framework",   "wrapper.framework"
+// "",             "compiled.mach-o.executable"
+
 PBXFileReference::PBXFileReference()
 {
 
@@ -907,6 +919,13 @@ void PBXLegacyTarget::syncToMap()
 
 
 /* PBXNativeTarget */
+
+const std::string PBXNativeTarget::ProductTypeApplication    = "com.apple.product-type.application";
+const std::string PBXNativeTarget::ProductTypeBundle         = "com.apple.product-type.bundle";
+const std::string PBXNativeTarget::ProductTypeFramework      = "com.apple.product-type.framework";
+const std::string PBXNativeTarget::ProductTypeLibraryDynamic = "com.apple.product-type.library.dynamic";
+const std::string PBXNativeTarget::ProductTypeLibraryStatic  = "com.apple.product-type.library.static";
+const std::string PBXNativeTarget::ProductTypeTool           = "com.apple.product-type.tool";
 
 PBXNativeTarget::PBXNativeTarget()
 {

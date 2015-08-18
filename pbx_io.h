@@ -445,6 +445,13 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 	static const std::string type_name;
 
+	static const std::string ProductTypeApplication;
+	static const std::string ProductTypeBundle;
+	static const std::string ProductTypeFramework;
+	static const std::string ProductTypeLibraryStatic;
+	static const std::string ProductTypeLibraryDynamic;
+	static const std::string ProductTypeTool;
+
 	PBXId buildConfigurationList;
 	PBXArrayPtr buildPhases;
 	PBXArrayPtr buildRules;
