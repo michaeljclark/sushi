@@ -317,7 +317,7 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 
 	std::string compilerSpec;
 	std::string filePatterns;
-	std::string fileType;
+	std::string type;
 	bool isEditable;
 	PBXArrayPtr outputFiles;
 	std::string script;
@@ -372,8 +372,40 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static const std::string type_name;
 
-	std::string explicitFileType;
-	std::string lastKnownFileType;
+	static const std::string ext_c_source;
+	static const std::string ext_c_header;
+	static const std::string ext_objc_source;
+	static const std::string ext_objcpp_source;
+	static const std::string ext_cpp_source_1;
+	static const std::string ext_cpp_source_2;
+	static const std::string ext_cpp_header_1;
+	static const std::string ext_cpp_header_2;
+	static const std::string ext_plist;
+	static const std::string ext_lib_archive;
+	static const std::string ext_application;
+	static const std::string ext_bundle;
+	static const std::string ext_framework;
+
+	static const std::string type_c_source;
+	static const std::string type_c_header;
+	static const std::string type_objc_source;
+	static const std::string type_objccpp_source;
+	static const std::string type_cpp_source;
+	static const std::string type_cpp_header;
+	static const std::string type_plist;
+	static const std::string type_lib_archive;
+	static const std::string type_application;
+	static const std::string type_bundle;
+	static const std::string type_framework;
+	static const std::string type_executable;
+
+	static std::once_flag extTypeMapInit;
+	static std::map<std::string,std::string> extTypeMap;
+
+	static std::string getType(std::string ext);
+
+	std::string explicittype;
+	std::string lastKnowntype;
 	bool includeInIndex;
 	std::string path;
 	std::string sourceTree;
@@ -492,7 +524,7 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 	static const std::string type_name;
 
-	std::string fileType;
+	std::string type;
 	std::string path;
 	PBXId remoteRef;
 	std::string sourceTree;

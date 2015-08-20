@@ -646,7 +646,7 @@ void PBXBuildRule::syncFromMap()
 
 	compilerSpec = getString("compilerSpec");
 	filePatterns = getString("filePatterns");
-	fileType = getString("fileType");
+	type = getString("type");
 	isEditable = getInteger("isEditable");
 	outputFiles = getArray("outputFiles");
 	script = getString("script");
@@ -658,7 +658,7 @@ void PBXBuildRule::syncToMap()
 
 	setString("compilerSpec", compilerSpec);
 	setString("filePatterns", filePatterns);
-	setString("fileType", fileType);
+	setString("type", type);
 	setInteger("isEditable", isEditable);
 	setArray("outputFiles", outputFiles);
 	setString("script", script);
@@ -751,17 +751,60 @@ void PBXCopyFilesBuildPhase::syncToMap()
 
 /* PBXFileReference */
 
-// ".mm",          "sourcecode.cpp.objcpp"
-// ".cc", ".cpp"   "sourcecode.cpp.cpp"
-// ".m",           "sourcecode.c.objc"
-// ".h",           "sourcecode.c.h"
-// ".c",           "sourcecode.c.c"
-// ".plist",       "text.plist.xml"
-// ".a",           "archive.ar"
-// ".app",         "wrapper.application"
-// ".bundle",      "wrapper.cfbundle"
-// ".framework",   "wrapper.framework"
-// "",             "compiled.mach-o.executable"
+const std::string PBXFileReference::ext_c_source        = ".c";
+const std::string PBXFileReference::ext_c_header        = ".h";
+const std::string PBXFileReference::ext_objc_source     = ".m";
+const std::string PBXFileReference::ext_objcpp_source   = ".mm";
+const std::string PBXFileReference::ext_cpp_source_1    = ".cc";
+const std::string PBXFileReference::ext_cpp_source_2    = ".cpp";
+const std::string PBXFileReference::ext_cpp_header_1    = ".hh";
+const std::string PBXFileReference::ext_cpp_header_2    = ".hpp";
+const std::string PBXFileReference::ext_plist           = ".plist";
+const std::string PBXFileReference::ext_lib_archive     = ".a";
+const std::string PBXFileReference::ext_application     = ".app";
+const std::string PBXFileReference::ext_bundle          = ".bundle";
+const std::string PBXFileReference::ext_framework       = ".framework"; 
+
+const std::string PBXFileReference::type_c_source       = "sourcecode.c.c";
+const std::string PBXFileReference::type_c_header       = "sourcecode.c.h";
+const std::string PBXFileReference::type_objc_source    = "sourcecode.c.objc";
+const std::string PBXFileReference::type_objccpp_source = "sourcecode.cpp.objcpp";
+const std::string PBXFileReference::type_cpp_source     = "sourcecode.cpp.cpp";
+const std::string PBXFileReference::type_cpp_header     = "sourcecode.cpp.h";
+const std::string PBXFileReference::type_plist          = "text.plist.xml";
+const std::string PBXFileReference::type_lib_archive    = "archive.ar";
+const std::string PBXFileReference::type_application    = "wrapper.application";
+const std::string PBXFileReference::type_bundle         = "wrapper.cfbundle";
+const std::string PBXFileReference::type_framework      = "wrapper.framework";
+const std::string PBXFileReference::type_executable     = "compiled.mach-o.executable";
+
+std::once_flag PBXFileReference::extTypeMapInit;
+std::map<std::string,std::string> PBXFileReference::extTypeMap;
+
+std::string PBXFileReference::getType(std::string ext)
+{
+	std::call_once(extTypeMapInit, [](){
+		extTypeMap[ext_c_source] = type_c_source;
+		extTypeMap[ext_c_header] = type_c_header;
+		extTypeMap[ext_objc_source] = type_objc_source;
+		extTypeMap[ext_objcpp_source] = type_objccpp_source;
+		extTypeMap[ext_cpp_source_1] = type_cpp_source;
+		extTypeMap[ext_cpp_source_2] = type_cpp_source;
+		extTypeMap[ext_cpp_header_1] = type_cpp_header;
+		extTypeMap[ext_cpp_header_2] = type_cpp_header;
+		extTypeMap[ext_plist] = type_plist;
+		extTypeMap[ext_lib_archive] = type_lib_archive;
+		extTypeMap[ext_application] = type_application;
+		extTypeMap[ext_bundle] = type_bundle;
+		extTypeMap[ext_framework] = type_framework;
+	});
+	auto it = extTypeMap.find(ext);
+	if (it != extTypeMap.end()) {
+		return it->second;
+	} else {
+		return std::string();
+	}
+}
 
 PBXFileReference::PBXFileReference()
 {
@@ -772,8 +815,8 @@ void PBXFileReference::syncFromMap()
 {
 	PBXObject::syncFromMap();
 
-	explicitFileType = getString("explicitFileType");
-	lastKnownFileType = getString("lastKnownFileType");
+	explicittype = getString("explicittype");
+	lastKnowntype = getString("lastKnowntype");
 	includeInIndex = getInteger("includeInIndex", 1);
 	path = getString("path");
 	sourceTree = getString("sourceTree");
@@ -783,11 +826,11 @@ void PBXFileReference::syncToMap()
 {
 	PBXObject::syncToMap();
 
-	if (explicitFileType.length() > 0) {
-		setString("explicitFileType", explicitFileType);
+	if (explicittype.length() > 0) {
+		setString("explicittype", explicittype);
 	}
-	if (lastKnownFileType.length() > 0) {
-		setString("lastKnownFileType", lastKnownFileType);
+	if (lastKnowntype.length() > 0) {
+		setString("lastKnowntype", lastKnowntype);
 	}
 	if (includeInIndex == 0) {
 		setInteger("includeInIndex", includeInIndex);
@@ -1023,7 +1066,7 @@ void PBXReferenceProxy::syncFromMap()
 {
 	PBXObject::syncFromMap();
 
-	fileType = getString("fileType");
+	type = getString("type");
 	path = getString("path");
 	remoteRef = getId("remoteRef");
 	sourceTree = getString("sourceTree");
@@ -1033,7 +1076,7 @@ void PBXReferenceProxy::syncToMap()
 {
 	PBXObject::syncToMap();
 
-	setString("fileType", fileType);
+	setString("type", type);
 	setString("path", path);
 	setId("remoteRef", remoteRef);
 	setString("sourceTree", sourceTree);
