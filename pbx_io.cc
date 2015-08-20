@@ -535,6 +535,12 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	project->productRefGroup = productsGroup->id;
 }
 
+void Xcodeproj::createNativeTarget(std::string targetName, std::string targetProduct,
+                            std::string targetProductType, std::vector<std::string> targetSource)
+{
+	
+}
+
 void Xcodeproj::syncFromMap()
 {
 	archiveVersion = getInteger("archiveVersion");

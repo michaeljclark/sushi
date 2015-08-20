@@ -260,6 +260,8 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 	Xcodeproj();
 
 	void createEmptyProject(std::string projectName, std::string sdkRoot);
+	void createNativeTarget(std::string targetName, std::string targetProduct,
+                            std::string targetProductType, std::vector<std::string> targetSource);
 
 	void syncFromMap();
 	void syncToMap();
