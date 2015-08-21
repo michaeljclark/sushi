@@ -380,6 +380,23 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 	void syncToMap();
 };
 
+enum FileTypeFlag {
+	FileTypeFlag_None           = 0x0000,
+	FileTypeFlag_Compiler       = 0x0001,
+	FileTypeFlag_Assembler      = 0x0002,
+	FileTypeFlag_Header         = 0x0004,
+	FileTypeFlag_LinkLibrary    = 0x0008,
+	FileTypeFlag_LinkFramework  = 0x0010,
+	FileTypeFlag_Resource       = 0x0020,
+	FileTypeFlag_Application    = 0x0040
+};
+
+struct FileTypeMetaData {
+	std::vector<std::string> extensions;
+	std::string type;
+	uint64_t flags;
+};
+
 struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static const std::string type_name;
 
@@ -411,11 +428,12 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static const std::string type_executable;
 
 	static std::once_flag extTypeMapInit;
-	static std::map<std::string,std::string> extTypeMap;
+	static std::map<std::string,FileTypeMetaData*> extTypeMap;
+	static FileTypeMetaData typeMetaData[];
 
 	static std::string getExtensionFromPath(std::string path);
-	static std::string getTypeForPath(std::string path);
-	static std::string getTypeForExtension(std::string ext);
+	static FileTypeMetaData* getFileMetaForPath(std::string path);
+	static FileTypeMetaData* getFileMetaForExtension(std::string ext);
 
 	std::string explicitFileType;
 	std::string lastKnownFileType;
