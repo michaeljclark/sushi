@@ -576,7 +576,6 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	// Create PBXFileReference for target source
 	for (auto sourceFile : source) {
 		FileTypeMetaData *meta = PBXFileReference::getFileMetaForPath(sourceFile);
-		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
 
 		auto sourceFileRef = createObject<PBXFileReference>(sourceFile);
 		sourceFileRef->lastKnownFileType = meta->type;
@@ -584,6 +583,8 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 		sourceFileRef->path = sourceFile;
 		sourceFileRef->sourceTree = "<group>";
 		sourceGroup->children->addIdRef(sourceFileRef);
+
+		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
 
 		auto sourceBuildFileRef = createObject<PBXBuildFile>(std::string(sourceFile) + " in Sources");
 		sourceBuildFileRef->fileRef = sourceFileRef->id;
