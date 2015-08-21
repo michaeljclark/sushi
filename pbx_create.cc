@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	xcodeproj->createNativeTarget("simple", "simple",
 		                          PBXFileReference::type_executable,
 		                          PBXNativeTarget::ProductTypeTool,
-		                          "simple", std::vector<std::string>{ "main.cpp" });
+		                          "simple", { "main.cpp" });
 	PBXWriter::write(xcodeproj, std::cout, 0);
 	std::cout << std::endl;
 }
