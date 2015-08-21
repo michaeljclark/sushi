@@ -25,7 +25,7 @@
 
 int main(int argc, char **argv) {
 	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
-	xcodeproj->createEmptyProject("test", "macosx");
+	xcodeproj->createEmptyProject("simple", "macosx");
 	xcodeproj->createNativeTarget("simple", "simple",
 		                          PBXFileReference::type_executable,
 		                          PBXNativeTarget::ProductTypeTool,
