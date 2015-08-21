@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	xcodeproj->createEmptyProject("simple", "macosx");
 	xcodeproj->createNativeTarget("simple", "simple",
 		                          PBXFileReference::type_executable,
-		                          PBXNativeTarget::ProductTypeTool,
+		                          PBXNativeTarget::type_tool,
 		                          "simple", { "main.cpp" });
 	PBXWriter::write(xcodeproj, std::cout, 0);
 	std::cout << std::endl;
