@@ -261,7 +261,8 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	void createEmptyProject(std::string projectName, std::string sdkRoot);
 	void createNativeTarget(std::string targetName, std::string targetProduct,
-                            std::string targetProductType, std::vector<std::string> targetSource);
+                            std::string targetType, std::string targetProductType,
+                            std::string sourcePath, std::vector<std::string> source);
 
 	void syncFromMap();
 	void syncToMap();
@@ -272,6 +273,14 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	template<typename T> std::shared_ptr<T> getObject(PBXId id) {
 		return std::static_pointer_cast<T>(objects->getObject(id));
+	}
+
+	template<typename T> std::shared_ptr<T> createObject(std::string comment) {
+		auto obj = std::make_shared<T>();
+		obj->id = PBXId::createId(rootObject);
+		obj->id.comment = comment;
+		objects->putObject(obj);
+		return obj;
 	}
 };
 
@@ -404,10 +413,12 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static std::once_flag extTypeMapInit;
 	static std::map<std::string,std::string> extTypeMap;
 
-	static std::string getType(std::string ext);
+	static std::string getExtensionFromPath(std::string path);
+	static std::string getTypeForPath(std::string path);
+	static std::string getTypeForExtension(std::string ext);
 
-	std::string explicittype;
-	std::string lastKnowntype;
+	std::string explicitFileType;
+	std::string lastKnownFileType;
 	bool includeInIndex;
 	std::string path;
 	std::string sourceTree;

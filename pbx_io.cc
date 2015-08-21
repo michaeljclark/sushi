@@ -489,56 +489,123 @@ Xcodeproj::Xcodeproj()
 void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
-	auto project = std::make_shared<PBXProject>();
-	project->id = PBXId::createRootId();
+	rootObject = PBXId::createRootId();
+	auto project = createObject<PBXProject>("Project Object");
 	rootObject = project->id;
-	rootObject.comment = "Project Object";
-	objects->putObject(project);
 
 	// Create Build Configuration List
-	auto configurationList = std::make_shared<XCConfigurationList>();
-	configurationList->id = PBXId::createId(project->id);
-	configurationList->id.comment = "Build configuration list for PBXProject \"" + projectName + "\"";
-	objects->putObject(configurationList);
+	auto configurationList = createObject<XCConfigurationList>
+		("Build configuration list for PBXProject \"" + projectName + "\"");
 	project->buildConfigurationList = configurationList->id;
 
 	// Create Debug Build Configuration
-	auto debugConfiguration = std::make_shared<XCBuildConfiguration>();
-	debugConfiguration->id = PBXId::createId(project->id);
-	debugConfiguration->id.comment = debugConfiguration->name = "Debug";
+	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
+	debugConfiguration->name = "Debug";
 	debugConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
-	objects->putObject(debugConfiguration);
+	debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
-	auto releaseConfiguration = std::make_shared<XCBuildConfiguration>();
-	releaseConfiguration->id = PBXId::createId(project->id);
-	releaseConfiguration->id.comment = releaseConfiguration->name = "Release";
+	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
+	releaseConfiguration->name = "Release";
 	releaseConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
-	objects->putObject(releaseConfiguration);
+	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group
-	auto mainGroup = std::make_shared<PBXGroup>();
-	mainGroup->id = PBXId::createId(project->id);
+	auto mainGroup = createObject<PBXGroup>("");
 	mainGroup->sourceTree = "<group>";
-	objects->putObject(mainGroup);
 	project->mainGroup = mainGroup->id;
 
 	// Create products group
-	auto productsGroup = std::make_shared<PBXGroup>();
-	productsGroup->id = PBXId::createId(project->id);
+	auto productsGroup = createObject<PBXGroup>("Products");
 	productsGroup->sourceTree = "<group>";
-	productsGroup->id.comment = productsGroup->name = "Products";
-	objects->putObject(productsGroup);
+	productsGroup->name = "Products";
 	mainGroup->children->addIdRef(productsGroup);
 	project->productRefGroup = productsGroup->id;
 }
 
 void Xcodeproj::createNativeTarget(std::string targetName, std::string targetProduct,
-                            std::string targetProductType, std::vector<std::string> targetSource)
+                            std::string targetType, std::string targetProductType,
+                            std::string sourcePath, std::vector<std::string> source)
 {
-	
+	auto project = getProject();
+	auto mainGroup = getObject<PBXGroup>(project->mainGroup);
+	auto productsGroup = getObject<PBXGroup>(project->productRefGroup);
+
+	// Create Build Configuration List
+	auto configurationList = createObject<XCConfigurationList>
+		("Build configuration list for PBXNativeTarget \"" + targetName + "\"");
+
+	// Create Debug Build Configuration
+	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
+	debugConfiguration->name = "Debug";
+	debugConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
+	configurationList->buildConfigurations->addIdRef(debugConfiguration);
+
+	// Create Release Build Configuration
+	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
+	releaseConfiguration->name = "Release";
+	releaseConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
+	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
+
+	// Create PBXSourcesBuildPhase
+	auto sourceBuildPhase = createObject<PBXSourcesBuildPhase>("Sources");
+	sourceBuildPhase->buildActionMask = 2147483647;
+	sourceBuildPhase->runOnlyForDeploymentPostprocessing = 0;
+
+	// Create PBXFrameworksBuildPhase
+	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
+	frameworkBuildPhase->buildActionMask = 2147483647;
+	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
+
+	// Create PBXCopyFilesBuildPhase
+	auto copyFilesBuildPhase = createObject<PBXCopyFilesBuildPhase>("CopyFiles");
+	copyFilesBuildPhase->buildActionMask = 2147483647;
+	copyFilesBuildPhase->runOnlyForDeploymentPostprocessing = 1;
+	copyFilesBuildPhase->dstPath = "/usr/share/man/man1/";
+	copyFilesBuildPhase->dstSubfolderSpec = 0;
+
+	// Create PBXGroup for target source
+	auto sourceGroup = createObject<PBXGroup>(targetName);
+	sourceGroup->sourceTree = "<group>";
+	sourceGroup->name = targetName;
+	sourceGroup->path = sourcePath;
+	mainGroup->children->addIdRef(sourceGroup);
+
+	// Create PBXFileReference for target source
+	for (auto sourceFile : source) {
+		auto sourceFileRef = createObject<PBXFileReference>(sourceFile);
+		sourceFileRef->lastKnownFileType = PBXFileReference::getTypeForPath(sourceFile);
+		sourceFileRef->includeInIndex = 1;
+		sourceFileRef->path = sourceFile;
+		sourceFileRef->sourceTree = "<group>";
+		sourceGroup->children->addIdRef(sourceFileRef);
+
+		auto sourceBuildFileRef = createObject<PBXBuildFile>(std::string(sourceFile) + " in Sources");
+		sourceBuildFileRef->fileRef = sourceFileRef->id;
+		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
+	}
+
+	// Create PBXFileReference for target output and add to Products
+	auto targetProductFileRef = createObject<PBXFileReference>(targetProduct);
+	targetProductFileRef->explicitFileType = targetType;
+	targetProductFileRef->includeInIndex = 0;
+	targetProductFileRef->path = targetProduct;
+	targetProductFileRef->sourceTree = "BUILT_PRODUCTS_DIR";
+	productsGroup->children->addIdRef(productsGroup);
+
+	// Create PBXNativeTarget
+	auto nativeTarget = createObject<PBXNativeTarget>(targetName);
+	nativeTarget->name = targetName;
+	nativeTarget->productName = targetName;
+	nativeTarget->productReference = targetProductFileRef->id;
+	nativeTarget->productType = targetProductType;
+	nativeTarget->buildConfigurationList = configurationList->id;
+	nativeTarget->buildPhases->addIdRef(sourceBuildPhase);
+	nativeTarget->buildPhases->addIdRef(frameworkBuildPhase);
+	nativeTarget->buildPhases->addIdRef(copyFilesBuildPhase);
+	project->targets->addIdRef(nativeTarget);
 }
 
 void Xcodeproj::syncFromMap()
@@ -757,19 +824,19 @@ void PBXCopyFilesBuildPhase::syncToMap()
 
 /* PBXFileReference */
 
-const std::string PBXFileReference::ext_c_source        = ".c";
-const std::string PBXFileReference::ext_c_header        = ".h";
-const std::string PBXFileReference::ext_objc_source     = ".m";
-const std::string PBXFileReference::ext_objcpp_source   = ".mm";
-const std::string PBXFileReference::ext_cpp_source_1    = ".cc";
-const std::string PBXFileReference::ext_cpp_source_2    = ".cpp";
-const std::string PBXFileReference::ext_cpp_header_1    = ".hh";
-const std::string PBXFileReference::ext_cpp_header_2    = ".hpp";
-const std::string PBXFileReference::ext_plist           = ".plist";
-const std::string PBXFileReference::ext_lib_archive     = ".a";
-const std::string PBXFileReference::ext_application     = ".app";
-const std::string PBXFileReference::ext_bundle          = ".bundle";
-const std::string PBXFileReference::ext_framework       = ".framework"; 
+const std::string PBXFileReference::ext_c_source        = "c";
+const std::string PBXFileReference::ext_c_header        = "h";
+const std::string PBXFileReference::ext_objc_source     = "m";
+const std::string PBXFileReference::ext_objcpp_source   = "mm";
+const std::string PBXFileReference::ext_cpp_source_1    = "cc";
+const std::string PBXFileReference::ext_cpp_source_2    = "cpp";
+const std::string PBXFileReference::ext_cpp_header_1    = "hh";
+const std::string PBXFileReference::ext_cpp_header_2    = "hpp";
+const std::string PBXFileReference::ext_plist           = "plist";
+const std::string PBXFileReference::ext_lib_archive     = "a";
+const std::string PBXFileReference::ext_application     = "app";
+const std::string PBXFileReference::ext_bundle          = "bundle";
+const std::string PBXFileReference::ext_framework       = "framework"; 
 
 const std::string PBXFileReference::type_c_source       = "sourcecode.c.c";
 const std::string PBXFileReference::type_c_header       = "sourcecode.c.h";
@@ -787,7 +854,21 @@ const std::string PBXFileReference::type_executable     = "compiled.mach-o.execu
 std::once_flag PBXFileReference::extTypeMapInit;
 std::map<std::string,std::string> PBXFileReference::extTypeMap;
 
-std::string PBXFileReference::getType(std::string ext)
+std::string PBXFileReference::getExtensionFromPath(std::string path)
+{
+	size_t lastDotIndex = path.find_last_of(".");
+	if (lastDotIndex == std::string::npos) return std::string();
+	return path.substr(lastDotIndex + 1);
+}
+
+std::string PBXFileReference::getTypeForPath(std::string path)
+{
+	std::string extension = getExtensionFromPath(path);
+	std::string type = getTypeForExtension(extension);
+	return type;
+}
+
+std::string PBXFileReference::getTypeForExtension(std::string extension)
 {
 	std::call_once(extTypeMapInit, [](){
 		extTypeMap[ext_c_source] = type_c_source;
@@ -804,7 +885,7 @@ std::string PBXFileReference::getType(std::string ext)
 		extTypeMap[ext_bundle] = type_bundle;
 		extTypeMap[ext_framework] = type_framework;
 	});
-	auto it = extTypeMap.find(ext);
+	auto it = extTypeMap.find(extension);
 	if (it != extTypeMap.end()) {
 		return it->second;
 	} else {
@@ -821,8 +902,8 @@ void PBXFileReference::syncFromMap()
 {
 	PBXObject::syncFromMap();
 
-	explicittype = getString("explicittype");
-	lastKnowntype = getString("lastKnowntype");
+	explicitFileType = getString("explicitFileType");
+	lastKnownFileType = getString("lastKnownFileType");
 	includeInIndex = getInteger("includeInIndex", 1);
 	path = getString("path");
 	sourceTree = getString("sourceTree");
@@ -832,11 +913,11 @@ void PBXFileReference::syncToMap()
 {
 	PBXObject::syncToMap();
 
-	if (explicittype.length() > 0) {
-		setString("explicittype", explicittype);
+	if (explicitFileType.length() > 0) {
+		setString("explicitFileType", explicitFileType);
 	}
-	if (lastKnowntype.length() > 0) {
-		setString("lastKnowntype", lastKnowntype);
+	if (lastKnownFileType.length() > 0) {
+		setString("lastKnownFileType", lastKnownFileType);
 	}
 	if (includeInIndex == 0) {
 		setInteger("includeInIndex", includeInIndex);
