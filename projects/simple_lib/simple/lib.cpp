@@ -6,7 +6,7 @@
 //
 //
 
-#include "static.h"
+#include "lib.h"
 
 void static_lib_init()
 {
