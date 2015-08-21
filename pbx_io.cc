@@ -828,32 +828,32 @@ void PBXCopyFilesBuildPhase::syncToMap()
 
 /* PBXFileReference */
 
-const std::string PBXFileReference::ext_c_source        = "c";
-const std::string PBXFileReference::ext_c_header        = "h";
-const std::string PBXFileReference::ext_objc_source     = "m";
-const std::string PBXFileReference::ext_objcpp_source   = "mm";
-const std::string PBXFileReference::ext_cpp_source_1    = "cc";
-const std::string PBXFileReference::ext_cpp_source_2    = "cpp";
-const std::string PBXFileReference::ext_cpp_header_1    = "hh";
-const std::string PBXFileReference::ext_cpp_header_2    = "hpp";
-const std::string PBXFileReference::ext_plist           = "plist";
-const std::string PBXFileReference::ext_lib_archive     = "a";
-const std::string PBXFileReference::ext_application     = "app";
-const std::string PBXFileReference::ext_bundle          = "bundle";
-const std::string PBXFileReference::ext_framework       = "framework"; 
+const std::string PBXFileReference::ext_c_source          = "c";
+const std::string PBXFileReference::ext_c_header          = "h";
+const std::string PBXFileReference::ext_objc_source       = "m";
+const std::string PBXFileReference::ext_objcpp_source     = "mm";
+const std::string PBXFileReference::ext_cpp_source_1      = "cc";
+const std::string PBXFileReference::ext_cpp_source_2      = "cpp";
+const std::string PBXFileReference::ext_cpp_header_1      = "hh";
+const std::string PBXFileReference::ext_cpp_header_2      = "hpp";
+const std::string PBXFileReference::ext_plist             = "plist";
+const std::string PBXFileReference::ext_library_archive   = "a";
+const std::string PBXFileReference::ext_application       = "app";
+const std::string PBXFileReference::ext_bundle            = "bundle";
+const std::string PBXFileReference::ext_framework         = "framework"; 
 
-const std::string PBXFileReference::type_c_source       = "sourcecode.c.c";
-const std::string PBXFileReference::type_c_header       = "sourcecode.c.h";
-const std::string PBXFileReference::type_objc_source    = "sourcecode.c.objc";
-const std::string PBXFileReference::type_objccpp_source = "sourcecode.cpp.objcpp";
-const std::string PBXFileReference::type_cpp_source     = "sourcecode.cpp.cpp";
-const std::string PBXFileReference::type_cpp_header     = "sourcecode.cpp.h";
-const std::string PBXFileReference::type_plist          = "text.plist.xml";
-const std::string PBXFileReference::type_lib_archive    = "archive.ar";
-const std::string PBXFileReference::type_application    = "wrapper.application";
-const std::string PBXFileReference::type_bundle         = "wrapper.cfbundle";
-const std::string PBXFileReference::type_framework      = "wrapper.framework";
-const std::string PBXFileReference::type_executable     = "compiled.mach-o.executable";
+const std::string PBXFileReference::type_c_source         = "sourcecode.c.c";
+const std::string PBXFileReference::type_c_header         = "sourcecode.c.h";
+const std::string PBXFileReference::type_objc_source      = "sourcecode.c.objc";
+const std::string PBXFileReference::type_objccpp_source   = "sourcecode.cpp.objcpp";
+const std::string PBXFileReference::type_cpp_source       = "sourcecode.cpp.cpp";
+const std::string PBXFileReference::type_cpp_header       = "sourcecode.cpp.h";
+const std::string PBXFileReference::type_plist            = "text.plist.xml";
+const std::string PBXFileReference::type_library_archive  = "archive.ar";
+const std::string PBXFileReference::type_application      = "wrapper.application";
+const std::string PBXFileReference::type_bundle           = "wrapper.cfbundle";
+const std::string PBXFileReference::type_framework        = "wrapper.framework";
+const std::string PBXFileReference::type_executable       = "compiled.mach-o.executable";
 
 std::once_flag PBXFileReference::extTypeMapInit;
 std::map<std::string,FileTypeMetaData*> PBXFileReference::extTypeMap;
@@ -866,7 +866,7 @@ FileTypeMetaData PBXFileReference::typeMetaData[] = {
 	{{ext_cpp_source_1, ext_cpp_source_2}, type_cpp_source, FileTypeFlag_Compiler},
 	{{ext_cpp_header_1, ext_cpp_header_2}, type_cpp_header, FileTypeFlag_Header},
 	{{ext_plist}, type_plist, FileTypeFlag_Resource},
-	{{ext_lib_archive}, type_lib_archive, FileTypeFlag_LinkLibrary},
+	{{ext_library_archive}, type_library_archive, FileTypeFlag_LinkLibrary},
 	{{ext_application}, type_application, FileTypeFlag_Application},
 	{{ext_bundle}, type_bundle, FileTypeFlag_Resource},
 	{{ext_framework}, type_framework, FileTypeFlag_LinkFramework},
