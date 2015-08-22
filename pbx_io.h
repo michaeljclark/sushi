@@ -21,6 +21,8 @@ struct PBXUtil {
 	static std::string ltrim(std::string s);
 	static std::string rtrim(std::string s);
 	static std::string trim(std::string s);
+	static int canonicalize_path(char *path);
+	static std::vector<std::string> path_components(std::string path);
 	static std::string hex_encode(const unsigned char *buf, size_t len);
 	static void hex_decode(std::string hex, unsigned char *buf, size_t len);
 	static void generate_random(unsigned char *buf, size_t len);
@@ -259,10 +261,12 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	Xcodeproj();
 
+	PBXFileReferencePtr getFileReferenceForPath(std::string path, bool create = true);
+	
 	void createEmptyProject(std::string projectName, std::string sdkRoot);
 	void createNativeTarget(std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
-                            std::string sourcePath, std::vector<std::string> source);
+                            std::vector<std::string> source);
 
 	void syncFromMap();
 	void syncToMap();

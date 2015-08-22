@@ -34,70 +34,70 @@ static const char* INFO_PREFIX = "INFO";
 
 std::string format_string(const char* fmt, ...)
 {
-    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
-    va_list ap;
-    
-    va_start(ap, fmt);
-    int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-    va_end(ap);
-    
-    std::string str;
-    if (len >= (int)buf.capacity()) {
-        buf.resize(len + 1);
-        va_start(ap, fmt);
-        vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-        va_end(ap);
-    }
-    str = buf.data();
-    
-    return str;
+	std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
+	va_list ap;
+
+	va_start(ap, fmt);
+	int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+	va_end(ap);
+
+	std::string str;
+	if (len >= (int)buf.capacity()) {
+		buf.resize(len + 1);
+		va_start(ap, fmt);
+		vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+		va_end(ap);
+	}
+	str = buf.data();
+
+	return str;
 }
 
 void log_prefix(const char* prefix, const char* fmt, va_list arg)
 {
-    std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
-    
-    int len = vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+	std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
 
-    if (len >= (int)buf.capacity()) {
-        buf.resize(len + 1);
-        vsnprintf(buf.data(), buf.capacity(), fmt, arg);
-    }
+	int len = vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+
+	if (len >= (int)buf.capacity()) {
+		buf.resize(len + 1);
+		vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+	}
 
 	fprintf(stderr, "%s: %s\n", prefix, buf.data());
 }
 
 void log_fatal_exit(const char* fmt, ...)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(FATAL_PREFIX, fmt, ap);
-    va_end(ap);
-    exit(9);
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(FATAL_PREFIX, fmt, ap);
+	va_end(ap);
+	exit(9);
 }
 
 void log_error(const char* fmt, ...)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(ERROR_PREFIX, fmt, ap);
-    va_end(ap);
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(ERROR_PREFIX, fmt, ap);
+	va_end(ap);
 }
 
 void log_info(const char* fmt, ...)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(INFO_PREFIX, fmt, ap);
-    va_end(ap);
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(INFO_PREFIX, fmt, ap);
+	va_end(ap);
 }
 
 void log_debug(const char* fmt, ...)
 {
-    va_list ap;
-    va_start(ap, fmt);
-    log_prefix(DEBUG_PREFIX, fmt, ap);
-    va_end(ap);
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(DEBUG_PREFIX, fmt, ap);
+	va_end(ap);
 }
 
 
@@ -122,24 +122,86 @@ std::string PBXUtil::trim(std::string s) {
 	return ltrim(rtrim(s));
 }
 
+int PBXUtil::canonicalize_path(char *path)
+{
+	char *r, *w;
+	int last_was_slash = 0;
+	r = w = path;
+	while(*r != 0)
+	{
+		/* convert backslash to foward slash */
+		if (*r == '\\') *r = '/';
+		/* Ignore duplicate /'s */
+		if (*r == '/' && last_was_slash) {
+			r++;
+			continue;
+		}
+		/* Calculate /../ in a secure way */
+		if (last_was_slash && *r == '.') {
+			if (*(r+1) == '.') {
+				/* skip past .. or ../ with read pointer */
+				if (*(r+2) == '/') r += 3;
+				else if (*(r+2) == 0) r += 2;
+				/* skip back to last / with write pointer */
+				if (w > path+1) {
+					w--;
+					while(*(w-1) != '/') { w--; }
+					continue;
+				} else {
+					return -1;
+				}
+			} else if (*(r+1) == '/') {
+				r += 2;
+				continue;
+			}
+		}
+		*w = *r;
+		last_was_slash = (*r == '/');
+		r++;
+		w++;
+	}
+	*w = 0;
+
+	return 0;
+}
+
+std::vector<std::string> PBXUtil::path_components(std::string path)
+{
+	std::vector<char> buf;
+	buf.resize(path.size() + 1);
+	memcpy(buf.data(), path.c_str(), path.size());
+
+	std::vector<std::string> path_components;
+	if (canonicalize_path(buf.data()) < 0) {
+		return path_components;
+	}
+
+	char *token, *p = buf.data();
+	while ((token = strsep(&p, "/")) != NULL) {
+		if(strlen(token)) {
+			path_components.push_back(token);
+		}
+	}
+	return path_components;
+}
 
 std::string PBXUtil::hex_encode(const unsigned char *buf, size_t len)
 {
-    std::string hex;
-    for (size_t i = 0; i < len; i++) {
-        char b = buf[i];
-        hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
-        hex.append(HEX_DIGITS + (b & 0x0F), 1);
-    }
-    return hex;
+	std::string hex;
+	for (size_t i = 0; i < len; i++) {
+		char b = buf[i];
+		hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
+		hex.append(HEX_DIGITS + (b & 0x0F), 1);
+	}
+	return hex;
 }
 
 void PBXUtil::hex_decode(std::string hex, unsigned char *buf, size_t len)
 {
-    for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
-        const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
-        *buf++ = (char)strtoul(tmp, NULL, 16);
-    }
+	for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
+		const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
+		*buf++ = (char)strtoul(tmp, NULL, 16);
+	}
 }
 
 void PBXUtil::generate_random(unsigned char *buf, size_t len)
@@ -155,11 +217,11 @@ void PBXUtil::generate_random(unsigned char *buf, size_t len)
 bool PBXUtil::literal_requires_quotes(std::string str)
 {
 	if (str.size() == 0) return true;
-    for (size_t i = 0; i < str.length(); i++) {
-    	char c = str[i];
-    	if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
-    }
-    return false;
+	for (size_t i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
+	}
+	return false;
 }
 
 std::string PBXUtil::escape_quotes(std::string str)
@@ -176,10 +238,10 @@ std::string PBXUtil::escape_quotes(std::string str)
 bool PBXUtil::literal_is_hex_id(std::string str)
 {
 	if (str.size() != 24) return false;
-    for (size_t i = 0; i < str.length(); i++) {
-    	if (strchr(HEX_DIGITS, str[i]) == NULL) return false;
-    }
-    return true;
+	for (size_t i = 0; i < str.length(); i++) {
+		if (strchr(HEX_DIGITS, str[i]) == NULL) return false;
+	}
+	return true;
 }
 
 std::vector<char> PBXUtil::read_file(std::string filename)
@@ -486,6 +548,67 @@ Xcodeproj::Xcodeproj()
 	objects = std::make_shared<PBXMap>();
 }
 
+PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool create)
+{
+	auto project = getProject();
+	auto mainGroup = getObject<PBXGroup>(project->mainGroup);
+	auto pathComponents = PBXUtil::path_components(path);
+	if (pathComponents.size() == 0) {
+		return PBXFileReferencePtr();
+	}
+
+	// find or create group
+	auto currentGroup = mainGroup;
+	for (size_t i = 0; i < pathComponents.size() - 1; i++) {
+		PBXGroupPtr foundGroup;
+		for (auto child : currentGroup->children->array_val) {
+			if (child->type() != PBXTypeId) continue;
+			auto childId = std::static_pointer_cast<PBXId>(child);
+			auto childObject = getObject<PBXObject>(*childId);
+			if (childObject->type_name() != "PBXGroup") continue;
+			auto group = std::static_pointer_cast<PBXGroup>(childObject);
+			if (group->path == pathComponents[i]) {
+				foundGroup = group;
+				break;
+			}
+		}
+		if (!foundGroup && !create) {
+			return PBXFileReferencePtr();
+		}
+		if (!foundGroup) {
+			foundGroup = createObject<PBXGroup>(pathComponents[i]);
+			foundGroup->name = foundGroup->path = pathComponents[i];
+			foundGroup->sourceTree = "<group>";
+			currentGroup->children->addIdRef(foundGroup);
+		}
+		currentGroup = foundGroup;
+	}
+
+	// find or create file reference
+	PBXFileReferencePtr foundFileRef;
+	for (auto child : currentGroup->children->array_val) {
+		if (child->type() != PBXTypeId) continue;
+		auto childId = std::static_pointer_cast<PBXId>(child);
+		auto childObject = getObject<PBXObject>(*childId);
+		if (childObject->type_name() != "PBXFileReference") continue;
+		auto fileRef = std::static_pointer_cast<PBXFileReference>(childObject);
+		if (fileRef->path == pathComponents.back()) {
+			foundFileRef = fileRef;
+			break;
+		}
+	}
+	if (!foundFileRef && !create) {
+		return PBXFileReferencePtr();
+	}
+	if (!foundFileRef) {
+		foundFileRef = createObject<PBXFileReference>(pathComponents.back());
+		foundFileRef->path = pathComponents.back();
+		foundFileRef->sourceTree = "<group>";
+		currentGroup->children->addIdRef(foundFileRef);
+	}
+	return foundFileRef;
+}
+
 void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
@@ -527,7 +650,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 
 void Xcodeproj::createNativeTarget(std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
-                            std::string sourcePath, std::vector<std::string> source)
+                            std::vector<std::string> source)
 {
 	auto project = getProject();
 	auto mainGroup = getObject<PBXGroup>(project->mainGroup);
@@ -566,27 +689,16 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	copyFilesBuildPhase->dstPath = "/usr/share/man/man1/";
 	copyFilesBuildPhase->dstSubfolderSpec = 0;
 
-	// Create PBXGroup for target source
-	auto sourceGroup = createObject<PBXGroup>(targetName);
-	sourceGroup->sourceTree = "<group>";
-	sourceGroup->name = targetName;
-	sourceGroup->path = sourcePath;
-	mainGroup->children->addIdRef(sourceGroup);
-
 	// Create PBXFileReference for target source
 	for (auto sourceFile : source) {
 		FileTypeMetaData *meta = PBXFileReference::getFileMetaForPath(sourceFile);
-
-		auto sourceFileRef = createObject<PBXFileReference>(sourceFile);
+		auto sourceFileRef = getFileReferenceForPath(sourceFile);
 		sourceFileRef->lastKnownFileType = meta->type;
 		sourceFileRef->includeInIndex = 1;
-		sourceFileRef->path = sourceFile;
-		sourceFileRef->sourceTree = "<group>";
-		sourceGroup->children->addIdRef(sourceFileRef);
 
 		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
 
-		auto sourceBuildFileRef = createObject<PBXBuildFile>(std::string(sourceFile) + " in Sources");
+		auto sourceBuildFileRef = createObject<PBXBuildFile>(sourceFileRef->id.comment + " in Sources");
 		sourceBuildFileRef->fileRef = sourceFileRef->id;
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
 	}
