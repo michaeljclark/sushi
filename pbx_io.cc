@@ -702,6 +702,7 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	for (std::string library : libraries) {
 		auto libraryFileRef = getProductReference(library);
 		if (libraryFileRef) {
+			// NOTE: we should check whether a build file already exists
 			auto libraryBuildFileRef = createObject<PBXBuildFile>(libraryFileRef->id.comment + " in Frameworks");
 			libraryBuildFileRef->fileRef = libraryFileRef->id;
 			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
@@ -724,6 +725,7 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 
 		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
 
+		// NOTE: we should check whether a build file already exists
 		auto sourceBuildFileRef = createObject<PBXBuildFile>(sourceFileRef->id.comment + " in Sources");
 		sourceBuildFileRef->fileRef = sourceFileRef->id;
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
