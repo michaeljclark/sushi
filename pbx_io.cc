@@ -997,6 +997,7 @@ const std::string PBXFileReference::type_cpp_source       = "sourcecode.cpp.cpp"
 const std::string PBXFileReference::type_cpp_header       = "sourcecode.cpp.h";
 const std::string PBXFileReference::type_plist            = "text.plist.xml";
 const std::string PBXFileReference::type_library_archive  = "archive.ar";
+const std::string PBXFileReference::type_library_dylib    = "compiled.mach-o.dylib";
 const std::string PBXFileReference::type_application      = "wrapper.application";
 const std::string PBXFileReference::type_bundle           = "wrapper.cfbundle";
 const std::string PBXFileReference::type_framework        = "wrapper.framework";
