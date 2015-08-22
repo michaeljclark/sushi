@@ -609,6 +609,23 @@ PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool cr
 	return foundFileRef;
 }
 
+PBXFileReferencePtr Xcodeproj::getProductReference(std::string path)
+{
+	auto project = getProject();
+	auto productsGroup = getObject<PBXGroup>(project->productRefGroup);
+	for (auto child : productsGroup->children->array_val) {
+		if (child->type() != PBXTypeId) continue;
+		auto childId = std::static_pointer_cast<PBXId>(child);
+		auto childObject = getObject<PBXObject>(*childId);
+		if (childObject->type_name() != "PBXFileReference") continue;
+		auto fileRef = std::static_pointer_cast<PBXFileReference>(childObject);
+		if (fileRef->path == path) {
+			return fileRef;
+		}
+	}
+	return PBXFileReferencePtr();
+}
+
 void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
@@ -650,6 +667,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 
 void Xcodeproj::createNativeTarget(std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
+                            std::vector<std::string> libraries,
                             std::vector<std::string> source)
 {
 	auto project = getProject();
@@ -681,6 +699,14 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
 	frameworkBuildPhase->buildActionMask = 2147483647;
 	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
+	for (std::string library : libraries) {
+		auto libraryFileRef = getProductReference(library);
+		if (libraryFileRef) {
+			auto libraryBuildFileRef = createObject<PBXBuildFile>(libraryFileRef->id.comment + " in Frameworks");
+			libraryBuildFileRef->fileRef = libraryFileRef->id;
+			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
+		}
+	}
 
 	// Create PBXCopyFilesBuildPhase
 	auto copyFilesBuildPhase = createObject<PBXCopyFilesBuildPhase>("CopyFiles");
@@ -709,7 +735,7 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	targetProductFileRef->includeInIndex = 0;
 	targetProductFileRef->path = targetProduct;
 	targetProductFileRef->sourceTree = "BUILT_PRODUCTS_DIR";
-	productsGroup->children->addIdRef(productsGroup);
+	productsGroup->children->addIdRef(targetProductFileRef);
 
 	// Create PBXNativeTarget
 	auto nativeTarget = createObject<PBXNativeTarget>(targetName);

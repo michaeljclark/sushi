@@ -29,11 +29,12 @@ int main(int argc, char **argv) {
 	xcodeproj->createNativeTarget("static", "libstatic.a",
 		                          PBXFileReference::type_library_archive,
 		                          PBXNativeTarget::type_library_static,
+		                          { },
 		                          { "simple/lib.h", "simple/lib.cpp" });
-	/* todo : depend on libstatic.a */
 	xcodeproj->createNativeTarget("simple", "simple",
 		                          PBXFileReference::type_executable,
 		                          PBXNativeTarget::type_tool,
+		                          { "libstatic.a" },
 		                          { "simple/main.cpp" });
 	PBXWriter::write(xcodeproj, std::cout, 0);
 	std::cout << std::endl;
