@@ -466,52 +466,7 @@ void PBXMap::setMap(std::string key, PBXMapPtr map)
 
 /* PBXObject */
 
-const std::string PBXObject::default_type_name = "PBXObject";
-
-
-/* PBX object factory */
-
-void PBXObjectFactory::init()
-{
-	std::call_once(factoryInit, [](){
-		registerFactory<PBXAggregateTarget>();
-		registerFactory<PBXAppleScriptBuildPhase>();
-		registerFactory<PBXBuildFile>();
-		registerFactory<PBXBuildRule>();
-		registerFactory<PBXBuildStyle>();
-		registerFactory<PBXContainerItemProxy>();
-		registerFactory<PBXCopyFilesBuildPhase>();
-		registerFactory<PBXFileReference>();
-		registerFactory<PBXFrameworksBuildPhase>();
-		registerFactory<PBXGroup>();
-		registerFactory<PBXHeadersBuildPhase>();
-		registerFactory<PBXNativeTarget>();
-		registerFactory<PBXProject>();
-		registerFactory<PBXReferenceProxy>();
-		registerFactory<PBXResourcesBuildPhase>();
-		registerFactory<PBXShellScriptBuildPhase>();
-		registerFactory<PBXSourcesBuildPhase>();
-		registerFactory<PBXTargetDependency>();
-		registerFactory<PBXVariantGroup>();
-		registerFactory<XCBuildConfiguration>();
-		registerFactory<XCConfigurationList>();
-		registerFactory<XCVersionGroup>();
-	});
-}
-
-PBXObject* PBXObjectFactory::create(std::string class_name, const PBXId &id, const PBXMap &map)
-{
-	init();
-	auto it = factoryMap.find(class_name);
-	PBXObject *ptr = it != factoryMap.end() ? it->second->create() : new PBXObject();
-	ptr->id = id;
-	ptr->object_val = map.object_val;
-	ptr->key_order = map.key_order;
-	return ptr;
-}
-
-std::once_flag PBXObjectFactory::factoryInit;
-std::map<std::string,PBXObjectFactoryPtr> PBXObjectFactory::factoryMap;
+const std::string PBXObject::default_type_name =             "PBXObject";
 
 
 /* PBX classes */
@@ -544,12 +499,43 @@ const std::string XCVersionGroup::type_name =                "XCVersionGroup";
 
 /* Xcodeproj */
 
+std::once_flag Xcodeproj::factoryInit;
+std::map<std::string,PBXObjectFactoryPtr> Xcodeproj::factoryMap;
+
 Xcodeproj::Xcodeproj()
 {
 	archiveVersion = 1;
 	classes = std::make_shared<PBXMap>();
 	objectVersion = 46;
 	objects = std::make_shared<PBXMap>();
+}
+
+void Xcodeproj::init()
+{
+	std::call_once(factoryInit, [](){
+		registerFactory<PBXAggregateTarget>();
+		registerFactory<PBXAppleScriptBuildPhase>();
+		registerFactory<PBXBuildFile>();
+		registerFactory<PBXBuildRule>();
+		registerFactory<PBXBuildStyle>();
+		registerFactory<PBXContainerItemProxy>();
+		registerFactory<PBXCopyFilesBuildPhase>();
+		registerFactory<PBXFileReference>();
+		registerFactory<PBXFrameworksBuildPhase>();
+		registerFactory<PBXGroup>();
+		registerFactory<PBXHeadersBuildPhase>();
+		registerFactory<PBXNativeTarget>();
+		registerFactory<PBXProject>();
+		registerFactory<PBXReferenceProxy>();
+		registerFactory<PBXResourcesBuildPhase>();
+		registerFactory<PBXShellScriptBuildPhase>();
+		registerFactory<PBXSourcesBuildPhase>();
+		registerFactory<PBXTargetDependency>();
+		registerFactory<PBXVariantGroup>();
+		registerFactory<XCBuildConfiguration>();
+		registerFactory<XCConfigurationList>();
+		registerFactory<XCVersionGroup>();
+	});
 }
 
 PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool create)
@@ -1931,7 +1917,7 @@ void PBXParserImpl::object_value_literal(std::string str) {
 		PBXMap &parent_map = static_cast<PBXMap&>(*value_stack.back());
 		PBXKey &last_key = parent_map.key_order.back();
 		PBXId id(last_key.str, last_key.comment);
-		valptr = PBXValuePtr(PBXObjectFactory::create(str, id, old_map));
+		valptr = xcodeproj->createObject(str, id, old_map);
 		parent_map.replace(last_key.str, valptr);
 		value_stack.push_back(valptr);
 

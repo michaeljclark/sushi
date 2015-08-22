@@ -251,6 +251,20 @@ typedef std::shared_ptr<XCBuildConfiguration> XCBuildConfigurationPtr;
 typedef std::shared_ptr<XCConfigurationList> XCConfigurationListPtr;
 typedef std::shared_ptr<XCVersionGroup> XCVersionGroupPtr;
 
+struct PBXObjectFactory;
+typedef std::shared_ptr<PBXObjectFactory> PBXObjectFactoryPtr;
+template <typename T> struct PBXObjectFactoryImpl;
+
+struct PBXObjectFactory {
+	virtual ~PBXObjectFactory() {}
+	virtual PBXObjectPtr create() = 0;
+};
+
+template <typename T>
+struct PBXObjectFactoryImpl : PBXObjectFactory {
+	PBXObjectPtr create() { return std::make_shared<T>(); }
+};
+
 template <typename T> struct PBXObjectImpl : PBXObject {
 	const std::string& type_name() { return T::type_name; }
 };
@@ -258,6 +272,16 @@ template <typename T> struct PBXObjectImpl : PBXObject {
 struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 	static const std::string type_name;
 	virtual PBXType type() { return PBXTypeXcodeproj; }
+
+	static std::once_flag factoryInit;
+	static std::map<std::string,PBXObjectFactoryPtr> factoryMap;
+
+	template <typename T> static void registerFactory() {
+		factoryMap.insert(std::pair<std::string,PBXObjectFactoryPtr>
+			(T::type_name, PBXObjectFactoryPtr(new PBXObjectFactoryImpl<T>())));
+	}
+
+	static void init();
 
 	int archiveVersion;
 	PBXMapPtr classes;
@@ -286,6 +310,17 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	template<typename T> std::shared_ptr<T> getObject(PBXId id) {
 		return std::static_pointer_cast<T>(objects->getObject(id));
+	}
+
+	PBXObjectPtr createObject(std::string class_name, const PBXId &id, const PBXMap &map) {
+		init();
+		auto it = factoryMap.find(class_name);
+		PBXObjectPtr ptr = it != factoryMap.end() ? it->second->create() : std::make_shared<PBXObject>();
+		ptr->id = id;
+		ptr->xcodeproj = this;
+		ptr->object_val = map.object_val;
+		ptr->key_order = map.key_order;
+		return ptr;
 	}
 
 	template<typename T> std::shared_ptr<T> createObject(std::string comment) {
@@ -678,34 +713,6 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 
 struct XCVersionGroup : PBXObjectImpl<XCVersionGroup> {
 	static const std::string type_name;
-};
-
-
-/* PBX object factory */
-
-struct PBXObjectFactory;
-typedef std::shared_ptr<PBXObjectFactory> PBXObjectFactoryPtr;
-template <typename T> struct PBXObjectFactoryImpl;
-
-struct PBXObjectFactory {
-	static std::once_flag factoryInit;
-	static std::map<std::string,PBXObjectFactoryPtr> factoryMap;
-
-	template <typename T> static void registerFactory() {
-		factoryMap.insert(std::pair<std::string,PBXObjectFactoryPtr>
-			(T::type_name, PBXObjectFactoryPtr(new PBXObjectFactoryImpl<T>())));
-	}
-
-	static void init();
-	static PBXObject* create(std::string class_name, const PBXId &id, const PBXMap &map);
-
-	virtual ~PBXObjectFactory() {}
-	virtual PBXObject* create() = 0;
-};
-
-template <typename T>
-struct PBXObjectFactoryImpl : PBXObjectFactory {
-	PBXObject* create() { return new T(); }
 };
 
 
