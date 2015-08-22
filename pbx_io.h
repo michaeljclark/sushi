@@ -180,11 +180,13 @@ struct PBXObject : PBXMap {
 	PBXId id;
 	Xcodeproj *xcodeproj;
 
+	static const std::string default_type_name;
+
 	virtual ~PBXObject() {}
 
 	virtual PBXType type() { return PBXTypeObject; }
 
-	virtual std::string type_name() { return std::string(); };
+	virtual const std::string& type_name() { return default_type_name; };
 
 	virtual void syncFromMap() {}
 	virtual void syncToMap() {
@@ -250,7 +252,7 @@ typedef std::shared_ptr<XCConfigurationList> XCConfigurationListPtr;
 typedef std::shared_ptr<XCVersionGroup> XCVersionGroupPtr;
 
 template <typename T> struct PBXObjectImpl : PBXObject {
-	std::string type_name() { return T::type_name; }
+	const std::string& type_name() { return T::type_name; }
 };
 
 struct Xcodeproj : PBXObjectImpl<Xcodeproj> {

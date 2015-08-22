@@ -464,6 +464,10 @@ void PBXMap::setMap(std::string key, PBXMapPtr map)
 	object_val[key] = map;
 }
 
+/* PBXObject */
+
+const std::string PBXObject::default_type_name = "PBXObject";
+
 
 /* PBX object factory */
 
