@@ -1129,6 +1129,8 @@ void PBXGroup::syncToMap()
 {
 	PBXObject::syncToMap();
 
+	sortChildren();
+
 	setArray("children", children);
 	if (name.length() > 0) {
 		setString("name", name);
@@ -1137,6 +1139,34 @@ void PBXGroup::syncToMap()
 		setString("path", path);
 	}
 	setString("sourceTree", sourceTree);
+}
+
+void PBXGroup::sortChildren()
+{
+	if (!xcodeproj) return;
+	sort(children->array_val.begin(), children->array_val.end(), 
+    		[&](const PBXValuePtr &a, const PBXValuePtr &b)
+    { 
+    	if (a->type() != PBXTypeId || b->type() != PBXTypeId) return false;
+    	auto aId = std::static_pointer_cast<PBXId>(a);
+    	auto bId = std::static_pointer_cast<PBXId>(b);
+    	auto aObj = xcodeproj->getObject<PBXObject>(*aId);
+    	auto bObj = xcodeproj->getObject<PBXObject>(*bId);
+    	std::string aName, bName;
+    	if (aObj->type_name() == "PBXGroup") {
+    		aName = std::static_pointer_cast<PBXGroup>(aObj)->name;
+    	}
+    	else if (aObj->type_name() == "PBXFileReference") {
+    		aName = std::static_pointer_cast<PBXFileReference>(aObj)->path;
+    	}
+    	if (bObj->type_name() == "PBXGroup") {
+    		bName = std::static_pointer_cast<PBXGroup>(bObj)->name;
+    	}
+    	else if (bObj->type_name() == "PBXFileReference") {
+    		bName = std::static_pointer_cast<PBXFileReference>(bObj)->path;
+    	}
+	    return aName < bName; 
+	});
 }
 
 

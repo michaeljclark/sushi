@@ -178,6 +178,7 @@ struct PBXLiteral : PBXValue {
 
 struct PBXObject : PBXMap {
 	PBXId id;
+	Xcodeproj *xcodeproj;
 
 	virtual ~PBXObject() {}
 
@@ -289,6 +290,7 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 		auto obj = std::make_shared<T>();
 		obj->id = PBXId::createId(rootObject);
 		obj->id.comment = comment;
+		obj->xcodeproj = this;
 		objects->putObject(obj);
 		return obj;
 	}
@@ -483,6 +485,7 @@ struct PBXGroup : PBXObjectImpl<PBXGroup> {
 
 	void syncFromMap();
 	void syncToMap();
+	void sortChildren();
 };
 
 struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
