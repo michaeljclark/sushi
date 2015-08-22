@@ -626,6 +626,25 @@ PBXFileReferencePtr Xcodeproj::getProductReference(std::string path)
 	return PBXFileReferencePtr();
 }
 
+PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::string comment)
+{
+	// TODO - we shouldn't use a linear scan
+	for (auto &keyval : objects->object_val) {
+		auto &objKey = keyval.second;
+		if (objKey->type() != PBXTypeId) continue;
+		auto objId = std::static_pointer_cast<PBXId>(objKey);
+		auto obj = getObject<PBXObject>(*objId);
+		if (obj->type_name() != "PBXBuildFile") continue;
+		auto buildFile = std::static_pointer_cast<PBXBuildFile>(obj);
+		if (buildFile->fileRef == fileRef->id) {
+			return buildFile;
+		}
+	}
+	auto buildFile = createObject<PBXBuildFile>(comment);
+	buildFile->fileRef = fileRef->id;
+	return buildFile;
+}
+
 void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 {
 	// Create Project
@@ -690,44 +709,33 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	releaseConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
+	// Create PBXFrameworksBuildPhase
+	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
+	frameworkBuildPhase->buildActionMask = 2147483647;
+	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
+
+	// Create PBXBuildFiles for target link libraries
+	for (std::string library : libraries) {
+		auto libraryFileRef = getProductReference(library);
+		if (libraryFileRef) {
+			auto libraryBuildFileRef = getBuildFile(libraryFileRef, libraryFileRef->id.comment + " in Frameworks");
+			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
+		}
+	}
+
 	// Create PBXSourcesBuildPhase
 	auto sourceBuildPhase = createObject<PBXSourcesBuildPhase>("Sources");
 	sourceBuildPhase->buildActionMask = 2147483647;
 	sourceBuildPhase->runOnlyForDeploymentPostprocessing = 0;
 
-	// Create PBXFrameworksBuildPhase
-	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
-	frameworkBuildPhase->buildActionMask = 2147483647;
-	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
-	for (std::string library : libraries) {
-		auto libraryFileRef = getProductReference(library);
-		if (libraryFileRef) {
-			// NOTE: we should check whether a build file already exists
-			auto libraryBuildFileRef = createObject<PBXBuildFile>(libraryFileRef->id.comment + " in Frameworks");
-			libraryBuildFileRef->fileRef = libraryFileRef->id;
-			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
-		}
-	}
-
-	// Create PBXCopyFilesBuildPhase
-	auto copyFilesBuildPhase = createObject<PBXCopyFilesBuildPhase>("CopyFiles");
-	copyFilesBuildPhase->buildActionMask = 2147483647;
-	copyFilesBuildPhase->runOnlyForDeploymentPostprocessing = 1;
-	copyFilesBuildPhase->dstPath = "/usr/share/man/man1/";
-	copyFilesBuildPhase->dstSubfolderSpec = 0;
-
-	// Create PBXFileReference for target source
+	// Create PBXFileReferences for target source
 	for (auto sourceFile : source) {
 		FileTypeMetaData *meta = PBXFileReference::getFileMetaForPath(sourceFile);
 		auto sourceFileRef = getFileReferenceForPath(sourceFile);
 		sourceFileRef->lastKnownFileType = meta->type;
 		sourceFileRef->includeInIndex = 1;
-
 		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
-
-		// NOTE: we should check whether a build file already exists
-		auto sourceBuildFileRef = createObject<PBXBuildFile>(sourceFileRef->id.comment + " in Sources");
-		sourceBuildFileRef->fileRef = sourceFileRef->id;
+		auto sourceBuildFileRef = getBuildFile(sourceFileRef, sourceFileRef->id.comment + " in Sources");
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
 	}
 
@@ -748,7 +756,6 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	nativeTarget->buildConfigurationList = configurationList->id;
 	nativeTarget->buildPhases->addIdRef(sourceBuildPhase);
 	nativeTarget->buildPhases->addIdRef(frameworkBuildPhase);
-	nativeTarget->buildPhases->addIdRef(copyFilesBuildPhase);
 	project->targets->addIdRef(nativeTarget);
 }
 

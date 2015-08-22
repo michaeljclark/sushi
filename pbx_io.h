@@ -123,6 +123,9 @@ struct PBXId : PBXValue {
 	}
 
 	virtual PBXType type() { return PBXTypeId; }
+
+	bool operator<(const PBXId &o) { return this->id < o.id; }
+	bool operator==(const PBXId &o) { return this->id == o.id; }
 };
 
 struct PBXMap : PBXValue {
@@ -263,6 +266,7 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 
 	PBXFileReferencePtr getFileReferenceForPath(std::string path, bool create = true);
 	PBXFileReferencePtr getProductReference(std::string path);
+	PBXBuildFilePtr getBuildFile(PBXFileReferencePtr &fileRef, std::string comment);
 	
 	void createEmptyProject(std::string projectName, std::string sdkRoot);
 	void createNativeTarget(std::string targetName, std::string targetProduct,
