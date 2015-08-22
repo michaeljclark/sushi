@@ -565,7 +565,7 @@ PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool cr
 			if (child->type() != PBXTypeId) continue;
 			auto childId = std::static_pointer_cast<PBXId>(child);
 			auto childObject = getObject<PBXObject>(*childId);
-			if (childObject->type_name() != "PBXGroup") continue;
+			if (childObject->type_name() != PBXGroup::type_name) continue;
 			auto group = std::static_pointer_cast<PBXGroup>(childObject);
 			if (group->path == pathComponents[i]) {
 				foundGroup = group;
@@ -590,7 +590,7 @@ PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool cr
 		if (child->type() != PBXTypeId) continue;
 		auto childId = std::static_pointer_cast<PBXId>(child);
 		auto childObject = getObject<PBXObject>(*childId);
-		if (childObject->type_name() != "PBXFileReference") continue;
+		if (childObject->type_name() != PBXFileReference::type_name) continue;
 		auto fileRef = std::static_pointer_cast<PBXFileReference>(childObject);
 		if (fileRef->path == pathComponents.back()) {
 			foundFileRef = fileRef;
@@ -617,7 +617,7 @@ PBXFileReferencePtr Xcodeproj::getProductReference(std::string path)
 		if (child->type() != PBXTypeId) continue;
 		auto childId = std::static_pointer_cast<PBXId>(child);
 		auto childObject = getObject<PBXObject>(*childId);
-		if (childObject->type_name() != "PBXFileReference") continue;
+		if (childObject->type_name() != PBXFileReference::type_name) continue;
 		auto fileRef = std::static_pointer_cast<PBXFileReference>(childObject);
 		if (fileRef->path == path) {
 			return fileRef;
@@ -634,7 +634,7 @@ PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::strin
 		if (objKey->type() != PBXTypeId) continue;
 		auto objId = std::static_pointer_cast<PBXId>(objKey);
 		auto obj = getObject<PBXObject>(*objId);
-		if (obj->type_name() != "PBXBuildFile") continue;
+		if (obj->type_name() != PBXBuildFile::type_name) continue;
 		auto buildFile = std::static_pointer_cast<PBXBuildFile>(obj);
 		if (buildFile->fileRef == fileRef->id) {
 			return buildFile;
@@ -1153,16 +1153,16 @@ void PBXGroup::sortChildren()
 		auto aObj = xcodeproj->getObject<PBXObject>(*aId);
 		auto bObj = xcodeproj->getObject<PBXObject>(*bId);
 		std::string aName, bName;
-		if (aObj->type_name() == "PBXGroup") {
+		if (aObj->type_name() == PBXGroup::type_name) {
 			aName = std::static_pointer_cast<PBXGroup>(aObj)->name;
 		}
-		else if (aObj->type_name() == "PBXFileReference") {
+		else if (aObj->type_name() == PBXFileReference::type_name) {
 			aName = std::static_pointer_cast<PBXFileReference>(aObj)->path;
 		}
-		if (bObj->type_name() == "PBXGroup") {
+		if (bObj->type_name() == PBXGroup::type_name) {
 			bName = std::static_pointer_cast<PBXGroup>(bObj)->name;
 		}
-		else if (bObj->type_name() == "PBXFileReference") {
+		else if (bObj->type_name() == PBXFileReference::type_name) {
 			bName = std::static_pointer_cast<PBXFileReference>(bObj)->path;
 		}
 		return aName < bName; 
