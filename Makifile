@@ -1,6 +1,6 @@
 /* project */
 
-project pbx {
+project sushi {
 
 	config * {
 		x_apple_sdk macosx;
