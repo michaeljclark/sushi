@@ -25,6 +25,10 @@ project sushi {
 		libs sushi;
 	};
 
+	tool maki {
+		source app/maki.cc;
+	};
+
 	tool pbx_create {
 		source app/pbx_create.cc;
 	};
