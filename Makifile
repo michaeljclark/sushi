@@ -19,12 +19,12 @@ project pbx {
 		type static;
 	};
 
-	lib pbx_io {
-		source pbx_io/*.h pbx_io/*.cc;
+	lib sushi {
+		source sushi/*.h sushi/*.cc;
 	};
 
 	tool * {
-		libs pbx_io;
+		libs sushi;
 	};
 
 	tool pbx_create {
