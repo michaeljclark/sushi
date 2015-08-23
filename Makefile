@@ -130,8 +130,12 @@ PBXREAD_SRCS =      $(APP_SRC_DIR)/pbx_read.cc
 PBXREAD_OBJS =      $(call src_objs, $(PBXREAD_SRCS))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
 
-ALL_SRCS =          $(SUSHI_SRCS) $(PBXCREATE_SRCS) $(PBXREAD_SRCS)
-BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN)
+SUSHICLI_SRCS =     $(APP_SRC_DIR)/maki.cc
+SUSHICLI_OBJS =     $(call src_objs, $(SUSHICLI_SRCS))
+SUSHICLI_BIN =      $(BIN_DIR)/maki
+
+ALL_SRCS =          $(SUSHI_SRCS) $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(SUSHICLI_SRCS)
+BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN) $(SUSHICLI_BIN)
 
 # don't build library if LTO is enabled
 ifeq ($(enable_lto),1)
@@ -153,10 +157,12 @@ dist: clean ; dir=$$(basename $$(pwd)) ; cd .. && tar --exclude .git -czf $${dir
 ifeq ($(enable_lto),1)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 else
 $(SUSHI_LIB): $(SUSHI_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 endif
 
 # build recipes

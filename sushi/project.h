@@ -15,7 +15,7 @@ struct project : project_parser
     void end_statement();
     void start_block();
     void end_block();
-    void config_done();
+    void project_done();
 };
 
 #endif

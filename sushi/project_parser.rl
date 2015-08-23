@@ -28,7 +28,7 @@
     Eol = ';' %w_end_statement;
     newline = ('\r' | '\n' ) | '\n';
     ws = (' ' | '\t' | '\r' | '\n' )+;
-    comment = '/*' ( any* - ( any* '*/' any* ) ) '*/';
+    comment = '#' ( any* - ( any* '\n' any* ) ) '\n';
     symbol = ( ( any - ';' - ws - '{' - '}' )+ - ('/*') ) >mark %w_symbol;
     statement = ( symbol ( ws symbol)* ) ws* Eol;
     start_block = ( symbol ( ws symbol)* ) ws+ '{' %w_start_block;

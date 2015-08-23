@@ -28,23 +28,28 @@ void project::read(std::string project_file)
     }
 }
 
-void project::symbol(const char *value, size_t vlen)
+void project::symbol(const char *value, size_t length)
 {
+	log_debug("symbol: %s", std::string(value, length).c_str());
 }
 
 void project::start_block()
 {
+	log_debug("start_block");
 }
 
 void project::end_block()
 {
+	log_debug("end_block");
 }
 
 void project::end_statement()
 {
+	log_debug("end_statement");
 }
 
-void project::config_done()
+void project::project_done()
 {
+	log_debug("project_done");
 }
 
