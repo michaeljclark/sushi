@@ -28,11 +28,11 @@ project pbx {
 	};
 
 	tool pbx_create {
-		source pbx_create/*.cc;
+		source app/pbx_create.cc;
 	};
 
 	tool pbx_read {
-		source pbx_read/*.cc;
+		source app/pbx_read.cc;
 	};
 
 };
