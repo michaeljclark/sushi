@@ -19,7 +19,9 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "pbx_io.h"
+#include "log.h"
+#include "util.h"
+#include "pbx.h"
 
 /* main */
 

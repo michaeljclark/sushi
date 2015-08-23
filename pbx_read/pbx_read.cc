@@ -19,7 +19,9 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "pbx_io.h"
+#include "log.h"
+#include "util.h"
+#include "pbx.h"
 
 /* main */
 
@@ -29,7 +31,7 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 	PBXParserImpl pbx;
-	std::vector<char> buf = PBXUtil::read_file(argv[1]);
+	std::vector<char> buf = util::read_file(argv[1]);
 	PBXParseError error = pbx.parse(buf);
 	if (error != PBXParseErrorNone) {
 		log_fatal_exit("error parsing project: %d", error);

@@ -1,36 +1,5 @@
-#ifndef pbx_io_h
-#define pbx_io_h
-
-
-/* logging */
-
-std::string format_string(const char* fmt, ...);
-void log_prefix(const char* prefix, const char* fmt, va_list arg);
-void log_fatal_exit(const char* fmt, ...);
-void log_error(const char* fmt, ...);
-void log_info(const char* fmt, ...);
-void log_debug(const char* fmt, ...);
-
-
-/* utility */
-
-struct PBXUtil {
-	static const char* HEX_DIGITS;
-	static const char* LITERAL_CHARS;
-
-	static std::string ltrim(std::string s);
-	static std::string rtrim(std::string s);
-	static std::string trim(std::string s);
-	static int canonicalize_path(char *path);
-	static std::vector<std::string> path_components(std::string path);
-	static std::string hex_encode(const unsigned char *buf, size_t len);
-	static void hex_decode(std::string hex, unsigned char *buf, size_t len);
-	static void generate_random(unsigned char *buf, size_t len);
-	static bool literal_requires_quotes(std::string str);
-	static std::string escape_quotes(std::string str);
-	static bool literal_is_hex_id(std::string str);
-	static std::vector<char> read_file(std::string filename);
-};
+#ifndef pbx_h
+#define pbx_h
 
 
 /* PBX primitives */
@@ -93,11 +62,11 @@ struct PBXId : PBXValue {
 	PBXId() : id(), comment() {}
 
 	PBXId(std::string id_str) : comment() {
-		PBXUtil::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+		util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 	}
 
 	PBXId(std::string id_str, std::string comment) : comment(comment) {
-		PBXUtil::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+		util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 	}
 
 	PBXId(const PBXId& o) : comment(o.comment) {
@@ -105,13 +74,13 @@ struct PBXId : PBXValue {
 	}
 
 	std::string str() {
-		return PBXUtil::hex_encode(id.id_val, sizeof(id.id_val));
+		return util::hex_encode(id.id_val, sizeof(id.id_val));
 	}
 
 	static PBXId createRootId() {
 		PBXId newid;
 		newid.id.id_obj = next_id++;
-		PBXUtil::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
+		util::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
 		return newid;
 	}
 
