@@ -1,0 +1,38 @@
+/* project */
+
+project pbx {
+
+	config * {
+		x_apple_sdk macosx;
+		x_apple_target 10.10;
+	};
+
+	config Debug {
+		cflags DEBUG;
+	};
+
+	config Release {
+		cflags NDEBUG;
+	};
+
+	lib * {
+		type static;
+	};
+
+	lib pbx_io {
+		source pbx_io/*.h pbx_io/*.cc;
+	};
+
+	tool * {
+		libs pbx_io;
+	};
+
+	tool pbx_create {
+		source pbx_create/*.cc;
+	};
+
+	tool pbx_read {
+		source pbx_read/*.cc;
+	};
+
+};
