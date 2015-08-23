@@ -1,3 +1,3 @@
-# pbx_io
+# sushi
 
-Xcode project parser and object model
+Xcode project generator
