@@ -21,23 +21,56 @@
 #include "pbx.h"
 
 
-/* PBX Id */
+/* PBXId */
 
 uint32_t PBXId::next_id = 0;
 
-
-/* PBX Array */
-
-void PBXArray::add(PBXValuePtr val) {
-	array_val.push_back(val);
+PBXId PBXId::createRootId() {
+	PBXId newid;
+	newid.id.id_obj = next_id++;
+	util::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
+	return newid;
 }
 
-void PBXArray::addIdRef(PBXObjectPtr obj) {
-	array_val.push_back(std::make_shared<PBXId>(obj->id));
+PBXId PBXId::createId(const PBXId &o) {
+	PBXId newid;
+	newid.id.id_obj = next_id++;
+	memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));;
+	return newid;
 }
 
+PBXId::PBXId() : id(), comment() {}
 
-/* PBX Map */
+PBXId::PBXId(std::string id_str) : comment() {
+	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+}
+
+PBXId::PBXId(std::string id_str, std::string comment) : comment(comment) {
+	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+}
+
+PBXId::PBXId(const PBXId& o) : comment(o.comment) {
+	memcpy(id.id_val, o.id.id_val, sizeof(id.id_val));
+}
+
+std::string PBXId::str() {
+	return util::hex_encode(id.id_val, sizeof(id.id_val));
+}
+
+PBXType PBXId::type() { return PBXTypeId; }
+
+bool PBXId::operator<(const PBXId &o) { return this->id < o.id; }
+bool PBXId::operator==(const PBXId &o) { return this->id == o.id; }
+
+
+/* PBXMap */
+
+PBXType PBXMap::type() { return PBXTypeMap; }
+
+void PBXMap::clear() {
+	object_val.clear();
+	key_order.clear();
+}
 
 void PBXMap::put(std::string key, std::string comment, PBXValuePtr val)
 {
@@ -215,9 +248,34 @@ void PBXMap::setMap(std::string key, PBXMapPtr map)
 	object_val[key] = map;
 }
 
+
+/* PBXArray */
+
+PBXType PBXArray::type() { return PBXTypeArray; }
+
+void PBXArray::add(PBXValuePtr val) {
+	array_val.push_back(val);
+}
+
+void PBXArray::addIdRef(PBXObjectPtr obj) {
+	array_val.push_back(std::make_shared<PBXId>(obj->id));
+}
+
+
+/* PBXLiteral */
+
+PBXLiteral::PBXLiteral(std::string literal_val) : literal_val(literal_val) {}
+
+PBXType PBXLiteral::type() { return PBXTypeLiteral; }
+
+
 /* PBXObject */
 
 const std::string PBXObject::default_type_name =             "PBXObject";
+
+PBXType PBXObject::type() { return PBXTypeObject; }
+
+const std::string& PBXObject::type_name() { return default_type_name; };
 
 
 /* PBX classes */

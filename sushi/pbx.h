@@ -59,55 +59,28 @@ struct PBXId : PBXValue {
 
 	static uint32_t next_id;
 
-	PBXId() : id(), comment() {}
+	static PBXId createRootId();
+	static PBXId createId(const PBXId &o);
 
-	PBXId(std::string id_str) : comment() {
-		util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
-	}
+	PBXId();
+	PBXId(std::string id_str);
+	PBXId(std::string id_str, std::string comment);
+	PBXId(const PBXId& o);
 
-	PBXId(std::string id_str, std::string comment) : comment(comment) {
-		util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
-	}
+	std::string str();
+	virtual PBXType type();
 
-	PBXId(const PBXId& o) : comment(o.comment) {
-		memcpy(id.id_val, o.id.id_val, sizeof(id.id_val));
-	}
-
-	std::string str() {
-		return util::hex_encode(id.id_val, sizeof(id.id_val));
-	}
-
-	static PBXId createRootId() {
-		PBXId newid;
-		newid.id.id_obj = next_id++;
-		util::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
-		return newid;
-	}
-
-	static PBXId createId(const PBXId &o) {
-		PBXId newid;
-		newid.id.id_obj = next_id++;
-		memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));;
-		return newid;
-	}
-
-	virtual PBXType type() { return PBXTypeId; }
-
-	bool operator<(const PBXId &o) { return this->id < o.id; }
-	bool operator==(const PBXId &o) { return this->id == o.id; }
+	bool operator<(const PBXId &o);
+	bool operator==(const PBXId &o);
 };
 
 struct PBXMap : PBXValue {
 	std::map<std::string,PBXValuePtr> object_val;
 	std::vector<PBXKey> key_order;
 
-	virtual PBXType type() { return PBXTypeMap; }
+	virtual PBXType type();
 
-	void clear() {
-		object_val.clear();
-		key_order.clear();
-	}
-
+	void clear();
 	void put(std::string key, std::string comment, PBXValuePtr val);
 	void putObject(PBXObjectPtr obj);
 	void replace(std::string key, PBXValuePtr val);
@@ -131,7 +104,7 @@ struct PBXMap : PBXValue {
 struct PBXArray : PBXValue {
 	std::vector<PBXValuePtr> array_val;
 
-	virtual PBXType type() { return PBXTypeArray; }
+	virtual PBXType type();
 
 	void add(PBXValuePtr val);
 	void addIdRef(PBXObjectPtr obj);
@@ -140,9 +113,9 @@ struct PBXArray : PBXValue {
 struct PBXLiteral : PBXValue {
 	std::string literal_val;
 
-	PBXLiteral(std::string literal_val) : literal_val(literal_val) {}
+	PBXLiteral(std::string literal_val);
 
-	virtual PBXType type() { return PBXTypeLiteral; }
+	virtual PBXType type();
 };
 
 struct PBXObject : PBXMap {
@@ -153,9 +126,9 @@ struct PBXObject : PBXMap {
 
 	virtual ~PBXObject() {}
 
-	virtual PBXType type() { return PBXTypeObject; }
+	virtual PBXType type();
 
-	virtual const std::string& type_name() { return default_type_name; };
+	virtual const std::string& type_name();
 
 	virtual void syncFromMap() {}
 	virtual void syncToMap() {
