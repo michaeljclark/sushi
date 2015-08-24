@@ -59,17 +59,17 @@
 		653C28041B8B0D25005EAE6F /* sushi */ = {
 			isa = PBXGroup;
 			children = (
-				653C28051B8B0D39005EAE6F /* util.cc */,
 				653C28061B8B0D39005EAE6F /* log.cc */,
-				653C28071B8B0D39005EAE6F /* xcode.cc */,
-				653C28081B8B0D39005EAE6F /* xcode.h */,
+				653C280F1B8B0D39005EAE6F /* log.h */,
 				653C28091B8B0D39005EAE6F /* project_parser.cc */,
+				653C280E1B8B0D39005EAE6F /* project_parser.h */,
 				653C280A1B8B0D39005EAE6F /* project_parser.rl */,
 				653C280B1B8B0D39005EAE6F /* project.cc */,
 				653C280C1B8B0D39005EAE6F /* project.h */,
+				653C28051B8B0D39005EAE6F /* util.cc */,
 				653C280D1B8B0D39005EAE6F /* util.h */,
-				653C280E1B8B0D39005EAE6F /* project_parser.h */,
-				653C280F1B8B0D39005EAE6F /* log.h */,
+				653C28071B8B0D39005EAE6F /* xcode.cc */,
+				653C28081B8B0D39005EAE6F /* xcode.h */,
 			);
 			name = sushi;
 			sourceTree = "<group>";
