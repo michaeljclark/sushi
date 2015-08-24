@@ -10,8 +10,6 @@
 #include <algorithm>
 #include <functional>
 
-#include <unistd.h>
-#include <fcntl.h>
 #include <sys/stat.h>
 
 #include "log.h"
@@ -166,23 +164,21 @@ std::vector<char> util::read_file(std::string filename)
 	std::vector<char> buf;
 	struct stat stat_buf;
 
-	int fd = ::open(filename.c_str(), O_RDONLY);
-	if (fd < 0) {
-		log_fatal_exit("error open: %s: %s", filename.c_str(), strerror(errno));
+	FILE *file = fopen(filename.c_str(), "r");
+	if (!file) {
+		log_fatal_exit("error fopen: %s: %s", filename.c_str(), strerror(errno));
 	}
 
-	if (fstat(fd, &stat_buf) < 0) {
+	if (fstat(fileno(file), &stat_buf) < 0) {
 		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
 	}
 
 	buf.resize(stat_buf.st_size);
-	ssize_t bytes_read = ::read(fd, buf.data(), stat_buf.st_size);
-	if (bytes_read < 0) {
-		log_fatal_exit("error read: %s: %s", filename.c_str(), strerror(errno));
-	} else if (bytes_read != stat_buf.st_size) {
-		log_fatal_exit("error short read: %s", filename.c_str());
+	size_t bytes_read = fread(buf.data(), 1, stat_buf.st_size, file);
+	if (bytes_read != (size_t)stat_buf.st_size) {
+		log_fatal_exit("error fread: %s", filename.c_str());
 	}
-	::close(fd);
+	fclose(file);
 
 	return buf;
 }
