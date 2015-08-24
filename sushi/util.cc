@@ -91,12 +91,17 @@ std::vector<std::string> util::path_components(std::string path)
 		return path_components;
 	}
 
-	char *token, *p = buf.data();
-	while ((token = strsep(&p, "/")) != NULL) {
-		if(strlen(token)) {
-			path_components.push_back(token);
+	size_t last_index = 0, index;
+	while ((index = path.find_first_of("/", last_index)) != std::string::npos) {
+		if (index - last_index > 1) {
+			path_components.push_back(path.substr(last_index, index - last_index));
 		}
+		last_index = index + 1;
 	}
+	if (path.size() - last_index > 1) {
+		path_components.push_back(path.substr(last_index, path.size() - last_index));
+	}
+
 	return path_components;
 }
 
