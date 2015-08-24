@@ -16,6 +16,9 @@
 #include "log.h"
 #include "util.h"
 
+#ifdef _WIN32
+#define fileno _fileno
+#endif
 
 /* utility */
 
