@@ -123,14 +123,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\sushi\log.h" />
-    <ClInclude Include="..\sushi\pbx.h" />
+    <ClInclude Include="..\sushi\xcode.h" />
     <ClInclude Include="..\sushi\project.h" />
     <ClInclude Include="..\sushi\project_parser.h" />
     <ClInclude Include="..\sushi\util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\sushi\log.cc" />
-    <ClCompile Include="..\sushi\pbx.cc" />
+    <ClCompile Include="..\sushi\xcode.cc" />
     <ClCompile Include="..\sushi\project.cc" />
     <ClCompile Include="..\sushi\project_parser.cc" />
     <ClCompile Include="..\sushi\util.cc" />

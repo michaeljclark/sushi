@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		653C281D1B8B0D5A005EAE6F /* util.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28051B8B0D39005EAE6F /* util.cc */; };
 		653C281E1B8B0D5A005EAE6F /* log.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28061B8B0D39005EAE6F /* log.cc */; };
-		653C281F1B8B0D5A005EAE6F /* pbx.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28071B8B0D39005EAE6F /* pbx.cc */; };
+		653C281F1B8B0D5A005EAE6F /* xcode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28071B8B0D39005EAE6F /* xcode.cc */; };
 		653C28201B8B0D5A005EAE6F /* project_parser.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28091B8B0D39005EAE6F /* project_parser.cc */; };
 		653C28211B8B0D5A005EAE6F /* project.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C280B1B8B0D39005EAE6F /* project.cc */; };
 /* End PBXBuildFile section */
@@ -17,8 +17,8 @@
 /* Begin PBXFileReference section */
 		653C28051B8B0D39005EAE6F /* util.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cc; path = ../sushi/util.cc; sourceTree = "<group>"; };
 		653C28061B8B0D39005EAE6F /* log.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = log.cc; path = ../sushi/log.cc; sourceTree = "<group>"; };
-		653C28071B8B0D39005EAE6F /* pbx.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pbx.cc; path = ../sushi/pbx.cc; sourceTree = "<group>"; };
-		653C28081B8B0D39005EAE6F /* pbx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pbx.h; path = ../sushi/pbx.h; sourceTree = "<group>"; };
+		653C28071B8B0D39005EAE6F /* xcode.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xcode.cc; path = ../sushi/xcode.cc; sourceTree = "<group>"; };
+		653C28081B8B0D39005EAE6F /* xcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xcode.h; path = ../sushi/xcode.h; sourceTree = "<group>"; };
 		653C28091B8B0D39005EAE6F /* project_parser.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = project_parser.cc; path = ../sushi/project_parser.cc; sourceTree = "<group>"; };
 		653C280A1B8B0D39005EAE6F /* project_parser.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = project_parser.rl; path = ../sushi/project_parser.rl; sourceTree = "<group>"; };
 		653C280B1B8B0D39005EAE6F /* project.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = project.cc; path = ../sushi/project.cc; sourceTree = "<group>"; };
@@ -61,8 +61,8 @@
 			children = (
 				653C28051B8B0D39005EAE6F /* util.cc */,
 				653C28061B8B0D39005EAE6F /* log.cc */,
-				653C28071B8B0D39005EAE6F /* pbx.cc */,
-				653C28081B8B0D39005EAE6F /* pbx.h */,
+				653C28071B8B0D39005EAE6F /* xcode.cc */,
+				653C28081B8B0D39005EAE6F /* xcode.h */,
 				653C28091B8B0D39005EAE6F /* project_parser.cc */,
 				653C280A1B8B0D39005EAE6F /* project_parser.rl */,
 				653C280B1B8B0D39005EAE6F /* project.cc */,
@@ -143,7 +143,7 @@
 				653C28201B8B0D5A005EAE6F /* project_parser.cc in Sources */,
 				653C281E1B8B0D5A005EAE6F /* log.cc in Sources */,
 				653C28211B8B0D5A005EAE6F /* project.cc in Sources */,
-				653C281F1B8B0D5A005EAE6F /* pbx.cc in Sources */,
+				653C281F1B8B0D5A005EAE6F /* xcode.cc in Sources */,
 				653C281D1B8B0D5A005EAE6F /* util.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,6 +267,7 @@
 				653C281C1B8B0D4A005EAE6F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

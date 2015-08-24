@@ -114,7 +114,7 @@ src_deps =          $(subst $(APP_SRC_DIR),$(DEP_DIR),$(subst $(LIB_SRC_DIR),$(D
 
 # target source and objects
 SUSHI_SRCS =        $(LIB_SRC_DIR)/log.cc \
-                    $(LIB_SRC_DIR)/pbx.cc \
+                    $(LIB_SRC_DIR)/xcode.cc \
                     $(LIB_SRC_DIR)/project.cc \
                     $(LIB_SRC_DIR)/project_parser.cc \
                     $(LIB_SRC_DIR)/util.cc
