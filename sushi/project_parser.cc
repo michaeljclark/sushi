@@ -26,100 +26,62 @@ static const char _project_parser_actions[] = {
 };
 
 static const char _project_parser_key_offsets[] = {
-	0, 0, 7, 15, 22, 29, 36, 44, 
-	49, 50, 55, 63, 71, 79, 87, 95, 
-	103, 111, 119, 127
+	0, 0, 8, 16, 17, 25, 33, 41
 };
 
 static const char _project_parser_trans_keys[] = {
-	13, 32, 59, 123, 125, 9, 10, 13, 
-	32, 35, 59, 123, 125, 9, 10, 13, 
-	32, 59, 123, 125, 9, 10, 9, 10, 
-	13, 32, 59, 123, 125, 9, 10, 13, 
-	32, 59, 123, 125, 9, 10, 13, 32, 
-	35, 59, 123, 125, 13, 32, 59, 9, 
-	10, 10, 9, 10, 13, 32, 59, 13, 
-	32, 35, 59, 123, 125, 9, 10, 13, 
-	32, 35, 59, 123, 125, 9, 10, 13, 
-	32, 35, 59, 123, 125, 9, 10, 13, 
-	32, 35, 59, 123, 125, 9, 10, 13, 
-	32, 35, 59, 123, 125, 9, 10, 9, 
+	13, 32, 35, 59, 123, 125, 9, 10, 
+	13, 32, 35, 59, 123, 125, 9, 10, 
 	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 13, 32, 35, 59, 123, 125, 13, 
-	32, 35, 59, 123, 125, 9, 10, 9, 
 	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 13, 32, 35, 59, 123, 125, 0
+	10, 13, 32, 35, 59, 123, 125, 9, 
+	10, 13, 32, 35, 59, 123, 125, 9, 
+	10, 0
 };
 
 static const char _project_parser_single_lengths[] = {
-	0, 5, 6, 5, 7, 7, 8, 3, 
-	1, 5, 6, 6, 6, 6, 6, 8, 
-	8, 6, 8, 8
+	0, 6, 6, 1, 6, 6, 6, 6
 };
 
 static const char _project_parser_range_lengths[] = {
-	0, 1, 1, 1, 0, 0, 0, 1, 
-	0, 0, 1, 1, 1, 1, 1, 0, 
-	0, 1, 0, 0
+	0, 1, 1, 0, 1, 1, 1, 1
 };
 
-static const unsigned char _project_parser_index_offsets[] = {
-	0, 0, 7, 15, 22, 30, 38, 47, 
-	52, 54, 60, 68, 76, 84, 92, 100, 
-	109, 118, 126, 135
+static const char _project_parser_index_offsets[] = {
+	0, 0, 8, 16, 18, 26, 34, 42
 };
 
 static const char _project_parser_indicies[] = {
-	1, 1, 2, 3, 3, 1, 0, 5, 
-	5, 6, 7, 8, 3, 5, 4, 3, 
-	3, 3, 3, 3, 3, 0, 10, 11, 
-	10, 10, 10, 10, 10, 9, 12, 13, 
-	12, 12, 14, 10, 10, 9, 16, 17, 
-	16, 16, 18, 19, 20, 10, 15, 21, 
-	21, 22, 21, 3, 11, 10, 23, 24, 
-	23, 23, 25, 10, 11, 11, 18, 3, 
-	3, 21, 11, 4, 27, 27, 28, 3, 
-	3, 29, 27, 26, 17, 17, 18, 7, 
-	8, 21, 17, 4, 31, 31, 32, 3, 
-	3, 33, 31, 30, 35, 35, 36, 3, 
-	3, 37, 35, 34, 39, 27, 39, 39, 
-	28, 10, 10, 40, 38, 41, 11, 41, 
-	41, 18, 10, 10, 23, 15, 24, 24, 
-	18, 22, 3, 21, 24, 4, 43, 35, 
-	43, 43, 36, 10, 10, 44, 42, 46, 
-	31, 46, 46, 32, 10, 10, 47, 45, 
-	0
+	1, 1, 2, 3, 2, 2, 1, 0, 
+	5, 5, 2, 6, 7, 2, 5, 4, 
+	9, 8, 9, 9, 8, 2, 2, 10, 
+	9, 4, 12, 12, 13, 2, 2, 14, 
+	12, 11, 16, 16, 17, 2, 2, 18, 
+	16, 15, 20, 20, 21, 2, 2, 22, 
+	20, 19, 0
 };
 
 static const char _project_parser_trans_targs[] = {
-	1, 2, 11, 0, 1, 2, 3, 11, 
-	13, 5, 8, 10, 6, 12, 15, 5, 
-	6, 12, 4, 15, 19, 7, 14, 9, 
-	17, 18, 1, 10, 4, 7, 1, 10, 
-	4, 7, 1, 10, 4, 7, 5, 16, 
-	9, 16, 5, 16, 9, 5, 16, 9
+	1, 2, 0, 5, 1, 2, 5, 7, 
+	3, 4, 6, 1, 4, 3, 6, 1, 
+	4, 3, 6, 1, 4, 3, 6
 };
 
 static const char _project_parser_trans_actions[] = {
-	0, 7, 7, 0, 1, 0, 1, 0, 
-	0, 0, 0, 0, 7, 7, 7, 1, 
-	0, 0, 1, 0, 0, 0, 0, 0, 
-	0, 0, 25, 9, 25, 9, 13, 3, 
-	13, 3, 19, 5, 19, 5, 25, 9, 
-	9, 0, 19, 5, 5, 13, 3, 3
+	0, 7, 0, 7, 1, 0, 0, 0, 
+	0, 0, 0, 25, 9, 9, 9, 19, 
+	5, 5, 5, 13, 3, 3, 3
 };
 
 static const char _project_parser_eof_actions[] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 11, 28, 11, 16, 22, 28, 
-	11, 11, 22, 16
+	0, 0, 0, 0, 11, 28, 22, 16
 };
 
-static const int project_parser_start = 10;
-static const int project_parser_first_final = 10;
+static const int project_parser_start = 4;
+static const int project_parser_first_final = 4;
 static const int project_parser_error = 0;
 
-static const int project_parser_en_main = 10;
+static const int project_parser_en_main = 4;
 
 
 #line 43 "sushi/project_parser.rl"
@@ -134,14 +96,14 @@ bool project_parser::parse(const char *buffer, size_t len)
     const char *eof = pe;
 
     
-#line 138 "sushi/project_parser.cc"
+#line 100 "sushi/project_parser.cc"
 	{
 	cs = project_parser_start;
 	}
 
 #line 54 "sushi/project_parser.rl"
     
-#line 145 "sushi/project_parser.cc"
+#line 107 "sushi/project_parser.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -235,7 +197,7 @@ _match:
 #line 21 "sushi/project_parser.rl"
 	{ end_statement(); }
 	break;
-#line 239 "sushi/project_parser.cc"
+#line 201 "sushi/project_parser.cc"
 		}
 	}
 
@@ -270,7 +232,7 @@ _again:
         {p++; goto _out; }
     }
 	break;
-#line 274 "sushi/project_parser.cc"
+#line 236 "sushi/project_parser.cc"
 		}
 	}
 	}

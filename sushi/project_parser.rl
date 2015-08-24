@@ -29,10 +29,10 @@
     newline = ('\r' | '\n' ) | '\n';
     ws = (' ' | '\t' | '\r' | '\n' )+;
     comment = '#' ( any - '\n' )* '\n';
-    symbol = ( ( any - ';' - ws - '{' - '}' )+ - ('#') ) >mark %w_symbol;
+    symbol = ( any - ';' - ws - '{' - '}' - '#' )+ >mark %w_symbol;
     statement = ( symbol ( ws symbol)* ) ws* Eol;
     start_block = ( symbol ( ws symbol)* ) ws+ '{' %w_start_block;
-    end_block = '}' ws* ';' %w_end_block;
+    end_block = '}' %w_end_block;
     project = ( comment | start_block | end_block | statement | ws )* %done;
 
     main := project;

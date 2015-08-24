@@ -1,40 +1,43 @@
 project sushi {
 
+	# inherited by all configurations
 	config * {
 		x_apple_sdk macosx;
 		x_apple_target 10.10;
-	};
+	}
 
 	config Debug {
 		cflags DEBUG;
-	};
+	}
 
 	config Release {
 		cflags NDEBUG;
-	};
+	}
 
+	# inherited by all libraries
 	lib * {
 		type static;
-	};
+	}
 
 	lib sushi {
 		source sushi/*.h sushi/*.cc;
-	};
+	}
 
+	# inherited by all tools
 	tool * {
 		libs sushi;
-	};
+	}
 
 	tool maki {
 		source app/maki.cc;
-	};
+	}
 
 	tool pbx_create {
 		source app/pbx_create.cc;
-	};
+	}
 
 	tool pbx_read {
 		source app/pbx_read.cc;
-	};
+	}
 
-};
+}
