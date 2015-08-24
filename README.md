@@ -1,3 +1,3 @@
 # sushi
 
-Xcode (and eventually) Visual Studio project generator
+Xcode, (and eventually) Visual Studio and Ninja project generator
