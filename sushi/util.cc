@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cctype>
 #include <cstring>
 #include <cstdlib>
 #include <cerrno>
@@ -6,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <random>
+#include <algorithm>
 #include <functional>
 
 #include <unistd.h>
