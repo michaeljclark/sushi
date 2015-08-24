@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cerrno>
+#include <ctime>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -127,10 +128,10 @@ void util::hex_decode(std::string hex, unsigned char *buf, size_t len)
 void util::generate_random(unsigned char *buf, size_t len)
 {
 	static std::default_random_engine generator;
-	static std::uniform_int_distribution<unsigned char> distribution(0, 255);
-	generator.seed(time(NULL));
+	static std::uniform_int_distribution<unsigned int> distribution(0, 255);
+	generator.seed((unsigned int)time(NULL));
 	for (size_t i = 0; i < len; i++) {
-		buf[i] = distribution(generator);
+		buf[i] = (unsigned char)distribution(generator);
 	}
 }
 
