@@ -371,20 +371,20 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 	void syncToMap();
 };
 
-enum FileTypeFlag {
-	FileTypeFlag_None           = 0x0000,
-	FileTypeFlag_Compiler       = 0x0001,
-	FileTypeFlag_Assembler      = 0x0002,
-	FileTypeFlag_Header         = 0x0004,
-	FileTypeFlag_LinkLibrary    = 0x0008,
-	FileTypeFlag_LinkFramework  = 0x0010,
-	FileTypeFlag_Resource       = 0x0020,
-	FileTypeFlag_Application    = 0x0040
+enum FileType {
+	FileTypeNone           = 0x0000,
+	FileTypeCompiler       = 0x0001,
+	FileTypeAssembler      = 0x0002,
+	FileTypeHeader         = 0x0004,
+	FileTypeLinkLibrary    = 0x0008,
+	FileTypeLinkFramework  = 0x0010,
+	FileTypeResource       = 0x0020,
+	FileTypeApplication    = 0x0040
 };
 
 struct FileTypeMetaData {
 	std::vector<std::string> extensions;
-	std::string type;
+	std::string xcodeType;
 	uint64_t flags;
 };
 

@@ -531,9 +531,9 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	for (auto sourceFile : source) {
 		FileTypeMetaData *meta = PBXFileReference::getFileMetaForPath(sourceFile);
 		auto sourceFileRef = getFileReferenceForPath(sourceFile);
-		sourceFileRef->lastKnownFileType = meta->type;
+		sourceFileRef->lastKnownFileType = meta->xcodeType;
 		sourceFileRef->includeInIndex = 1;
-		if (!(meta && (meta->flags & FileTypeFlag_Compiler))) continue;
+		if (!(meta && (meta->flags & FileTypeCompiler))) continue;
 		auto sourceBuildFileRef = getBuildFile(sourceFileRef, sourceFileRef->id.comment + " in Sources");
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
 	}
@@ -806,18 +806,18 @@ std::once_flag PBXFileReference::extTypeMapInit;
 std::map<std::string,FileTypeMetaData*> PBXFileReference::extTypeMap;
 
 FileTypeMetaData PBXFileReference::typeMetaData[] = {
-	{{ext_c_source}, type_c_source, FileTypeFlag_Compiler},
-	{{ext_c_header}, type_c_header, FileTypeFlag_Header},
-	{{ext_objc_source}, type_objc_source, FileTypeFlag_Compiler},
-	{{ext_objcpp_source}, type_objccpp_source, FileTypeFlag_Compiler},
-	{{ext_cpp_source_1, ext_cpp_source_2}, type_cpp_source, FileTypeFlag_Compiler},
-	{{ext_cpp_header_1, ext_cpp_header_2}, type_cpp_header, FileTypeFlag_Header},
-	{{ext_plist}, type_plist, FileTypeFlag_Resource},
-	{{ext_library_archive}, type_library_archive, FileTypeFlag_LinkLibrary},
-	{{ext_application}, type_application, FileTypeFlag_Application},
-	{{ext_bundle}, type_bundle, FileTypeFlag_Resource},
-	{{ext_framework}, type_framework, FileTypeFlag_LinkFramework},
-	{{}, std::string(), FileTypeFlag_None}
+	{{ext_c_source}, type_c_source, FileTypeCompiler},
+	{{ext_c_header}, type_c_header, FileTypeHeader},
+	{{ext_objc_source}, type_objc_source, FileTypeCompiler},
+	{{ext_objcpp_source}, type_objccpp_source, FileTypeCompiler},
+	{{ext_cpp_source_1, ext_cpp_source_2}, type_cpp_source, FileTypeCompiler},
+	{{ext_cpp_header_1, ext_cpp_header_2}, type_cpp_header, FileTypeHeader},
+	{{ext_plist}, type_plist, FileTypeResource},
+	{{ext_library_archive}, type_library_archive, FileTypeLinkLibrary},
+	{{ext_application}, type_application, FileTypeApplication},
+	{{ext_bundle}, type_bundle, FileTypeResource},
+	{{ext_framework}, type_framework, FileTypeLinkFramework},
+	{{}, std::string(), FileTypeNone}
 };
 
 std::string PBXFileReference::getExtensionFromPath(std::string path)
@@ -836,7 +836,7 @@ FileTypeMetaData* PBXFileReference::getFileMetaForExtension(std::string extensio
 {
 	std::call_once(extTypeMapInit, [](){
 		FileTypeMetaData *meta = typeMetaData;
-		while (meta->flags != FileTypeFlag_None) {
+		while (meta->flags != FileTypeNone) {
 			for (std::string ext : meta->extensions) {
 				extTypeMap[ext] = meta;
 			}
