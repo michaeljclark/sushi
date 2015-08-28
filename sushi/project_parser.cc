@@ -183,7 +183,7 @@ _match:
 	break;
 	case 1:
 #line 18 "sushi/project_parser.rl"
-	{ start_block(); }
+	{ begin_block(); }
 	break;
 	case 2:
 #line 19 "sushi/project_parser.rl"
@@ -215,7 +215,7 @@ _again:
 		switch ( *__acts++ ) {
 	case 1:
 #line 18 "sushi/project_parser.rl"
-	{ start_block(); }
+	{ begin_block(); }
 	break;
 	case 2:
 #line 19 "sushi/project_parser.rl"

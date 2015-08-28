@@ -2,8 +2,8 @@ project sushi {
 
 	# inherited by all configurations
 	config * {
-		x_apple_sdk macosx;
-		x_apple_target 10.10;
+		define x_apple_sdk macosx;
+		define x_apple_target 10.10;
 	}
 
 	config Debug {
