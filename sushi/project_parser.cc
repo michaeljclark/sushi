@@ -242,5 +242,5 @@ _again:
 
 #line 55 "sushi/project_parser.rl"
 
-    return (cs != project_parser_error && cs == project_parser_first_final);
+    return (cs != project_parser_error || cs == project_parser_first_final);
 }

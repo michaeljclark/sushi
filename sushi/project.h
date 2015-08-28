@@ -6,9 +6,17 @@
 #define project_h
 
 struct project;
+struct project_block;
+struct project_config;
+struct project_lib;
+struct project_tool;
 struct statement_record;
 struct block_record;
 typedef std::shared_ptr<project> project_ptr;
+typedef std::shared_ptr<project_block> project_block_ptr;
+typedef std::shared_ptr<project_config> project_config_ptr;
+typedef std::shared_ptr<project_lib> project_lib_ptr;
+typedef std::shared_ptr<project_tool> project_tool_ptr;
 typedef std::vector<std::string> statement;
 typedef std::function<void(project*,statement&)>statement_function;
 typedef std::map<std::string,statement_record> statement_function_map;
@@ -31,6 +39,32 @@ struct block_record
     std::string parent_block;
     block_begin_function begin_block_fn;
     block_end_function end_block_fn;
+};
+
+struct project_block
+{
+	std::string type;
+	std::vector<std::string> libs;
+	std::vector<std::string> source;
+	std::vector<std::string> cflags;
+	std::map<std::string,std::string> defines;
+
+	virtual ~project_block() {}
+};
+
+struct project_config : project_block
+{
+
+};
+
+struct project_lib : project_block
+{
+
+};
+
+struct project_tool : project_block
+{
+
 };
 
 struct project : project_parser
@@ -57,7 +91,12 @@ struct project : project_parser
 
 	static void init();
 
-	statement current_statement;
+	statement line;
+	std::vector<project_block_ptr> block_stack;
+
+	std::vector<project_config_ptr> config_list;
+	std::vector<project_lib_ptr> lib_list;
+	std::vector<project_tool_ptr> tool_list;
 
     project();
 

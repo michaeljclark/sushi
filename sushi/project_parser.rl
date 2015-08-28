@@ -53,5 +53,5 @@ bool project_parser::parse(const char *buffer, size_t len)
     %% write init;
     %% write exec;
 
-    return (cs != project_parser_error && cs == project_parser_first_final);
+    return (cs != project_parser_error || cs == project_parser_first_final);
 }
