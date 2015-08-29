@@ -84,17 +84,21 @@ int util::canonicalize_path(char *path)
 	return 0;
 }
 
-std::vector<std::string> util::split(std::string str, char separator)
+std::vector<std::string> util::split(std::string str, std::string separator,
+		bool includeEmptyElements, bool includeSeparators)
 {
 	size_t last_index = 0, index;
 	std::vector<std::string> components;
 	while ((index = str.find_first_of(separator, last_index)) != std::string::npos) {
-		if (index - last_index > 1) {
+		if (includeEmptyElements || index - last_index > 0) {
 			components.push_back(str.substr(last_index, index - last_index));
 		}
-		last_index = index + 1;
+		if (includeSeparators) {
+			components.push_back(separator);
+		}
+		last_index = index + separator.length();
 	}
-	if (str.size() - last_index > 1) {
+	if (includeEmptyElements || str.size() - last_index > 0) {
 		components.push_back(str.substr(last_index, str.size() - last_index));
 	}
 	return components;
@@ -109,7 +113,7 @@ std::vector<std::string> util::path_components(std::string path)
 		return std::vector<std::string>();
 	}
 	path = buf.data();
-	return split(path, '/');
+	return split(path, "/", false);
 }
 
 std::string util::hex_encode(const unsigned char *buf, size_t len)

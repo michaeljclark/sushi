@@ -13,6 +13,8 @@
 #include <mutex>
 #include <map>
 
+#include <dirent.h>
+
 #include "log.h"
 #include "util.h"
 #include "project_parser.h"
@@ -126,7 +128,7 @@ void project::read(std::string project_file)
 
 bool project::check_parent(std::string allowed_parent_spec)
 {
-	std::vector<std::string> allowed_parent_list = util::split(allowed_parent_spec, '|');
+	std::vector<std::string> allowed_parent_list = util::split(allowed_parent_spec, "|");
 	std::string parent = item_stack.size() == 0 ? "<root>" : item_stack.back()->block_name();
 	for (std::string allowed_parent : allowed_parent_list) {
 		if (allowed_parent == parent) return true;
