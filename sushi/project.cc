@@ -61,7 +61,11 @@ void project::block_tool_begin(project *project, statement &line)
 void project::statement_type(project *project, statement &line)
 {
 	auto lib = std::static_pointer_cast<project_lib>(project->item_stack.back());
-	lib->lib_type = line[1];
+	if (line[1] == "static" || line[1] == "dynamic") {
+		lib->lib_type = line[1];
+	} else {
+		log_fatal_exit("type must be 'static' or 'dynamic'");
+	}
 }
 
 void project::statement_define(project *project, statement &line)
