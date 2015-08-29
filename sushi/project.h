@@ -6,17 +6,22 @@
 #define project_h
 
 struct project;
-struct project_block;
+struct project_root;
+struct project_item;
 struct project_config;
+struct project_target;
 struct project_lib;
 struct project_tool;
-struct statement_record;
-struct block_record;
+typedef std::shared_ptr<project_root> project_root_ptr;
 typedef std::shared_ptr<project> project_ptr;
-typedef std::shared_ptr<project_block> project_block_ptr;
+typedef std::shared_ptr<project_item> project_item_ptr;
 typedef std::shared_ptr<project_config> project_config_ptr;
+typedef std::shared_ptr<project_target> project_target_ptr;
 typedef std::shared_ptr<project_lib> project_lib_ptr;
 typedef std::shared_ptr<project_tool> project_tool_ptr;
+
+struct statement_record;
+struct block_record;
 typedef std::vector<std::string> statement;
 typedef std::function<void(project*,statement&)>statement_function;
 typedef std::map<std::string,statement_record> statement_function_map;
@@ -28,7 +33,7 @@ struct statement_record
 {
     int minargs;
     int maxargs;
-    std::string parent_block;
+    std::string parent_block_spec;
     statement_function statement_fn;
 };
 
@@ -36,35 +41,59 @@ struct block_record
 {
     int minargs;
     int maxargs;
-    std::string parent_block;
+    std::string parent_block_spec;
     block_begin_function begin_block_fn;
-    block_end_function end_block_fn;
 };
 
-struct project_block
+struct project_item
 {
-	std::string type;
-	std::vector<std::string> libs;
-	std::vector<std::string> source;
-	std::vector<std::string> cflags;
+	virtual ~project_item() {}
+	virtual std::string block_name() = 0;
+	virtual bool validate() { return true; }
+};
+
+struct project_root : project_item
+{
+	virtual std::string block_name() { return "project"; }
+
+	std::string project_name;
+	std::vector<project_config_ptr> config_list;
+	std::vector<project_lib_ptr> lib_list;
+	std::vector<project_tool_ptr> tool_list;
+};
+
+struct project_config : project_item
+{
+	virtual std::string block_name() { return "config"; }
+
+	std::string config_name;
 	std::map<std::string,std::string> defines;
-
-	virtual ~project_block() {}
+	std::vector<std::string> cflags;
 };
 
-struct project_config : project_block
+struct project_target : project_config
 {
+	virtual std::string target_name() = 0;
 
+	std::vector<std::string> source;
 };
 
-struct project_lib : project_block
+struct project_lib : project_target
 {
+	virtual std::string block_name() { return "lib"; }
+	virtual std::string target_name() { return lib_name; }
 
+	std::string lib_name;
+	std::string lib_type;
 };
 
-struct project_tool : project_block
+struct project_tool : project_target
 {
+	virtual std::string block_name() { return "tool"; }
+	virtual std::string target_name() { return tool_name; }
 
+	std::string tool_name;
+	std::vector<std::string> libs;
 };
 
 struct project : project_parser
@@ -75,32 +104,26 @@ struct project : project_parser
 	static statement_function_map statement_fn_map;
 	static block_function_map block_fn_map;
 
-	static void block_project_begin(project *project, statement &st);
-	static void block_project_end(project *project);
-	static void block_config_begin(project *project, statement &st);
-	static void block_config_end(project *project);
-	static void block_lib_begin(project *project, statement &st);
-	static void block_lib_end(project *project);
-	static void block_tool_begin(project *project, statement &st);
-	static void block_tool_end(project *project);
-	static void statement_type(project *project, statement &st);
-	static void statement_define(project *project, statement &st);
-	static void statement_cflags(project *project, statement &st);
-	static void statement_source(project *project, statement &st);
-	static void statement_libs(project *project, statement &st);
+	static void block_project_begin(project *project, statement &line);
+	static void block_config_begin(project *project, statement &line);
+	static void block_lib_begin(project *project, statement &line);
+	static void block_tool_begin(project *project, statement &line);
+	static void statement_type(project *project, statement &line);
+	static void statement_define(project *project, statement &line);
+	static void statement_cflags(project *project, statement &line);
+	static void statement_source(project *project, statement &line);
+	static void statement_libs(project *project, statement &line);
 
 	static void init();
 
 	statement line;
-	std::vector<project_block_ptr> block_stack;
-
-	std::vector<project_config_ptr> config_list;
-	std::vector<project_lib_ptr> lib_list;
-	std::vector<project_tool_ptr> tool_list;
+	project_root_ptr root;
+	std::vector<project_item_ptr> item_stack;
 
     project();
 
     void read(std::string project_file);
+    bool check_parent(std::string allowed_parent_spec);
     
     void symbol(const char *value, size_t length);
     void end_statement();
