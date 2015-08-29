@@ -11,6 +11,7 @@ struct util {
 	static std::string rtrim(std::string s);
 	static std::string trim(std::string s);
 	static int canonicalize_path(char *path);
+	static std::vector<std::string> split(std::string str, char separator);
 	static std::vector<std::string> path_components(std::string path);
 	static std::string hex_encode(const unsigned char *buf, size_t len);
 	static void hex_decode(std::string hex, unsigned char *buf, size_t len);

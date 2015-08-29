@@ -84,29 +84,32 @@ int util::canonicalize_path(char *path)
 	return 0;
 }
 
+std::vector<std::string> util::split(std::string str, char separator)
+{
+	size_t last_index = 0, index;
+	std::vector<std::string> components;
+	while ((index = str.find_first_of(separator, last_index)) != std::string::npos) {
+		if (index - last_index > 1) {
+			components.push_back(str.substr(last_index, index - last_index));
+		}
+		last_index = index + 1;
+	}
+	if (str.size() - last_index > 1) {
+		components.push_back(str.substr(last_index, str.size() - last_index));
+	}
+	return components;
+}
+
 std::vector<std::string> util::path_components(std::string path)
 {
 	std::vector<char> buf;
 	buf.resize(path.size() + 1);
 	memcpy(buf.data(), path.c_str(), path.size());
-
-	std::vector<std::string> path_components;
 	if (canonicalize_path(buf.data()) < 0) {
-		return path_components;
+		return std::vector<std::string>();
 	}
-
-	size_t last_index = 0, index;
-	while ((index = path.find_first_of("/", last_index)) != std::string::npos) {
-		if (index - last_index > 1) {
-			path_components.push_back(path.substr(last_index, index - last_index));
-		}
-		last_index = index + 1;
-	}
-	if (path.size() - last_index > 1) {
-		path_components.push_back(path.substr(last_index, path.size() - last_index));
-	}
-
-	return path_components;
+	path = buf.data();
+	return split(path, '/');
 }
 
 std::string util::hex_encode(const unsigned char *buf, size_t len)
