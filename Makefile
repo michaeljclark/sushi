@@ -104,6 +104,7 @@ SUSHI_SRCS =        $(SUSHI_SRC_DIR)/cmdline_options.cc \
                     $(SUSHI_SRC_DIR)/project_parser.cc \
                     $(SUSHI_SRC_DIR)/project_xcode.cc \
                     $(SUSHI_SRC_DIR)/util.cc \
+                    $(SUSHI_SRC_DIR)/visual_studio.cc \
                     $(SUSHI_SRC_DIR)/xcode.cc
 SUSHI_OBJS =        $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHI_SRCS)))
 SUSHI_LIB =         $(LIB_DIR)/libsushi.a

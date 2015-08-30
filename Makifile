@@ -35,6 +35,8 @@ project sushi {
 			sushi/project_xcode.h
 			sushi/util.cc
 			sushi/util.h
+			sushi/visual_studio.cc
+			sushi/visual_studio.h
 			sushi/xcode.cc
 			sushi/xcode.h;
 	}

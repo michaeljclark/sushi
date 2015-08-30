@@ -5,41 +5,41 @@
 	};
 	objectVersion = 46;
 	objects = {
-		0100000014288087E7A2262F /* Project Object */ = {
+		01000000F9E4A8C7CB04287C /* Project Object */ = {
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = 0200000014288087E7A2262F /* Build configuration list for PBXProject "sushi" */;
+			buildConfigurationList = 02000000F9E4A8C7CB04287C /* Build configuration list for PBXProject "sushi" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
-			hasScannedForEncodings = 2097744443;
+			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 0500000014288087E7A2262F;
-			productRefGroup = 0600000014288087E7A2262F /* Products */;
+			mainGroup = 05000000F9E4A8C7CB04287C;
+			productRefGroup = 06000000F9E4A8C7CB04287C /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 			);
 			projectRoot = "";
 			targets = (
-				2700000014288087E7A2262F /* sushi */,
-				3200000014288087E7A2262F /* tinyxml2 */,
-				3E00000014288087E7A2262F /* maki */,
-				4900000014288087E7A2262F /* pbx_create */,
-				5400000014288087E7A2262F /* pbx_read */,
+				2A000000F9E4A8C7CB04287C /* sushi */,
+				35000000F9E4A8C7CB04287C /* tinyxml2 */,
+				41000000F9E4A8C7CB04287C /* maki */,
+				4C000000F9E4A8C7CB04287C /* pbx_create */,
+				57000000F9E4A8C7CB04287C /* pbx_read */,
 			);
 		};
-		0200000014288087E7A2262F /* Build configuration list for PBXProject "sushi" */ = {
+		02000000F9E4A8C7CB04287C /* Build configuration list for PBXProject "sushi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0300000014288087E7A2262F /* Debug */,
-				0400000014288087E7A2262F /* Release */,
+				03000000F9E4A8C7CB04287C /* Debug */,
+				04000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0300000014288087E7A2262F /* Debug */ = {
+		03000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -49,7 +49,7 @@
 			};
 			name = Debug;
 		};
-		0400000014288087E7A2262F /* Release */ = {
+		04000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -59,245 +59,264 @@
 			};
 			name = Release;
 		};
-		0500000014288087E7A2262F = {
+		05000000F9E4A8C7CB04287C = {
 			isa = PBXGroup;
 			children = (
-				0600000014288087E7A2262F /* Products */,
-				3A00000014288087E7A2262F /* app */,
-				0C00000014288087E7A2262F /* sushi */,
-				2D00000014288087E7A2262F /* tinyxml2 */,
+				06000000F9E4A8C7CB04287C /* Products */,
+				3D000000F9E4A8C7CB04287C /* app */,
+				0C000000F9E4A8C7CB04287C /* sushi */,
+				30000000F9E4A8C7CB04287C /* tinyxml2 */,
 			);
 			sourceTree = "<group>";
 		};
-		0600000014288087E7A2262F /* Products */ = {
+		06000000F9E4A8C7CB04287C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2600000014288087E7A2262F /* libsushi.a */,
-				3100000014288087E7A2262F /* libtinyxml2.a */,
-				3D00000014288087E7A2262F /* maki */,
-				4800000014288087E7A2262F /* pbx_create */,
-				5300000014288087E7A2262F /* pbx_read */,
+				29000000F9E4A8C7CB04287C /* libsushi.a */,
+				34000000F9E4A8C7CB04287C /* libtinyxml2.a */,
+				40000000F9E4A8C7CB04287C /* maki */,
+				4B000000F9E4A8C7CB04287C /* pbx_create */,
+				56000000F9E4A8C7CB04287C /* pbx_read */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0700000014288087E7A2262F /* Build configuration list for PBXNativeTarget "sushi" */ = {
+		07000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "sushi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0800000014288087E7A2262F /* Debug */,
-				0900000014288087E7A2262F /* Release */,
+				08000000F9E4A8C7CB04287C /* Debug */,
+				09000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0800000014288087E7A2262F /* Debug */ = {
+		08000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		0900000014288087E7A2262F /* Release */ = {
+		09000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		0A00000014288087E7A2262F /* Frameworks */ = {
+		0A000000F9E4A8C7CB04287C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0B00000014288087E7A2262F /* Sources */ = {
+		0B000000F9E4A8C7CB04287C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E00000014288087E7A2262F /* cmdline_options.cc in Sources */,
-				1100000014288087E7A2262F /* filesystem.cc in Sources */,
-				1400000014288087E7A2262F /* log.cc in Sources */,
-				1700000014288087E7A2262F /* project.cc in Sources */,
-				1A00000014288087E7A2262F /* project_parser.cc in Sources */,
-				1E00000014288087E7A2262F /* project_xcode.cc in Sources */,
-				2100000014288087E7A2262F /* util.cc in Sources */,
-				2400000014288087E7A2262F /* xcode.cc in Sources */,
+				0E000000F9E4A8C7CB04287C /* cmdline_options.cc in Sources */,
+				11000000F9E4A8C7CB04287C /* filesystem.cc in Sources */,
+				14000000F9E4A8C7CB04287C /* log.cc in Sources */,
+				17000000F9E4A8C7CB04287C /* project.cc in Sources */,
+				1A000000F9E4A8C7CB04287C /* project_parser.cc in Sources */,
+				1E000000F9E4A8C7CB04287C /* project_xcode.cc in Sources */,
+				21000000F9E4A8C7CB04287C /* util.cc in Sources */,
+				24000000F9E4A8C7CB04287C /* visual_studio.cc in Sources */,
+				27000000F9E4A8C7CB04287C /* xcode.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0C00000014288087E7A2262F /* sushi */ = {
+		0C000000F9E4A8C7CB04287C /* sushi */ = {
 			isa = PBXGroup;
 			children = (
-				0D00000014288087E7A2262F /* cmdline_options.cc */,
-				0F00000014288087E7A2262F /* cmdline_options.h */,
-				1000000014288087E7A2262F /* filesystem.cc */,
-				1200000014288087E7A2262F /* filesystem.h */,
-				1300000014288087E7A2262F /* log.cc */,
-				1500000014288087E7A2262F /* log.h */,
-				1600000014288087E7A2262F /* project.cc */,
-				1800000014288087E7A2262F /* project.h */,
-				1900000014288087E7A2262F /* project_parser.cc */,
-				1B00000014288087E7A2262F /* project_parser.h */,
-				1C00000014288087E7A2262F /* project_parser.rl */,
-				1D00000014288087E7A2262F /* project_xcode.cc */,
-				1F00000014288087E7A2262F /* project_xcode.h */,
-				2000000014288087E7A2262F /* util.cc */,
-				2200000014288087E7A2262F /* util.h */,
-				2300000014288087E7A2262F /* xcode.cc */,
-				2500000014288087E7A2262F /* xcode.h */,
+				0D000000F9E4A8C7CB04287C /* cmdline_options.cc */,
+				0F000000F9E4A8C7CB04287C /* cmdline_options.h */,
+				10000000F9E4A8C7CB04287C /* filesystem.cc */,
+				12000000F9E4A8C7CB04287C /* filesystem.h */,
+				13000000F9E4A8C7CB04287C /* log.cc */,
+				15000000F9E4A8C7CB04287C /* log.h */,
+				16000000F9E4A8C7CB04287C /* project.cc */,
+				18000000F9E4A8C7CB04287C /* project.h */,
+				19000000F9E4A8C7CB04287C /* project_parser.cc */,
+				1B000000F9E4A8C7CB04287C /* project_parser.h */,
+				1C000000F9E4A8C7CB04287C /* project_parser.rl */,
+				1D000000F9E4A8C7CB04287C /* project_xcode.cc */,
+				1F000000F9E4A8C7CB04287C /* project_xcode.h */,
+				20000000F9E4A8C7CB04287C /* util.cc */,
+				22000000F9E4A8C7CB04287C /* util.h */,
+				23000000F9E4A8C7CB04287C /* visual_studio.cc */,
+				25000000F9E4A8C7CB04287C /* visual_studio.h */,
+				26000000F9E4A8C7CB04287C /* xcode.cc */,
+				28000000F9E4A8C7CB04287C /* xcode.h */,
 			);
 			name = sushi;
 			path = sushi;
 			sourceTree = "<group>";
 		};
-		0D00000014288087E7A2262F /* cmdline_options.cc */ = {
+		0D000000F9E4A8C7CB04287C /* cmdline_options.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = cmdline_options.cc;
 			sourceTree = "<group>";
 		};
-		0E00000014288087E7A2262F /* cmdline_options.cc in Sources */ = {
+		0E000000F9E4A8C7CB04287C /* cmdline_options.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 0D00000014288087E7A2262F /* cmdline_options.cc */;
+			fileRef = 0D000000F9E4A8C7CB04287C /* cmdline_options.cc */;
 		};
-		0F00000014288087E7A2262F /* cmdline_options.h */ = {
+		0F000000F9E4A8C7CB04287C /* cmdline_options.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = cmdline_options.h;
 			sourceTree = "<group>";
 		};
-		1000000014288087E7A2262F /* filesystem.cc */ = {
+		10000000F9E4A8C7CB04287C /* filesystem.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = filesystem.cc;
 			sourceTree = "<group>";
 		};
-		1100000014288087E7A2262F /* filesystem.cc in Sources */ = {
+		11000000F9E4A8C7CB04287C /* filesystem.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1000000014288087E7A2262F /* filesystem.cc */;
+			fileRef = 10000000F9E4A8C7CB04287C /* filesystem.cc */;
 		};
-		1200000014288087E7A2262F /* filesystem.h */ = {
+		12000000F9E4A8C7CB04287C /* filesystem.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = filesystem.h;
 			sourceTree = "<group>";
 		};
-		1300000014288087E7A2262F /* log.cc */ = {
+		13000000F9E4A8C7CB04287C /* log.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = log.cc;
 			sourceTree = "<group>";
 		};
-		1400000014288087E7A2262F /* log.cc in Sources */ = {
+		14000000F9E4A8C7CB04287C /* log.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1300000014288087E7A2262F /* log.cc */;
+			fileRef = 13000000F9E4A8C7CB04287C /* log.cc */;
 		};
-		1500000014288087E7A2262F /* log.h */ = {
+		15000000F9E4A8C7CB04287C /* log.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = log.h;
 			sourceTree = "<group>";
 		};
-		1600000014288087E7A2262F /* project.cc */ = {
+		16000000F9E4A8C7CB04287C /* project.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project.cc;
 			sourceTree = "<group>";
 		};
-		1700000014288087E7A2262F /* project.cc in Sources */ = {
+		17000000F9E4A8C7CB04287C /* project.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1600000014288087E7A2262F /* project.cc */;
+			fileRef = 16000000F9E4A8C7CB04287C /* project.cc */;
 		};
-		1800000014288087E7A2262F /* project.h */ = {
+		18000000F9E4A8C7CB04287C /* project.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project.h;
 			sourceTree = "<group>";
 		};
-		1900000014288087E7A2262F /* project_parser.cc */ = {
+		19000000F9E4A8C7CB04287C /* project_parser.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project_parser.cc;
 			sourceTree = "<group>";
 		};
-		1A00000014288087E7A2262F /* project_parser.cc in Sources */ = {
+		1A000000F9E4A8C7CB04287C /* project_parser.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1900000014288087E7A2262F /* project_parser.cc */;
+			fileRef = 19000000F9E4A8C7CB04287C /* project_parser.cc */;
 		};
-		1B00000014288087E7A2262F /* project_parser.h */ = {
+		1B000000F9E4A8C7CB04287C /* project_parser.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project_parser.h;
 			sourceTree = "<group>";
 		};
-		1C00000014288087E7A2262F /* project_parser.rl */ = {
+		1C000000F9E4A8C7CB04287C /* project_parser.rl */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = text;
 			path = project_parser.rl;
 			sourceTree = "<group>";
 		};
-		1D00000014288087E7A2262F /* project_xcode.cc */ = {
+		1D000000F9E4A8C7CB04287C /* project_xcode.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project_xcode.cc;
 			sourceTree = "<group>";
 		};
-		1E00000014288087E7A2262F /* project_xcode.cc in Sources */ = {
+		1E000000F9E4A8C7CB04287C /* project_xcode.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1D00000014288087E7A2262F /* project_xcode.cc */;
+			fileRef = 1D000000F9E4A8C7CB04287C /* project_xcode.cc */;
 		};
-		1F00000014288087E7A2262F /* project_xcode.h */ = {
+		1F000000F9E4A8C7CB04287C /* project_xcode.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project_xcode.h;
 			sourceTree = "<group>";
 		};
-		2000000014288087E7A2262F /* util.cc */ = {
+		20000000F9E4A8C7CB04287C /* util.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = util.cc;
 			sourceTree = "<group>";
 		};
-		2100000014288087E7A2262F /* util.cc in Sources */ = {
+		21000000F9E4A8C7CB04287C /* util.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 2000000014288087E7A2262F /* util.cc */;
+			fileRef = 20000000F9E4A8C7CB04287C /* util.cc */;
 		};
-		2200000014288087E7A2262F /* util.h */ = {
+		22000000F9E4A8C7CB04287C /* util.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = util.h;
 			sourceTree = "<group>";
 		};
-		2300000014288087E7A2262F /* xcode.cc */ = {
+		23000000F9E4A8C7CB04287C /* visual_studio.cc */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = visual_studio.cc;
+			sourceTree = "<group>";
+		};
+		24000000F9E4A8C7CB04287C /* visual_studio.cc in Sources */ = {
+			isa = PBXBuildFile;
+			fileRef = 23000000F9E4A8C7CB04287C /* visual_studio.cc */;
+		};
+		25000000F9E4A8C7CB04287C /* visual_studio.h */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = visual_studio.h;
+			sourceTree = "<group>";
+		};
+		26000000F9E4A8C7CB04287C /* xcode.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = xcode.cc;
 			sourceTree = "<group>";
 		};
-		2400000014288087E7A2262F /* xcode.cc in Sources */ = {
+		27000000F9E4A8C7CB04287C /* xcode.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 2300000014288087E7A2262F /* xcode.cc */;
+			fileRef = 26000000F9E4A8C7CB04287C /* xcode.cc */;
 		};
-		2500000014288087E7A2262F /* xcode.h */ = {
+		28000000F9E4A8C7CB04287C /* xcode.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = xcode.h;
 			sourceTree = "<group>";
 		};
-		2600000014288087E7A2262F /* libsushi.a */ = {
+		29000000F9E4A8C7CB04287C /* libsushi.a */ = {
 			isa = PBXFileReference;
 			explicitFileType = archive.ar;
 			includeInIndex = 0;
 			path = libsushi.a;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2700000014288087E7A2262F /* sushi */ = {
+		2A000000F9E4A8C7CB04287C /* sushi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0700000014288087E7A2262F /* Build configuration list for PBXNativeTarget "sushi" */;
+			buildConfigurationList = 07000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "sushi" */;
 			buildPhases = (
-				0B00000014288087E7A2262F /* Sources */,
-				0A00000014288087E7A2262F /* Frameworks */,
+				0B000000F9E4A8C7CB04287C /* Sources */,
+				0A000000F9E4A8C7CB04287C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -305,86 +324,86 @@
 			);
 			name = sushi;
 			productName = sushi;
-			productReference = 2600000014288087E7A2262F /* libsushi.a */;
+			productReference = 29000000F9E4A8C7CB04287C /* libsushi.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2800000014288087E7A2262F /* Build configuration list for PBXNativeTarget "tinyxml2" */ = {
+		2B000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "tinyxml2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2900000014288087E7A2262F /* Debug */,
-				2A00000014288087E7A2262F /* Release */,
+				2C000000F9E4A8C7CB04287C /* Debug */,
+				2D000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 1937077018;
 			defaultConfigurationName = Release;
 		};
-		2900000014288087E7A2262F /* Debug */ = {
+		2C000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		2A00000014288087E7A2262F /* Release */ = {
+		2D000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		2B00000014288087E7A2262F /* Frameworks */ = {
+		2E000000F9E4A8C7CB04287C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2C00000014288087E7A2262F /* Sources */ = {
+		2F000000F9E4A8C7CB04287C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3000000014288087E7A2262F /* tinyxml2.cpp in Sources */,
+				33000000F9E4A8C7CB04287C /* tinyxml2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2D00000014288087E7A2262F /* tinyxml2 */ = {
+		30000000F9E4A8C7CB04287C /* tinyxml2 */ = {
 			isa = PBXGroup;
 			children = (
-				2F00000014288087E7A2262F /* tinyxml2.cpp */,
-				2E00000014288087E7A2262F /* tinyxml2.h */,
+				32000000F9E4A8C7CB04287C /* tinyxml2.cpp */,
+				31000000F9E4A8C7CB04287C /* tinyxml2.h */,
 			);
 			name = tinyxml2;
 			path = tinyxml2;
 			sourceTree = "<group>";
 		};
-		2E00000014288087E7A2262F /* tinyxml2.h */ = {
+		31000000F9E4A8C7CB04287C /* tinyxml2.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = tinyxml2.h;
 			sourceTree = "<group>";
 		};
-		2F00000014288087E7A2262F /* tinyxml2.cpp */ = {
+		32000000F9E4A8C7CB04287C /* tinyxml2.cpp */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = tinyxml2.cpp;
 			sourceTree = "<group>";
 		};
-		3000000014288087E7A2262F /* tinyxml2.cpp in Sources */ = {
+		33000000F9E4A8C7CB04287C /* tinyxml2.cpp in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 2F00000014288087E7A2262F /* tinyxml2.cpp */;
+			fileRef = 32000000F9E4A8C7CB04287C /* tinyxml2.cpp */;
 		};
-		3100000014288087E7A2262F /* libtinyxml2.a */ = {
+		34000000F9E4A8C7CB04287C /* libtinyxml2.a */ = {
 			isa = PBXFileReference;
 			explicitFileType = archive.ar;
 			includeInIndex = 0;
 			path = libtinyxml2.a;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3200000014288087E7A2262F /* tinyxml2 */ = {
+		35000000F9E4A8C7CB04287C /* tinyxml2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2800000014288087E7A2262F /* Build configuration list for PBXNativeTarget "tinyxml2" */;
+			buildConfigurationList = 2B000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "tinyxml2" */;
 			buildPhases = (
-				2C00000014288087E7A2262F /* Sources */,
-				2B00000014288087E7A2262F /* Frameworks */,
+				2F000000F9E4A8C7CB04287C /* Sources */,
+				2E000000F9E4A8C7CB04287C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -392,91 +411,91 @@
 			);
 			name = tinyxml2;
 			productName = tinyxml2;
-			productReference = 3100000014288087E7A2262F /* libtinyxml2.a */;
+			productReference = 34000000F9E4A8C7CB04287C /* libtinyxml2.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		3300000014288087E7A2262F /* Build configuration list for PBXNativeTarget "maki" */ = {
+		36000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "maki" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3400000014288087E7A2262F /* Debug */,
-				3500000014288087E7A2262F /* Release */,
+				37000000F9E4A8C7CB04287C /* Debug */,
+				38000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3400000014288087E7A2262F /* Debug */ = {
+		37000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		3500000014288087E7A2262F /* Release */ = {
+		38000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		3600000014288087E7A2262F /* Frameworks */ = {
+		39000000F9E4A8C7CB04287C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3700000014288087E7A2262F /* libsushi.a in Frameworks */,
-				3800000014288087E7A2262F /* libtinyxml2.a in Frameworks */,
+				3A000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */,
+				3B000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3700000014288087E7A2262F /* libsushi.a in Frameworks */ = {
+		3A000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2600000014288087E7A2262F /* libsushi.a */;
+			fileRef = 29000000F9E4A8C7CB04287C /* libsushi.a */;
 		};
-		3800000014288087E7A2262F /* libtinyxml2.a in Frameworks */ = {
+		3B000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 3100000014288087E7A2262F /* libtinyxml2.a */;
+			fileRef = 34000000F9E4A8C7CB04287C /* libtinyxml2.a */;
 		};
-		3900000014288087E7A2262F /* Sources */ = {
+		3C000000F9E4A8C7CB04287C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C00000014288087E7A2262F /* maki.cc in Sources */,
+				3F000000F9E4A8C7CB04287C /* maki.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A00000014288087E7A2262F /* app */ = {
+		3D000000F9E4A8C7CB04287C /* app */ = {
 			isa = PBXGroup;
 			children = (
-				3B00000014288087E7A2262F /* maki.cc */,
-				4600000014288087E7A2262F /* pbx_create.cc */,
-				5100000014288087E7A2262F /* pbx_read.cc */,
+				3E000000F9E4A8C7CB04287C /* maki.cc */,
+				49000000F9E4A8C7CB04287C /* pbx_create.cc */,
+				54000000F9E4A8C7CB04287C /* pbx_read.cc */,
 			);
 			name = app;
 			path = app;
 			sourceTree = "<group>";
 		};
-		3B00000014288087E7A2262F /* maki.cc */ = {
+		3E000000F9E4A8C7CB04287C /* maki.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = maki.cc;
 			sourceTree = "<group>";
 		};
-		3C00000014288087E7A2262F /* maki.cc in Sources */ = {
+		3F000000F9E4A8C7CB04287C /* maki.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 3B00000014288087E7A2262F /* maki.cc */;
+			fileRef = 3E000000F9E4A8C7CB04287C /* maki.cc */;
 		};
-		3D00000014288087E7A2262F /* maki */ = {
+		40000000F9E4A8C7CB04287C /* maki */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = maki;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3E00000014288087E7A2262F /* maki */ = {
+		41000000F9E4A8C7CB04287C /* maki */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3300000014288087E7A2262F /* Build configuration list for PBXNativeTarget "maki" */;
+			buildConfigurationList = 36000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "maki" */;
 			buildPhases = (
-				3900000014288087E7A2262F /* Sources */,
-				3600000014288087E7A2262F /* Frameworks */,
+				3C000000F9E4A8C7CB04287C /* Sources */,
+				39000000F9E4A8C7CB04287C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -484,80 +503,80 @@
 			);
 			name = maki;
 			productName = maki;
-			productReference = 3D00000014288087E7A2262F /* maki */;
+			productReference = 40000000F9E4A8C7CB04287C /* maki */;
 			productType = "com.apple.product-type.tool";
 		};
-		3F00000014288087E7A2262F /* Build configuration list for PBXNativeTarget "pbx_create" */ = {
+		42000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "pbx_create" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4000000014288087E7A2262F /* Debug */,
-				4100000014288087E7A2262F /* Release */,
+				43000000F9E4A8C7CB04287C /* Debug */,
+				44000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4000000014288087E7A2262F /* Debug */ = {
+		43000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		4100000014288087E7A2262F /* Release */ = {
+		44000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		4200000014288087E7A2262F /* Frameworks */ = {
+		45000000F9E4A8C7CB04287C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4300000014288087E7A2262F /* libsushi.a in Frameworks */,
-				4400000014288087E7A2262F /* libtinyxml2.a in Frameworks */,
+				46000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */,
+				47000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4300000014288087E7A2262F /* libsushi.a in Frameworks */ = {
+		46000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2600000014288087E7A2262F /* libsushi.a */;
+			fileRef = 29000000F9E4A8C7CB04287C /* libsushi.a */;
 		};
-		4400000014288087E7A2262F /* libtinyxml2.a in Frameworks */ = {
+		47000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 3100000014288087E7A2262F /* libtinyxml2.a */;
+			fileRef = 34000000F9E4A8C7CB04287C /* libtinyxml2.a */;
 		};
-		4500000014288087E7A2262F /* Sources */ = {
+		48000000F9E4A8C7CB04287C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4700000014288087E7A2262F /* pbx_create.cc in Sources */,
+				4A000000F9E4A8C7CB04287C /* pbx_create.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4600000014288087E7A2262F /* pbx_create.cc */ = {
+		49000000F9E4A8C7CB04287C /* pbx_create.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = pbx_create.cc;
 			sourceTree = "<group>";
 		};
-		4700000014288087E7A2262F /* pbx_create.cc in Sources */ = {
+		4A000000F9E4A8C7CB04287C /* pbx_create.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 4600000014288087E7A2262F /* pbx_create.cc */;
+			fileRef = 49000000F9E4A8C7CB04287C /* pbx_create.cc */;
 		};
-		4800000014288087E7A2262F /* pbx_create */ = {
+		4B000000F9E4A8C7CB04287C /* pbx_create */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = pbx_create;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4900000014288087E7A2262F /* pbx_create */ = {
+		4C000000F9E4A8C7CB04287C /* pbx_create */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3F00000014288087E7A2262F /* Build configuration list for PBXNativeTarget "pbx_create" */;
+			buildConfigurationList = 42000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "pbx_create" */;
 			buildPhases = (
-				4500000014288087E7A2262F /* Sources */,
-				4200000014288087E7A2262F /* Frameworks */,
+				48000000F9E4A8C7CB04287C /* Sources */,
+				45000000F9E4A8C7CB04287C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -565,80 +584,80 @@
 			);
 			name = pbx_create;
 			productName = pbx_create;
-			productReference = 4800000014288087E7A2262F /* pbx_create */;
+			productReference = 4B000000F9E4A8C7CB04287C /* pbx_create */;
 			productType = "com.apple.product-type.tool";
 		};
-		4A00000014288087E7A2262F /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
+		4D000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4B00000014288087E7A2262F /* Debug */,
-				4C00000014288087E7A2262F /* Release */,
+				4E000000F9E4A8C7CB04287C /* Debug */,
+				4F000000F9E4A8C7CB04287C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B00000014288087E7A2262F /* Debug */ = {
+		4E000000F9E4A8C7CB04287C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		4C00000014288087E7A2262F /* Release */ = {
+		4F000000F9E4A8C7CB04287C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		4D00000014288087E7A2262F /* Frameworks */ = {
+		50000000F9E4A8C7CB04287C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E00000014288087E7A2262F /* libsushi.a in Frameworks */,
-				4F00000014288087E7A2262F /* libtinyxml2.a in Frameworks */,
+				51000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */,
+				52000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4E00000014288087E7A2262F /* libsushi.a in Frameworks */ = {
+		51000000F9E4A8C7CB04287C /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2600000014288087E7A2262F /* libsushi.a */;
+			fileRef = 29000000F9E4A8C7CB04287C /* libsushi.a */;
 		};
-		4F00000014288087E7A2262F /* libtinyxml2.a in Frameworks */ = {
+		52000000F9E4A8C7CB04287C /* libtinyxml2.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 3100000014288087E7A2262F /* libtinyxml2.a */;
+			fileRef = 34000000F9E4A8C7CB04287C /* libtinyxml2.a */;
 		};
-		5000000014288087E7A2262F /* Sources */ = {
+		53000000F9E4A8C7CB04287C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5200000014288087E7A2262F /* pbx_read.cc in Sources */,
+				55000000F9E4A8C7CB04287C /* pbx_read.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5100000014288087E7A2262F /* pbx_read.cc */ = {
+		54000000F9E4A8C7CB04287C /* pbx_read.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = pbx_read.cc;
 			sourceTree = "<group>";
 		};
-		5200000014288087E7A2262F /* pbx_read.cc in Sources */ = {
+		55000000F9E4A8C7CB04287C /* pbx_read.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 5100000014288087E7A2262F /* pbx_read.cc */;
+			fileRef = 54000000F9E4A8C7CB04287C /* pbx_read.cc */;
 		};
-		5300000014288087E7A2262F /* pbx_read */ = {
+		56000000F9E4A8C7CB04287C /* pbx_read */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = pbx_read;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5400000014288087E7A2262F /* pbx_read */ = {
+		57000000F9E4A8C7CB04287C /* pbx_read */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4A00000014288087E7A2262F /* Build configuration list for PBXNativeTarget "pbx_read" */;
+			buildConfigurationList = 4D000000F9E4A8C7CB04287C /* Build configuration list for PBXNativeTarget "pbx_read" */;
 			buildPhases = (
-				5000000014288087E7A2262F /* Sources */,
-				4D00000014288087E7A2262F /* Frameworks */,
+				53000000F9E4A8C7CB04287C /* Sources */,
+				50000000F9E4A8C7CB04287C /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -646,9 +665,9 @@
 			);
 			name = pbx_read;
 			productName = pbx_read;
-			productReference = 5300000014288087E7A2262F /* pbx_read */;
+			productReference = 56000000F9E4A8C7CB04287C /* pbx_read */;
 			productType = "com.apple.product-type.tool";
 		};
 	};
-	rootObject = 0100000014288087E7A2262F /* Project Object */;
+	rootObject = 01000000F9E4A8C7CB04287C /* Project Object */;
 }
