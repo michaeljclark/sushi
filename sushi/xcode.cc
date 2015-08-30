@@ -459,15 +459,19 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	// Create Debug Build Configuration
 	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
 	debugConfiguration->name = "Debug";
-	debugConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
-	debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
+    debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
+    debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+    debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
+    debugConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
 	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
 	releaseConfiguration->name = "Release";
-	releaseConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
+    releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
+    releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
 	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
+    releaseConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group
