@@ -75,7 +75,6 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// create libs
 	for (auto lib : root->lib_list) {
 		if (lib->lib_name == "*") continue;
-        log_debug("lib_name: %s, lib_output: %s", lib->lib_name.c_str(), lib_output(root, lib).c_str());
 		xcodeproj->createNativeTarget(lib->lib_name, lib_output(root, lib),
 									PBXFileReference::type_library_archive,
 									PBXNativeTarget::type_library_static,
