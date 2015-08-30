@@ -31,18 +31,18 @@ typedef std::map<std::string,block_record> block_function_map;
 
 struct statement_record
 {
-    int minargs;
-    int maxargs;
-    std::string parent_block_spec;
-    statement_function statement_fn;
+	int minargs;
+	int maxargs;
+	std::string parent_block_spec;
+	statement_function statement_fn;
 };
 
 struct block_record
 {
-    int minargs;
-    int maxargs;
-    std::string parent_block_spec;
-    block_begin_function begin_block_fn;
+	int minargs;
+	int maxargs;
+	std::string parent_block_spec;
+	block_begin_function begin_block_fn;
 };
 
 struct project_item
@@ -120,16 +120,16 @@ struct project : project_parser
 	project_root_ptr root;
 	std::vector<project_item_ptr> item_stack;
 
-    project();
+	project();
 
-    void read(std::string project_file);
-    bool check_parent(std::string allowed_parent_spec);
-    
-    void symbol(const char *value, size_t length);
-    void end_statement();
-    void begin_block();
-    void end_block();
-    void project_done();
+	void read(std::string project_file);
+	bool check_parent(std::string allowed_parent_spec);
+	
+	void symbol(const char *value, size_t length);
+	void end_statement();
+	void begin_block();
+	void end_block();
+	void project_done();
 };
 
 #endif

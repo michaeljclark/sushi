@@ -70,47 +70,47 @@ void project::statement_type(project *project, statement &line)
 
 void project::statement_define(project *project, statement &line)
 {
-    auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
-    config->defines[line[1]] = line[2];
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	config->defines[line[1]] = line[2];
 }
 
 void project::statement_cflags(project *project, statement &line)
 {
-    auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
-    for (size_t i = 1; i < line.size(); i++) {
-    	config->cflags.push_back(line[i]);
-    }
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		config->cflags.push_back(line[i]);
+	}
 }
 
 void project::statement_source(project *project, statement &line)
 {
-    auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
-    for (size_t i = 1; i < line.size(); i++) {
-    	target->source.push_back(line[i]);
-    }
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		target->source.push_back(line[i]);
+	}
 }
 
 void project::statement_libs(project *project, statement &line)
 {
-    auto tool = std::static_pointer_cast<project_tool>(project->item_stack.back());
-    for (size_t i = 1; i < line.size(); i++) {
-    	tool->libs.push_back(line[i]);
-    }
+	auto tool = std::static_pointer_cast<project_tool>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		tool->libs.push_back(line[i]);
+	}
 }
 
 void project::init()
 {
 	std::call_once(function_map_init, []()
 	{
-	    block_fn_map["project"] = { 2,  2, "<root>", &block_project_begin };
-	    block_fn_map["config"] = {2,  2, "project", &block_config_begin };
-	    block_fn_map["lib"] = {2,  2, "project", &block_lib_begin };
-	    block_fn_map["tool"] = {2,  2, "project", &block_tool_begin };
-	    statement_fn_map["type"] = {2,  2, "lib", &statement_type };
-	    statement_fn_map["define"] = {3,  3, "lib|tool|config", &statement_define };
-	    statement_fn_map["cflags"] = {2,  -1, "lib|tool|config", &statement_cflags };
-	    statement_fn_map["source"] = {2,  -1, "lib|tool", &statement_source };
-	    statement_fn_map["libs"] = {2,  -1, "tool", &statement_libs };
+		block_fn_map["project"] = { 2,  2, "<root>", &block_project_begin };
+		block_fn_map["config"] = {2,  2, "project", &block_config_begin };
+		block_fn_map["lib"] = {2,  2, "project", &block_lib_begin };
+		block_fn_map["tool"] = {2,  2, "project", &block_tool_begin };
+		statement_fn_map["type"] = {2,  2, "lib", &statement_type };
+		statement_fn_map["define"] = {3,  3, "lib|tool|config", &statement_define };
+		statement_fn_map["cflags"] = {2,  -1, "lib|tool|config", &statement_cflags };
+		statement_fn_map["source"] = {2,  -1, "lib|tool", &statement_source };
+		statement_fn_map["libs"] = {2,  -1, "tool", &statement_libs };
 	});
 }
 
@@ -118,10 +118,10 @@ project::project() { init(); }
 
 void project::read(std::string project_file)
 {
-    std::vector<char> buf = util::read_file(project_file);
-    if (!parse(buf.data(), buf.size())) {
-        log_fatal_exit("config: parse error");
-    }
+	std::vector<char> buf = util::read_file(project_file);
+	if (!parse(buf.data(), buf.size())) {
+		log_fatal_exit("config: parse error");
+	}
 }
 
 bool project::check_parent(std::string allowed_parent_spec)
@@ -137,7 +137,7 @@ bool project::check_parent(std::string allowed_parent_spec)
 void project::symbol(const char *value, size_t length)
 {
 	if (debug) log_debug("symbol: %s", std::string(value, length).c_str());
-    line.push_back(std::string(value, length));
+	line.push_back(std::string(value, length));
 }
 
 void project::begin_block()
@@ -160,7 +160,7 @@ void project::begin_block()
 	} else {
 		log_fatal_exit("unrecognized block: %s", line[0].c_str());
 	}
-    line.clear();
+	line.clear();
 }
 
 void project::end_block()
@@ -195,7 +195,7 @@ void project::end_statement()
 	} else {
 		log_fatal_exit("unrecognized statement: %s", line[0].c_str());
 	}
-    line.clear();
+	line.clear();
 }
 
 void project::project_done()

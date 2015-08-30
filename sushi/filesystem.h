@@ -23,7 +23,7 @@ struct directory_entry
 
 struct filesystem
 {
-    bool list_files(std::vector<directory_entry> &files, std::string path_name);
+	bool list_files(std::vector<directory_entry> &files, std::string path_name);
 };
 
 #endif
