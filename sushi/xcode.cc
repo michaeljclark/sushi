@@ -537,7 +537,7 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 		auto sourceFileRef = getFileReferenceForPath(sourceFile);
 		sourceFileRef->lastKnownFileType = meta ? meta->xcodeType : PBXFileReference::type_text;
 		sourceFileRef->includeInIndex = 1;
-		if (!meta || (meta->flags & FileTypeCompiler)) continue;
+		if (!meta || !(meta->flags & FileTypeCompiler)) continue;
 		auto sourceBuildFileRef = getBuildFile(sourceFileRef, sourceFileRef->id.comment + " in Sources");
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
 	}
