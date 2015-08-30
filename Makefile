@@ -31,7 +31,7 @@ RELROF_FLAGS =      -Wl,-z,relro,-z,now
 NOEXEC_FLAGS =      -Wl,-z,noexecstack
 
 # default optimizer, debug and warning flags
-INCLUDES :=         -I$(shell pwd)/sushi
+INCLUDES :=         -I$(shell pwd)/sushi -I$(shell pwd)/tinyxml2
 OPT_FLAGS =         -O3
 DEBUG_FLAGS =       -g
 WARN_FLAGS =        -Wall -Wpedantic -Wsign-compare
@@ -73,19 +73,6 @@ ifeq ($(call check_opt,$(CXX),cc,$(PIE_FLAGS)), 0)
 CXXFLAGS +=         $(PIE_FLAGS)
 endif
 
-# prefer link time optimization by default with clang
-ifeq ($(findstring clang++,$(CXX)),clang++)
-enable_lto=1
-endif
-
-# check if link time optimization is enabled. e.g. make enable_lto=1
-ifeq ($(enable_lto),1)
-# check if we can use link time optimization
-ifeq ($(call check_opt,$(CXX),cc,$(LTO_FLAGS)), 0)
-CXXFLAGS +=         $(LTO_FLAGS)
-endif
-endif
-
 # check whether to enable sanitizer
 ifneq (,$(filter $(sanitize),memory address thread undefined))
 CXXFLAGS +=         -fno-omit-frame-pointer -fsanitize=$(sanitize)
@@ -101,72 +88,62 @@ endif
 
 # directories
 APP_SRC_DIR =       app
-LIB_SRC_DIR =       sushi
+SUSHI_SRC_DIR =     sushi
+TINYXML2_SRC_DIR =  tinyxml2
 BUILD_DIR =         build
 BIN_DIR =           $(BUILD_DIR)/$(ARCH)/bin
 LIB_DIR =           $(BUILD_DIR)/$(ARCH)/lib
 OBJ_DIR =           $(BUILD_DIR)/$(ARCH)/obj
 DEP_DIR =           $(BUILD_DIR)/$(ARCH)/dep
 
-# helper functions
-src_objs =          $(subst $(APP_SRC_DIR),$(OBJ_DIR),$(subst $(LIB_SRC_DIR),$(OBJ_DIR),$(subst .cc,.o,$(1))))
-src_deps =          $(subst $(APP_SRC_DIR),$(DEP_DIR),$(subst $(LIB_SRC_DIR),$(DEP_DIR),$(subst .cc,.cc.P,$(1))))
-
 # target source and objects
-SUSHI_SRCS =        $(LIB_SRC_DIR)/cmdline_options.cc \
-                    $(LIB_SRC_DIR)/filesystem.cc \
-                    $(LIB_SRC_DIR)/log.cc \
-                    $(LIB_SRC_DIR)/project.cc \
-                    $(LIB_SRC_DIR)/project_parser.cc \
-                    $(LIB_SRC_DIR)/project_xcode.cc \
-                    $(LIB_SRC_DIR)/util.cc \
-                    $(LIB_SRC_DIR)/xcode.cc
-
-SUSHI_OBJS =        $(call src_objs, $(SUSHI_SRCS))
+SUSHI_SRCS =        $(SUSHI_SRC_DIR)/cmdline_options.cc \
+                    $(SUSHI_SRC_DIR)/filesystem.cc \
+                    $(SUSHI_SRC_DIR)/log.cc \
+                    $(SUSHI_SRC_DIR)/project.cc \
+                    $(SUSHI_SRC_DIR)/project_parser.cc \
+                    $(SUSHI_SRC_DIR)/project_xcode.cc \
+                    $(SUSHI_SRC_DIR)/util.cc \
+                    $(SUSHI_SRC_DIR)/xcode.cc
+SUSHI_OBJS =        $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHI_SRCS)))
 SUSHI_LIB =         $(LIB_DIR)/libsushi.a
 
+TINYXML2_SRCS =		$(TINYXML2_SRC_DIR)/tinyxml2.cpp
+TINYXML2_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cpp,.o,$(TINYXML2_SRCS)))
+TINYXML2_LIB =      $(LIB_DIR)/libtinyxml2.a
+
 PBXCREATE_SRCS =    $(APP_SRC_DIR)/pbx_create.cc
-PBXCREATE_OBJS =    $(call src_objs, $(PBXCREATE_SRCS))
+PBXCREATE_OBJS =    $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXCREATE_SRCS)))
 PBXCREATE_BIN =     $(BIN_DIR)/pbx_create
 
 PBXREAD_SRCS =      $(APP_SRC_DIR)/pbx_read.cc
-PBXREAD_OBJS =      $(call src_objs, $(PBXREAD_SRCS))
+PBXREAD_OBJS =      $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXREAD_SRCS)))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
 
 SUSHICLI_SRCS =     $(APP_SRC_DIR)/maki.cc
-SUSHICLI_OBJS =     $(call src_objs, $(SUSHICLI_SRCS))
+SUSHICLI_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHICLI_SRCS)))
 SUSHICLI_BIN =      $(BIN_DIR)/maki
 
-ALL_SRCS =          $(SUSHI_SRCS) $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(SUSHICLI_SRCS)
+APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(SUSHICLI_SRCS)
 BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN) $(SUSHICLI_BIN)
 
-# don't build library if LTO is enabled
-ifeq ($(enable_lto),1)
-LIBS =
-else
-LIBS =              $(SUSHI_LIB)
-endif
 
 # build rules
 all: dirs $(LIBS) $(BINARIES)
+
 .PHONY: dirs
-dirs: ; @mkdir -p $(OBJ_DIR) $(LIB_DIR) $(BIN_DIR) $(DEP_DIR)
+dirs: ; @mkdir -p $(OBJ_DIR)/app $(OBJ_DIR)/sushi $(OBJ_DIR)/tinyxml2 $(LIB_DIR) $(BIN_DIR)
 clean: ; @echo "CLEAN $(BUILD_DIR)"; rm -rf $(BUILD_DIR)
 
 backup: clean ; dir=$$(basename $$(pwd)) ; cd .. && tar -czf $${dir}-backup-$$(date '+%Y%m%d').tar.gz $${dir}
 dist: clean ; dir=$$(basename $$(pwd)) ; cd .. && tar --exclude .git -czf $${dir}-$$(date '+%Y%m%d').tar.gz $${dir}
 
 # build targets
-ifeq ($(enable_lto),1)
-$(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-$(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_OBJS) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-else
 $(SUSHI_LIB): $(SUSHI_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
-$(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-$(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-endif
+$(TINYXML2_LIB): $(TINYXML2_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
+$(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 
 # build recipes
 ifdef V
@@ -175,13 +152,19 @@ else
 cmd = @echo "$1"; $2
 endif
 
-$(OBJ_DIR)/%.o : $(APP_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
-$(OBJ_DIR)/%.o : $(LIB_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
-$(LIB_SRC_DIR)/%.cc : $(LIB_SRC_DIR)/%.rl ; $(call cmd, RAGEL $@, $(RAGEL) $< -o $@)
-$(DEP_DIR)/%.cc.P : $(APP_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR) ;
+$(OBJ_DIR)/app/%.o : $(APP_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
+$(OBJ_DIR)/sushi/%.o : $(SUSHI_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
+$(OBJ_DIR)/tinyxml2/%.o : $(TINYXML2_SRC_DIR)/%.cpp ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
+$(SUSHI_SRC_DIR)/%.cc : $(SUSHI_SRC_DIR)/%.rl ; $(call cmd, RAGEL $@, $(RAGEL) $< -o $@)
+
+$(DEP_DIR)/$(APP_SRC_DIR)/%.cc.P : $(APP_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(APP_SRC_DIR) ;
 	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
-$(DEP_DIR)/%.cc.P : $(LIB_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR) ;
+$(DEP_DIR)/$(SUSHI_SRC_DIR)/%.cc.P : $(SUSHI_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(SUSHI_SRC_DIR) ;
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
+$(DEP_DIR)/$(TINYXML2_SRC_DIR)/%.cpp.P : $(TINYXML2_SRC_DIR)/%.cpp ; @mkdir -p $(DEP_DIR)/$(TINYXML2_SRC_DIR) ;
 	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
 
 # make dependencies
-include $(call src_deps,$(ALL_SRCS))
+include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(APP_SRCS)))
+include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(SUSHI_SRCS)))
+include $(addprefix $(DEP_DIR)/,$(subst .cpp,.cpp.P,$(TINYXML2_SRCS)))

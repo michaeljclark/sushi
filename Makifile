@@ -39,9 +39,14 @@ project sushi {
 			sushi/xcode.h;
 	}
 
+	lib tinyxml2 {
+		source	tinyxml2/tinyxml2.h
+			tinyxml2/tinyxml2.cpp;
+	}
+
 	# inherited by all tools
 	tool * {
-		libs sushi;
+		libs sushi tinyxml2;
 	}
 
 	tool maki {

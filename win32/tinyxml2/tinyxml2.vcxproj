@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{007C2E85-3E79-4B49-81FE-186974CE38D1}</ProjectGuid>
-    <RootNamespace>sushi</RootNamespace>
+    <ProjectGuid>{17EA24EF-FDE1-46D3-8067-2B5899A47007}</ProjectGuid>
+    <RootNamespace>tinyxml2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -74,8 +74,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\tinyxml2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,8 +84,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\tinyxml2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -100,8 +96,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\tinyxml2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -116,8 +110,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\tinyxml2</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -126,24 +118,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sushi\cmdline_options.h" />
-    <ClInclude Include="..\..\sushi\filesystem.h" />
-    <ClInclude Include="..\..\sushi\log.h" />
-    <ClInclude Include="..\..\sushi\project.h" />
-    <ClInclude Include="..\..\sushi\project_parser.h" />
-    <ClInclude Include="..\..\sushi\project_xcode.h" />
-    <ClInclude Include="..\..\sushi\util.h" />
-    <ClInclude Include="..\..\sushi\xcode.h" />
+    <ClCompile Include="..\..\tinyxml2\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sushi\cmdline_options.cc" />
-    <ClCompile Include="..\..\sushi\filesystem.cc" />
-    <ClCompile Include="..\..\sushi\log.cc" />
-    <ClCompile Include="..\..\sushi\project.cc" />
-    <ClCompile Include="..\..\sushi\project_parser.cc" />
-    <ClCompile Include="..\..\sushi\project_xcode.cc" />
-    <ClCompile Include="..\..\sushi\util.cc" />
-    <ClCompile Include="..\..\sushi\xcode.cc" />
+    <ClInclude Include="..\..\tinyxml2\tinyxml2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
