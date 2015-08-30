@@ -28,6 +28,7 @@ project sushi {
 				sushi/project.h
 				sushi/project_parser.cc
 				sushi/project_parser.h
+				sushi/project_parser.rl
 				sushi/project_xcode.cc
 				sushi/project_xcode.h
 				sushi/util.cc
