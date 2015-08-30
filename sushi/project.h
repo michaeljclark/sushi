@@ -12,8 +12,9 @@ struct project_config;
 struct project_target;
 struct project_lib;
 struct project_tool;
-typedef std::shared_ptr<project_root> project_root_ptr;
+
 typedef std::shared_ptr<project> project_ptr;
+typedef std::shared_ptr<project_root> project_root_ptr;
 typedef std::shared_ptr<project_item> project_item_ptr;
 typedef std::shared_ptr<project_config> project_config_ptr;
 typedef std::shared_ptr<project_target> project_target_ptr;
@@ -26,7 +27,6 @@ typedef std::vector<std::string> statement;
 typedef std::function<void(project*,statement&)>statement_function;
 typedef std::map<std::string,statement_record> statement_function_map;
 typedef std::function<void(project*,statement&)>block_begin_function;
-typedef std::function<void(project*)>block_end_function;
 typedef std::map<std::string,block_record> block_function_map;
 
 struct statement_record
