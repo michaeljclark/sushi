@@ -400,6 +400,7 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static const std::string ext_cpp_header_1;
 	static const std::string ext_cpp_header_2;
 	static const std::string ext_plist;
+	static const std::string ext_text;
 	static const std::string ext_library_archive;
 	static const std::string ext_application;
 	static const std::string ext_bundle;
@@ -412,6 +413,7 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	static const std::string type_cpp_source;
 	static const std::string type_cpp_header;
 	static const std::string type_plist;
+	static const std::string type_text;
 	static const std::string type_library_archive;
 	static const std::string type_library_dylib;
 	static const std::string type_application;

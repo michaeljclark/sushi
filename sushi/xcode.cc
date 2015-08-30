@@ -535,9 +535,9 @@ void Xcodeproj::createNativeTarget(std::string targetName, std::string targetPro
 	for (auto sourceFile : source) {
 		FileTypeMetaData *meta = PBXFileReference::getFileMetaForPath(sourceFile);
 		auto sourceFileRef = getFileReferenceForPath(sourceFile);
-		sourceFileRef->lastKnownFileType = meta->xcodeType;
+		sourceFileRef->lastKnownFileType = meta ? meta->xcodeType : PBXFileReference::type_text;
 		sourceFileRef->includeInIndex = 1;
-		if (!(meta && (meta->flags & FileTypeCompiler))) continue;
+		if (!meta || (meta->flags & FileTypeCompiler)) continue;
 		auto sourceBuildFileRef = getBuildFile(sourceFileRef, sourceFileRef->id.comment + " in Sources");
 		sourceBuildPhase->files->addIdRef(sourceBuildFileRef);
 	}
@@ -787,6 +787,7 @@ const std::string PBXFileReference::ext_cpp_source_2      = "cpp";
 const std::string PBXFileReference::ext_cpp_header_1      = "hh";
 const std::string PBXFileReference::ext_cpp_header_2      = "hpp";
 const std::string PBXFileReference::ext_plist             = "plist";
+const std::string PBXFileReference::ext_text              = "txt";
 const std::string PBXFileReference::ext_library_archive   = "a";
 const std::string PBXFileReference::ext_application       = "app";
 const std::string PBXFileReference::ext_bundle            = "bundle";
@@ -799,6 +800,7 @@ const std::string PBXFileReference::type_objccpp_source   = "sourcecode.cpp.objc
 const std::string PBXFileReference::type_cpp_source       = "sourcecode.cpp.cpp";
 const std::string PBXFileReference::type_cpp_header       = "sourcecode.cpp.h";
 const std::string PBXFileReference::type_plist            = "text.plist.xml";
+const std::string PBXFileReference::type_text             = "text";
 const std::string PBXFileReference::type_library_archive  = "archive.ar";
 const std::string PBXFileReference::type_library_dylib    = "compiled.mach-o.dylib";
 const std::string PBXFileReference::type_application      = "wrapper.application";
@@ -817,6 +819,7 @@ FileTypeMetaData PBXFileReference::typeMetaData[] = {
 	{{ext_cpp_source_1, ext_cpp_source_2}, type_cpp_source, FileTypeCompiler},
 	{{ext_cpp_header_1, ext_cpp_header_2}, type_cpp_header, FileTypeHeader},
 	{{ext_plist}, type_plist, FileTypeResource},
+	{{ext_text}, type_text, FileTypeResource},
 	{{ext_library_archive}, type_library_archive, FileTypeLinkLibrary},
 	{{ext_application}, type_application, FileTypeApplication},
 	{{ext_bundle}, type_bundle, FileTypeResource},
