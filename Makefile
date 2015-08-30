@@ -113,11 +113,13 @@ src_objs =          $(subst $(APP_SRC_DIR),$(OBJ_DIR),$(subst $(LIB_SRC_DIR),$(O
 src_deps =          $(subst $(APP_SRC_DIR),$(DEP_DIR),$(subst $(LIB_SRC_DIR),$(DEP_DIR),$(subst .cc,.cc.P,$(1))))
 
 # target source and objects
-SUSHI_SRCS =        $(LIB_SRC_DIR)/log.cc \
-                    $(LIB_SRC_DIR)/xcode.cc \
+SUSHI_SRCS =        $(LIB_SRC_DIR)/filesystem.cc \
+                    $(LIB_SRC_DIR)/log.cc \
                     $(LIB_SRC_DIR)/project.cc \
                     $(LIB_SRC_DIR)/project_parser.cc \
-                    $(LIB_SRC_DIR)/util.cc
+                    $(LIB_SRC_DIR)/project_xcode.cc \
+                    $(LIB_SRC_DIR)/util.cc \
+                    $(LIB_SRC_DIR)/xcode.cc
 
 SUSHI_OBJS =        $(call src_objs, $(SUSHI_SRCS))
 SUSHI_LIB =         $(LIB_DIR)/libsushi.a
