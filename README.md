@@ -1,6 +1,6 @@
 # sushi
 
-Xcode, (and eventually) Visual Studio and Ninja project generator
+Xcode (and eventually) Visual Studio and Ninja project generator
 
 Work in progress...
 
@@ -13,6 +13,7 @@ Work in progress...
 
 ## Example
 
+To create the Xcode project for Sushi:
 ```
 ./build/darwin_x86_64/bin/maki xcode > sushi.xcodeproj/project.pbxproj
 ```
