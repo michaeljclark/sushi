@@ -12,6 +12,10 @@
 		653C281F1B8B0D5A005EAE6F /* xcode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28071B8B0D39005EAE6F /* xcode.cc */; };
 		653C28201B8B0D5A005EAE6F /* project_parser.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C28091B8B0D39005EAE6F /* project_parser.cc */; };
 		653C28211B8B0D5A005EAE6F /* project.cc in Sources */ = {isa = PBXBuildFile; fileRef = 653C280B1B8B0D39005EAE6F /* project.cc */; };
+		657BE3CA1B926EE8001DDC9B /* filesystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 657BE3C61B926EE8001DDC9B /* filesystem.h */; };
+		657BE3CB1B926EE8001DDC9B /* filesystem.cc in Sources */ = {isa = PBXBuildFile; fileRef = 657BE3C71B926EE8001DDC9B /* filesystem.cc */; };
+		657BE3CC1B926EE8001DDC9B /* project_xcode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 657BE3C81B926EE8001DDC9B /* project_xcode.cc */; };
+		657BE3CD1B926EE8001DDC9B /* project_xcode.h in Headers */ = {isa = PBXBuildFile; fileRef = 657BE3C91B926EE8001DDC9B /* project_xcode.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +31,10 @@
 		653C280E1B8B0D39005EAE6F /* project_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = project_parser.h; path = ../sushi/project_parser.h; sourceTree = "<group>"; };
 		653C280F1B8B0D39005EAE6F /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = ../sushi/log.h; sourceTree = "<group>"; };
 		653C28191B8B0D4A005EAE6F /* libsushi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libsushi.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		657BE3C61B926EE8001DDC9B /* filesystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = filesystem.h; path = ../sushi/filesystem.h; sourceTree = "<group>"; };
+		657BE3C71B926EE8001DDC9B /* filesystem.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = filesystem.cc; path = ../sushi/filesystem.cc; sourceTree = "<group>"; };
+		657BE3C81B926EE8001DDC9B /* project_xcode.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = project_xcode.cc; path = ../sushi/project_xcode.cc; sourceTree = "<group>"; };
+		657BE3C91B926EE8001DDC9B /* project_xcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = project_xcode.h; path = ../sushi/project_xcode.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,11 +67,15 @@
 		653C28041B8B0D25005EAE6F /* sushi */ = {
 			isa = PBXGroup;
 			children = (
+				657BE3C71B926EE8001DDC9B /* filesystem.cc */,
+				657BE3C61B926EE8001DDC9B /* filesystem.h */,
 				653C28061B8B0D39005EAE6F /* log.cc */,
 				653C280F1B8B0D39005EAE6F /* log.h */,
 				653C28091B8B0D39005EAE6F /* project_parser.cc */,
 				653C280E1B8B0D39005EAE6F /* project_parser.h */,
 				653C280A1B8B0D39005EAE6F /* project_parser.rl */,
+				657BE3C81B926EE8001DDC9B /* project_xcode.cc */,
+				657BE3C91B926EE8001DDC9B /* project_xcode.h */,
 				653C280B1B8B0D39005EAE6F /* project.cc */,
 				653C280C1B8B0D39005EAE6F /* project.h */,
 				653C28051B8B0D39005EAE6F /* util.cc */,
@@ -81,6 +93,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				657BE3CD1B926EE8001DDC9B /* project_xcode.h in Headers */,
+				657BE3CA1B926EE8001DDC9B /* filesystem.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +158,8 @@
 				653C281E1B8B0D5A005EAE6F /* log.cc in Sources */,
 				653C28211B8B0D5A005EAE6F /* project.cc in Sources */,
 				653C281F1B8B0D5A005EAE6F /* xcode.cc in Sources */,
+				657BE3CC1B926EE8001DDC9B /* project_xcode.cc in Sources */,
+				657BE3CB1B926EE8001DDC9B /* filesystem.cc in Sources */,
 				653C281D1B8B0D5A005EAE6F /* util.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
