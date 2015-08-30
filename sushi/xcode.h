@@ -299,7 +299,7 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 
 	int buildActionMask;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXAppleScriptBuildPhase();
 
@@ -324,7 +324,7 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 	std::string compilerSpec;
 	std::string filePatterns;
 	std::string type;
-	bool isEditable;
+	int isEditable;
 	PBXArrayPtr outputFiles;
 	std::string script;
 
@@ -365,9 +365,9 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 
 	int buildActionMask;
 	std::string dstPath;
-	bool dstSubfolderSpec;
+	int dstSubfolderSpec;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXCopyFilesBuildPhase();
 
@@ -435,7 +435,7 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 
 	std::string explicitFileType;
 	std::string lastKnownFileType;
-	bool includeInIndex;
+	int includeInIndex;
 	std::string path;
 	std::string sourceTree;
 
@@ -450,7 +450,7 @@ struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
 
 	int buildActionMask;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXFrameworksBuildPhase();
 
@@ -478,7 +478,7 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 
 	int buildActionMask;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXHeadersBuildPhase();
 
@@ -495,7 +495,7 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 	std::string buildToolPath;
 	PBXArrayPtr dependencies;
 	std::string name;
-	bool passBuildSettingsInEnvironment;
+	int passBuildSettingsInEnvironment;
 	std::string productName;
 
 	PBXLegacyTarget();
@@ -536,7 +536,7 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 	PBXId buildConfigurationList;
 	std::string compatibilityVersion;
 	std::string developmentRegion;
-	bool hasScannedForEncodings;
+	int hasScannedForEncodings;
 	PBXArrayPtr knownRegions;
 	PBXId mainGroup;
 	PBXId productRefGroup;
@@ -570,7 +570,7 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 
 	int buildActionMask;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXResourcesBuildPhase();
 
@@ -585,7 +585,7 @@ struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
 	PBXArrayPtr files;
 	PBXArrayPtr inputPaths;
 	PBXArrayPtr outputPaths;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 	std::string shellPath;
 	std::string shellScript;
 
@@ -600,7 +600,7 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
 
 	int buildActionMask;
 	PBXArrayPtr files;
-	bool runOnlyForDeploymentPostprocessing;
+	int runOnlyForDeploymentPostprocessing;
 
 	PBXSourcesBuildPhase();
 
@@ -650,7 +650,7 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 	static const std::string type_name;
 
 	PBXArrayPtr buildConfigurations;
-	bool defaultConfigurationIsVisible;
+	int defaultConfigurationIsVisible;
 	std::string defaultConfigurationName;
 
 	XCConfigurationList();
