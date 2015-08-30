@@ -1,3 +1,7 @@
+//
+//  log.cc
+//
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
