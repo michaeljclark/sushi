@@ -30,7 +30,7 @@
 
 /* project_xcode */
 
-std::string project_xcode::lib_output(project_root_ptr root, project_lib_ptr lib)
+lib_output_data project_xcode::lib_output(project_root_ptr root, project_lib_ptr lib)
 {
     std::string lib_type;
     for (auto lib : root->lib_list) {
@@ -41,13 +41,15 @@ std::string project_xcode::lib_output(project_root_ptr root, project_lib_ptr lib
     if (lib->lib_type.length() > 0) {
         lib_type = lib->lib_type;
     }
-	std::stringstream ss;
 	if (lib_type == "static") {
-		ss << "lib" << lib->lib_name << ".a";
+		return lib_output_data{ PBXFileReference::type_library_archive,
+								PBXNativeTarget::type_library_static,
+								"lib" + lib->lib_name + ".a"};
 	} else {
-		ss << lib->lib_name << ".dylib";
+		return lib_output_data{ PBXFileReference::type_library_dylib,
+								PBXNativeTarget::type_library_dynamic,
+								lib->lib_name + ".dylib"};
 	}
-	return ss.str();
 }
 
 std::vector<std::string> project_xcode::lib_deps(project_root_ptr root, std::vector<std::string> libs)
@@ -57,7 +59,7 @@ std::vector<std::string> project_xcode::lib_deps(project_root_ptr root, std::vec
         auto li = std::find_if(root->lib_list.begin(), root->lib_list.end(),
                                [&lib_name](project_lib_ptr const& lib) { return lib->lib_name == lib_name; });
         if (li != root->lib_list.end()) {
-            lib_deps.push_back(lib_output(root, *li));
+            lib_deps.push_back(lib_output(root, *li).output_file);
         } else {
             log_fatal_exit("can't find library definition for '%s'", lib_name.c_str());
         }
@@ -75,9 +77,10 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// create libs
 	for (auto lib : root->lib_list) {
 		if (lib->lib_name == "*") continue;
-		xcodeproj->createNativeTarget(lib->lib_name, lib_output(root, lib),
-									PBXFileReference::type_library_archive,
-									PBXNativeTarget::type_library_static,
+		auto lib_data = lib_output(root, lib);
+		xcodeproj->createNativeTarget(lib->lib_name, lib_data.output_file,
+									lib_data.file_type,
+									lib_data.target_type,
 									{ }, lib->source);
 	}
 

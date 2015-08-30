@@ -5,9 +5,16 @@
 #ifndef prject_xcode_h
 #define prject_xcode_h
 
+struct lib_output_data
+{
+	std::string file_type;
+	std::string target_type;
+	std::string output_file;
+};
+
 struct project_xcode
 {
-	static std::string lib_output(project_root_ptr root, project_lib_ptr lib);
+	static lib_output_data lib_output(project_root_ptr root, project_lib_ptr lib);
 	static std::vector<std::string> lib_deps(project_root_ptr root, std::vector<std::string> libs);
 	static XcodeprojPtr create_project(project_root_ptr root);
 };
