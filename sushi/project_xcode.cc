@@ -45,12 +45,14 @@ lib_output_data project_xcode::lib_output(project_root_ptr root, project_lib_ptr
 		return lib_output_data {
 			PBXFileReference::type_library_archive,
 			PBXNativeTarget::type_library_static,
-			"lib" + lib->lib_name + ".a"};
+			"lib" + lib->lib_name + ".a"
+		};
 	} else {
 		return lib_output_data {
 			PBXFileReference::type_library_dylib,
 			PBXNativeTarget::type_library_dynamic,
-			lib->lib_name + ".dylib"};
+			lib->lib_name + ".dylib"
+		};
 	}
 }
 
