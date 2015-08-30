@@ -75,10 +75,10 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 {
 	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
 
-	// construct Xcode project
+	// construct empty Xcode project
 	xcodeproj->createEmptyProject(root->project_name, "macosx");
 
-	// create libs
+	// create library targers
 	for (auto lib : root->lib_list) {
 		if (lib->lib_name == "*") continue;
 		auto lib_data = lib_output(root, lib);
@@ -91,14 +91,16 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 			lib->source);
 	}
 
-	// create tools
+	// find base library dependencies
 	std::vector<std::string> base_libs;
 	for (auto tool : root->tool_list) {
 		if (tool->tool_name == "*") {
-			base_libs = lib_deps(root, tool->libs);
-			break;
+			auto libs = lib_deps(root, tool->libs);
+			base_libs.insert(base_libs.end(), libs.begin(), libs.end());
 		}
 	}
+
+	// create tool targets
 	for (auto tool : root->tool_list) {
 		if (tool->tool_name == "*") continue;
 		std::vector<std::string> tool_libs = lib_deps(root, tool->libs);
