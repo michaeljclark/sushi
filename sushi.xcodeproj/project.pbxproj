@@ -5,40 +5,40 @@
 	};
 	objectVersion = 46;
 	objects = {
-		0100000039A4AE0E84F014E7 /* Project Object */ = {
+		01000000EB5F2F4594BA6C24 /* Project Object */ = {
 			isa = PBXProject;
 			attributes = {
 			};
-			buildConfigurationList = 0200000039A4AE0E84F014E7 /* Build configuration list for PBXProject "sushi" */;
+			buildConfigurationList = 02000000EB5F2F4594BA6C24 /* Build configuration list for PBXProject "sushi" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 0500000039A4AE0E84F014E7;
-			productRefGroup = 0600000039A4AE0E84F014E7 /* Products */;
+			mainGroup = 05000000EB5F2F4594BA6C24;
+			productRefGroup = 06000000EB5F2F4594BA6C24 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 			);
 			projectRoot = "";
 			targets = (
-				2400000039A4AE0E84F014E7 /* sushi */,
-				2F00000039A4AE0E84F014E7 /* maki */,
-				3900000039A4AE0E84F014E7 /* pbx_create */,
-				4300000039A4AE0E84F014E7 /* pbx_read */,
+				27000000EB5F2F4594BA6C24 /* sushi */,
+				32000000EB5F2F4594BA6C24 /* maki */,
+				3C000000EB5F2F4594BA6C24 /* pbx_create */,
+				46000000EB5F2F4594BA6C24 /* pbx_read */,
 			);
 		};
-		0200000039A4AE0E84F014E7 /* Build configuration list for PBXProject "sushi" */ = {
+		02000000EB5F2F4594BA6C24 /* Build configuration list for PBXProject "sushi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0300000039A4AE0E84F014E7 /* Debug */,
-				0400000039A4AE0E84F014E7 /* Release */,
+				03000000EB5F2F4594BA6C24 /* Debug */,
+				04000000EB5F2F4594BA6C24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0300000039A4AE0E84F014E7 /* Debug */ = {
+		03000000EB5F2F4594BA6C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -48,7 +48,7 @@
 			};
 			name = Debug;
 		};
-		0400000039A4AE0E84F014E7 /* Release */ = {
+		04000000EB5F2F4594BA6C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -58,224 +58,243 @@
 			};
 			name = Release;
 		};
-		0500000039A4AE0E84F014E7 = {
+		05000000EB5F2F4594BA6C24 = {
 			isa = PBXGroup;
 			children = (
-				0600000039A4AE0E84F014E7 /* Products */,
-				2B00000039A4AE0E84F014E7 /* app */,
-				0C00000039A4AE0E84F014E7 /* sushi */,
+				06000000EB5F2F4594BA6C24 /* Products */,
+				2E000000EB5F2F4594BA6C24 /* app */,
+				0C000000EB5F2F4594BA6C24 /* sushi */,
 			);
 			sourceTree = "<group>";
 		};
-		0600000039A4AE0E84F014E7 /* Products */ = {
+		06000000EB5F2F4594BA6C24 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2300000039A4AE0E84F014E7 /* libsushi.a */,
-				2E00000039A4AE0E84F014E7 /* maki */,
-				3800000039A4AE0E84F014E7 /* pbx_create */,
-				4200000039A4AE0E84F014E7 /* pbx_read */,
+				26000000EB5F2F4594BA6C24 /* libsushi.a */,
+				31000000EB5F2F4594BA6C24 /* maki */,
+				3B000000EB5F2F4594BA6C24 /* pbx_create */,
+				45000000EB5F2F4594BA6C24 /* pbx_read */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0700000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "sushi" */ = {
+		07000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "sushi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0800000039A4AE0E84F014E7 /* Debug */,
-				0900000039A4AE0E84F014E7 /* Release */,
+				08000000EB5F2F4594BA6C24 /* Debug */,
+				09000000EB5F2F4594BA6C24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0800000039A4AE0E84F014E7 /* Debug */ = {
+		08000000EB5F2F4594BA6C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		0900000039A4AE0E84F014E7 /* Release */ = {
+		09000000EB5F2F4594BA6C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		0A00000039A4AE0E84F014E7 /* Frameworks */ = {
+		0A000000EB5F2F4594BA6C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0B00000039A4AE0E84F014E7 /* Sources */ = {
+		0B000000EB5F2F4594BA6C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E00000039A4AE0E84F014E7 /* filesystem.cc in Sources */,
-				1100000039A4AE0E84F014E7 /* log.cc in Sources */,
-				1400000039A4AE0E84F014E7 /* project.cc in Sources */,
-				1700000039A4AE0E84F014E7 /* project_parser.cc in Sources */,
-				1B00000039A4AE0E84F014E7 /* project_xcode.cc in Sources */,
-				1E00000039A4AE0E84F014E7 /* util.cc in Sources */,
-				2100000039A4AE0E84F014E7 /* xcode.cc in Sources */,
+				0E000000EB5F2F4594BA6C24 /* cmdline_options.cc in Sources */,
+				11000000EB5F2F4594BA6C24 /* filesystem.cc in Sources */,
+				14000000EB5F2F4594BA6C24 /* log.cc in Sources */,
+				17000000EB5F2F4594BA6C24 /* project.cc in Sources */,
+				1A000000EB5F2F4594BA6C24 /* project_parser.cc in Sources */,
+				1E000000EB5F2F4594BA6C24 /* project_xcode.cc in Sources */,
+				21000000EB5F2F4594BA6C24 /* util.cc in Sources */,
+				24000000EB5F2F4594BA6C24 /* xcode.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0C00000039A4AE0E84F014E7 /* sushi */ = {
+		0C000000EB5F2F4594BA6C24 /* sushi */ = {
 			isa = PBXGroup;
 			children = (
-				0D00000039A4AE0E84F014E7 /* filesystem.cc */,
-				0F00000039A4AE0E84F014E7 /* filesystem.h */,
-				1000000039A4AE0E84F014E7 /* log.cc */,
-				1200000039A4AE0E84F014E7 /* log.h */,
-				1300000039A4AE0E84F014E7 /* project.cc */,
-				1500000039A4AE0E84F014E7 /* project.h */,
-				1600000039A4AE0E84F014E7 /* project_parser.cc */,
-				1800000039A4AE0E84F014E7 /* project_parser.h */,
-				1900000039A4AE0E84F014E7 /* project_parser.rl */,
-				1A00000039A4AE0E84F014E7 /* project_xcode.cc */,
-				1C00000039A4AE0E84F014E7 /* project_xcode.h */,
-				1D00000039A4AE0E84F014E7 /* util.cc */,
-				1F00000039A4AE0E84F014E7 /* util.h */,
-				2000000039A4AE0E84F014E7 /* xcode.cc */,
-				2200000039A4AE0E84F014E7 /* xcode.h */,
+				0D000000EB5F2F4594BA6C24 /* cmdline_options.cc */,
+				0F000000EB5F2F4594BA6C24 /* cmdline_options.h */,
+				10000000EB5F2F4594BA6C24 /* filesystem.cc */,
+				12000000EB5F2F4594BA6C24 /* filesystem.h */,
+				13000000EB5F2F4594BA6C24 /* log.cc */,
+				15000000EB5F2F4594BA6C24 /* log.h */,
+				16000000EB5F2F4594BA6C24 /* project.cc */,
+				18000000EB5F2F4594BA6C24 /* project.h */,
+				19000000EB5F2F4594BA6C24 /* project_parser.cc */,
+				1B000000EB5F2F4594BA6C24 /* project_parser.h */,
+				1C000000EB5F2F4594BA6C24 /* project_parser.rl */,
+				1D000000EB5F2F4594BA6C24 /* project_xcode.cc */,
+				1F000000EB5F2F4594BA6C24 /* project_xcode.h */,
+				20000000EB5F2F4594BA6C24 /* util.cc */,
+				22000000EB5F2F4594BA6C24 /* util.h */,
+				23000000EB5F2F4594BA6C24 /* xcode.cc */,
+				25000000EB5F2F4594BA6C24 /* xcode.h */,
 			);
 			name = sushi;
 			path = sushi;
 			sourceTree = "<group>";
 		};
-		0D00000039A4AE0E84F014E7 /* filesystem.cc */ = {
+		0D000000EB5F2F4594BA6C24 /* cmdline_options.cc */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = cmdline_options.cc;
+			sourceTree = "<group>";
+		};
+		0E000000EB5F2F4594BA6C24 /* cmdline_options.cc in Sources */ = {
+			isa = PBXBuildFile;
+			fileRef = 0D000000EB5F2F4594BA6C24 /* cmdline_options.cc */;
+		};
+		0F000000EB5F2F4594BA6C24 /* cmdline_options.h */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = cmdline_options.h;
+			sourceTree = "<group>";
+		};
+		10000000EB5F2F4594BA6C24 /* filesystem.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = filesystem.cc;
 			sourceTree = "<group>";
 		};
-		0E00000039A4AE0E84F014E7 /* filesystem.cc in Sources */ = {
+		11000000EB5F2F4594BA6C24 /* filesystem.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 0D00000039A4AE0E84F014E7 /* filesystem.cc */;
+			fileRef = 10000000EB5F2F4594BA6C24 /* filesystem.cc */;
 		};
-		0F00000039A4AE0E84F014E7 /* filesystem.h */ = {
+		12000000EB5F2F4594BA6C24 /* filesystem.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = filesystem.h;
 			sourceTree = "<group>";
 		};
-		1000000039A4AE0E84F014E7 /* log.cc */ = {
+		13000000EB5F2F4594BA6C24 /* log.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = log.cc;
 			sourceTree = "<group>";
 		};
-		1100000039A4AE0E84F014E7 /* log.cc in Sources */ = {
+		14000000EB5F2F4594BA6C24 /* log.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1000000039A4AE0E84F014E7 /* log.cc */;
+			fileRef = 13000000EB5F2F4594BA6C24 /* log.cc */;
 		};
-		1200000039A4AE0E84F014E7 /* log.h */ = {
+		15000000EB5F2F4594BA6C24 /* log.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = log.h;
 			sourceTree = "<group>";
 		};
-		1300000039A4AE0E84F014E7 /* project.cc */ = {
+		16000000EB5F2F4594BA6C24 /* project.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project.cc;
 			sourceTree = "<group>";
 		};
-		1400000039A4AE0E84F014E7 /* project.cc in Sources */ = {
+		17000000EB5F2F4594BA6C24 /* project.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1300000039A4AE0E84F014E7 /* project.cc */;
+			fileRef = 16000000EB5F2F4594BA6C24 /* project.cc */;
 		};
-		1500000039A4AE0E84F014E7 /* project.h */ = {
+		18000000EB5F2F4594BA6C24 /* project.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project.h;
 			sourceTree = "<group>";
 		};
-		1600000039A4AE0E84F014E7 /* project_parser.cc */ = {
+		19000000EB5F2F4594BA6C24 /* project_parser.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project_parser.cc;
 			sourceTree = "<group>";
 		};
-		1700000039A4AE0E84F014E7 /* project_parser.cc in Sources */ = {
+		1A000000EB5F2F4594BA6C24 /* project_parser.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1600000039A4AE0E84F014E7 /* project_parser.cc */;
+			fileRef = 19000000EB5F2F4594BA6C24 /* project_parser.cc */;
 		};
-		1800000039A4AE0E84F014E7 /* project_parser.h */ = {
+		1B000000EB5F2F4594BA6C24 /* project_parser.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project_parser.h;
 			sourceTree = "<group>";
 		};
-		1900000039A4AE0E84F014E7 /* project_parser.rl */ = {
+		1C000000EB5F2F4594BA6C24 /* project_parser.rl */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = text;
 			path = project_parser.rl;
 			sourceTree = "<group>";
 		};
-		1A00000039A4AE0E84F014E7 /* project_xcode.cc */ = {
+		1D000000EB5F2F4594BA6C24 /* project_xcode.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = project_xcode.cc;
 			sourceTree = "<group>";
 		};
-		1B00000039A4AE0E84F014E7 /* project_xcode.cc in Sources */ = {
+		1E000000EB5F2F4594BA6C24 /* project_xcode.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1A00000039A4AE0E84F014E7 /* project_xcode.cc */;
+			fileRef = 1D000000EB5F2F4594BA6C24 /* project_xcode.cc */;
 		};
-		1C00000039A4AE0E84F014E7 /* project_xcode.h */ = {
+		1F000000EB5F2F4594BA6C24 /* project_xcode.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = project_xcode.h;
 			sourceTree = "<group>";
 		};
-		1D00000039A4AE0E84F014E7 /* util.cc */ = {
+		20000000EB5F2F4594BA6C24 /* util.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = util.cc;
 			sourceTree = "<group>";
 		};
-		1E00000039A4AE0E84F014E7 /* util.cc in Sources */ = {
+		21000000EB5F2F4594BA6C24 /* util.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 1D00000039A4AE0E84F014E7 /* util.cc */;
+			fileRef = 20000000EB5F2F4594BA6C24 /* util.cc */;
 		};
-		1F00000039A4AE0E84F014E7 /* util.h */ = {
+		22000000EB5F2F4594BA6C24 /* util.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = util.h;
 			sourceTree = "<group>";
 		};
-		2000000039A4AE0E84F014E7 /* xcode.cc */ = {
+		23000000EB5F2F4594BA6C24 /* xcode.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = xcode.cc;
 			sourceTree = "<group>";
 		};
-		2100000039A4AE0E84F014E7 /* xcode.cc in Sources */ = {
+		24000000EB5F2F4594BA6C24 /* xcode.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 2000000039A4AE0E84F014E7 /* xcode.cc */;
+			fileRef = 23000000EB5F2F4594BA6C24 /* xcode.cc */;
 		};
-		2200000039A4AE0E84F014E7 /* xcode.h */ = {
+		25000000EB5F2F4594BA6C24 /* xcode.h */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = xcode.h;
 			sourceTree = "<group>";
 		};
-		2300000039A4AE0E84F014E7 /* libsushi.a */ = {
+		26000000EB5F2F4594BA6C24 /* libsushi.a */ = {
 			isa = PBXFileReference;
 			explicitFileType = archive.ar;
 			includeInIndex = 0;
 			path = libsushi.a;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2400000039A4AE0E84F014E7 /* sushi */ = {
+		27000000EB5F2F4594BA6C24 /* sushi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0700000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "sushi" */;
+			buildConfigurationList = 07000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "sushi" */;
 			buildPhases = (
-				0B00000039A4AE0E84F014E7 /* Sources */,
-				0A00000039A4AE0E84F014E7 /* Frameworks */,
+				0B000000EB5F2F4594BA6C24 /* Sources */,
+				0A000000EB5F2F4594BA6C24 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -283,86 +302,86 @@
 			);
 			name = sushi;
 			productName = sushi;
-			productReference = 2300000039A4AE0E84F014E7 /* libsushi.a */;
+			productReference = 26000000EB5F2F4594BA6C24 /* libsushi.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2500000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "maki" */ = {
+		28000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "maki" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2600000039A4AE0E84F014E7 /* Debug */,
-				2700000039A4AE0E84F014E7 /* Release */,
+				29000000EB5F2F4594BA6C24 /* Debug */,
+				2A000000EB5F2F4594BA6C24 /* Release */,
 			);
-			defaultConfigurationIsVisible = 111;
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2600000039A4AE0E84F014E7 /* Debug */ = {
+		29000000EB5F2F4594BA6C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		2700000039A4AE0E84F014E7 /* Release */ = {
+		2A000000EB5F2F4594BA6C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		2800000039A4AE0E84F014E7 /* Frameworks */ = {
+		2B000000EB5F2F4594BA6C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2900000039A4AE0E84F014E7 /* libsushi.a in Frameworks */,
+				2C000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2900000039A4AE0E84F014E7 /* libsushi.a in Frameworks */ = {
+		2C000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2300000039A4AE0E84F014E7 /* libsushi.a */;
+			fileRef = 26000000EB5F2F4594BA6C24 /* libsushi.a */;
 		};
-		2A00000039A4AE0E84F014E7 /* Sources */ = {
+		2D000000EB5F2F4594BA6C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D00000039A4AE0E84F014E7 /* maki.cc in Sources */,
+				30000000EB5F2F4594BA6C24 /* maki.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2B00000039A4AE0E84F014E7 /* app */ = {
+		2E000000EB5F2F4594BA6C24 /* app */ = {
 			isa = PBXGroup;
 			children = (
-				2C00000039A4AE0E84F014E7 /* maki.cc */,
-				3600000039A4AE0E84F014E7 /* pbx_create.cc */,
-				4000000039A4AE0E84F014E7 /* pbx_read.cc */,
+				2F000000EB5F2F4594BA6C24 /* maki.cc */,
+				39000000EB5F2F4594BA6C24 /* pbx_create.cc */,
+				43000000EB5F2F4594BA6C24 /* pbx_read.cc */,
 			);
 			name = app;
 			path = app;
 			sourceTree = "<group>";
 		};
-		2C00000039A4AE0E84F014E7 /* maki.cc */ = {
+		2F000000EB5F2F4594BA6C24 /* maki.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = maki.cc;
 			sourceTree = "<group>";
 		};
-		2D00000039A4AE0E84F014E7 /* maki.cc in Sources */ = {
+		30000000EB5F2F4594BA6C24 /* maki.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 2C00000039A4AE0E84F014E7 /* maki.cc */;
+			fileRef = 2F000000EB5F2F4594BA6C24 /* maki.cc */;
 		};
-		2E00000039A4AE0E84F014E7 /* maki */ = {
+		31000000EB5F2F4594BA6C24 /* maki */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = maki;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2F00000039A4AE0E84F014E7 /* maki */ = {
+		32000000EB5F2F4594BA6C24 /* maki */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2500000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "maki" */;
+			buildConfigurationList = 28000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "maki" */;
 			buildPhases = (
-				2A00000039A4AE0E84F014E7 /* Sources */,
-				2800000039A4AE0E84F014E7 /* Frameworks */,
+				2D000000EB5F2F4594BA6C24 /* Sources */,
+				2B000000EB5F2F4594BA6C24 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -370,75 +389,75 @@
 			);
 			name = maki;
 			productName = maki;
-			productReference = 2E00000039A4AE0E84F014E7 /* maki */;
+			productReference = 31000000EB5F2F4594BA6C24 /* maki */;
 			productType = "com.apple.product-type.tool";
 		};
-		3000000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "pbx_create" */ = {
+		33000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "pbx_create" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3100000039A4AE0E84F014E7 /* Debug */,
-				3200000039A4AE0E84F014E7 /* Release */,
+				34000000EB5F2F4594BA6C24 /* Debug */,
+				35000000EB5F2F4594BA6C24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3100000039A4AE0E84F014E7 /* Debug */ = {
+		34000000EB5F2F4594BA6C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		3200000039A4AE0E84F014E7 /* Release */ = {
+		35000000EB5F2F4594BA6C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		3300000039A4AE0E84F014E7 /* Frameworks */ = {
+		36000000EB5F2F4594BA6C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3400000039A4AE0E84F014E7 /* libsushi.a in Frameworks */,
+				37000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3400000039A4AE0E84F014E7 /* libsushi.a in Frameworks */ = {
+		37000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2300000039A4AE0E84F014E7 /* libsushi.a */;
+			fileRef = 26000000EB5F2F4594BA6C24 /* libsushi.a */;
 		};
-		3500000039A4AE0E84F014E7 /* Sources */ = {
+		38000000EB5F2F4594BA6C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3700000039A4AE0E84F014E7 /* pbx_create.cc in Sources */,
+				3A000000EB5F2F4594BA6C24 /* pbx_create.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3600000039A4AE0E84F014E7 /* pbx_create.cc */ = {
+		39000000EB5F2F4594BA6C24 /* pbx_create.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = pbx_create.cc;
 			sourceTree = "<group>";
 		};
-		3700000039A4AE0E84F014E7 /* pbx_create.cc in Sources */ = {
+		3A000000EB5F2F4594BA6C24 /* pbx_create.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 3600000039A4AE0E84F014E7 /* pbx_create.cc */;
+			fileRef = 39000000EB5F2F4594BA6C24 /* pbx_create.cc */;
 		};
-		3800000039A4AE0E84F014E7 /* pbx_create */ = {
+		3B000000EB5F2F4594BA6C24 /* pbx_create */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = pbx_create;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3900000039A4AE0E84F014E7 /* pbx_create */ = {
+		3C000000EB5F2F4594BA6C24 /* pbx_create */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3000000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "pbx_create" */;
+			buildConfigurationList = 33000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "pbx_create" */;
 			buildPhases = (
-				3500000039A4AE0E84F014E7 /* Sources */,
-				3300000039A4AE0E84F014E7 /* Frameworks */,
+				38000000EB5F2F4594BA6C24 /* Sources */,
+				36000000EB5F2F4594BA6C24 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -446,75 +465,75 @@
 			);
 			name = pbx_create;
 			productName = pbx_create;
-			productReference = 3800000039A4AE0E84F014E7 /* pbx_create */;
+			productReference = 3B000000EB5F2F4594BA6C24 /* pbx_create */;
 			productType = "com.apple.product-type.tool";
 		};
-		3A00000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
+		3D000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3B00000039A4AE0E84F014E7 /* Debug */,
-				3C00000039A4AE0E84F014E7 /* Release */,
+				3E000000EB5F2F4594BA6C24 /* Debug */,
+				3F000000EB5F2F4594BA6C24 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3B00000039A4AE0E84F014E7 /* Debug */ = {
+		3E000000EB5F2F4594BA6C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		3C00000039A4AE0E84F014E7 /* Release */ = {
+		3F000000EB5F2F4594BA6C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
-		3D00000039A4AE0E84F014E7 /* Frameworks */ = {
+		40000000EB5F2F4594BA6C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E00000039A4AE0E84F014E7 /* libsushi.a in Frameworks */,
+				41000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3E00000039A4AE0E84F014E7 /* libsushi.a in Frameworks */ = {
+		41000000EB5F2F4594BA6C24 /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
-			fileRef = 2300000039A4AE0E84F014E7 /* libsushi.a */;
+			fileRef = 26000000EB5F2F4594BA6C24 /* libsushi.a */;
 		};
-		3F00000039A4AE0E84F014E7 /* Sources */ = {
+		42000000EB5F2F4594BA6C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4100000039A4AE0E84F014E7 /* pbx_read.cc in Sources */,
+				44000000EB5F2F4594BA6C24 /* pbx_read.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4000000039A4AE0E84F014E7 /* pbx_read.cc */ = {
+		43000000EB5F2F4594BA6C24 /* pbx_read.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = pbx_read.cc;
 			sourceTree = "<group>";
 		};
-		4100000039A4AE0E84F014E7 /* pbx_read.cc in Sources */ = {
+		44000000EB5F2F4594BA6C24 /* pbx_read.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 4000000039A4AE0E84F014E7 /* pbx_read.cc */;
+			fileRef = 43000000EB5F2F4594BA6C24 /* pbx_read.cc */;
 		};
-		4200000039A4AE0E84F014E7 /* pbx_read */ = {
+		45000000EB5F2F4594BA6C24 /* pbx_read */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = pbx_read;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4300000039A4AE0E84F014E7 /* pbx_read */ = {
+		46000000EB5F2F4594BA6C24 /* pbx_read */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A00000039A4AE0E84F014E7 /* Build configuration list for PBXNativeTarget "pbx_read" */;
+			buildConfigurationList = 3D000000EB5F2F4594BA6C24 /* Build configuration list for PBXNativeTarget "pbx_read" */;
 			buildPhases = (
-				3F00000039A4AE0E84F014E7 /* Sources */,
-				3D00000039A4AE0E84F014E7 /* Frameworks */,
+				42000000EB5F2F4594BA6C24 /* Sources */,
+				40000000EB5F2F4594BA6C24 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -522,9 +541,9 @@
 			);
 			name = pbx_read;
 			productName = pbx_read;
-			productReference = 4200000039A4AE0E84F014E7 /* pbx_read */;
+			productReference = 45000000EB5F2F4594BA6C24 /* pbx_read */;
 			productType = "com.apple.product-type.tool";
 		};
 	};
-	rootObject = 0100000039A4AE0E84F014E7 /* Project Object */;
+	rootObject = 01000000EB5F2F4594BA6C24 /* Project Object */;
 }

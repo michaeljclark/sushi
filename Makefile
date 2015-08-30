@@ -113,7 +113,8 @@ src_objs =          $(subst $(APP_SRC_DIR),$(OBJ_DIR),$(subst $(LIB_SRC_DIR),$(O
 src_deps =          $(subst $(APP_SRC_DIR),$(DEP_DIR),$(subst $(LIB_SRC_DIR),$(DEP_DIR),$(subst .cc,.cc.P,$(1))))
 
 # target source and objects
-SUSHI_SRCS =        $(LIB_SRC_DIR)/filesystem.cc \
+SUSHI_SRCS =        $(LIB_SRC_DIR)/cmdline_options.cc \
+                    $(LIB_SRC_DIR)/filesystem.cc \
                     $(LIB_SRC_DIR)/log.cc \
                     $(LIB_SRC_DIR)/project.cc \
                     $(LIB_SRC_DIR)/project_parser.cc \

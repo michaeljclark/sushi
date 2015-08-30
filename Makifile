@@ -21,6 +21,8 @@ project sushi {
 
 	lib sushi {
 		source
+			sushi/cmdline_options.cc
+			sushi/cmdline_options.h
 			sushi/filesystem.cc
 			sushi/filesystem.h
 			sushi/log.cc
