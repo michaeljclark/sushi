@@ -122,25 +122,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\sushi\cmdline_options.h" />
-    <ClInclude Include="..\sushi\filesystem.h" />
-    <ClInclude Include="..\sushi\log.h" />
-    <ClInclude Include="..\sushi\project.h" />
-    <ClInclude Include="..\sushi\project_parser.h" />
-    <ClInclude Include="..\sushi\project_xcode.h" />
-    <ClInclude Include="..\sushi\util.h" />
-    <ClInclude Include="..\sushi\xcode.h" />
+    <ClInclude Include="..\..\sushi\cmdline_options.h" />
+    <ClInclude Include="..\..\sushi\filesystem.h" />
+    <ClInclude Include="..\..\sushi\log.h" />
+    <ClInclude Include="..\..\sushi\project.h" />
+    <ClInclude Include="..\..\sushi\project_parser.h" />
+    <ClInclude Include="..\..\sushi\project_xcode.h" />
+    <ClInclude Include="..\..\sushi\util.h" />
+    <ClInclude Include="..\..\sushi\xcode.h" />
 
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\sushi\cmdline_options.cc" />
-    <ClCompile Include="..\sushi\filesystem.cc" />
-    <ClCompile Include="..\sushi\log.cc" />
-    <ClCompile Include="..\sushi\project.cc" />
-    <ClCompile Include="..\sushi\project_parser.cc" />
-    <ClCompile Include="..\sushi\project_xcode.cc" />
-    <ClCompile Include="..\sushi\util.cc" />
-    <ClCompile Include="..\sushi\xcode.cc" />
+    <ClCompile Include="..\..\sushi\cmdline_options.cc" />
+    <ClCompile Include="..\..\sushi\filesystem.cc" />
+    <ClCompile Include="..\..\sushi\log.cc" />
+    <ClCompile Include="..\..\sushi\project.cc" />
+    <ClCompile Include="..\..\sushi\project_parser.cc" />
+    <ClCompile Include="..\..\sushi\project_xcode.cc" />
+    <ClCompile Include="..\..\sushi\util.cc" />
+    <ClCompile Include="..\..\sushi\xcode.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
