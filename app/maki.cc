@@ -22,14 +22,12 @@
 
 /* main */
 
-int main(int argc, char **argv) {
-	if (argc != 2) {
-		fprintf(stderr, "usage: %s <makiproj>\n", argv[0]);
-		exit(1);
-	}
-
+int main(int argc, char **argv)
+{
+	// TODO parse command line options
+	// currently hardcoded to produce Xcode project
 	project proj;
-	proj.read(argv[1]);
+	proj.read("Makifile");
 	XcodeprojPtr xcodeproj = project_xcode::create_project(proj.root);
 	PBXWriter::write(xcodeproj, std::cout, 0);
 	std::cout << std::endl;
