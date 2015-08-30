@@ -20,21 +20,22 @@ project sushi {
 	}
 
 	lib sushi {
-		source	sushi/filesystem.cc
-				sushi/filesystem.h
-				sushi/log.cc
-				sushi/log.h
-				sushi/project.cc
-				sushi/project.h
-				sushi/project_parser.cc
-				sushi/project_parser.h
-				sushi/project_parser.rl
-				sushi/project_xcode.cc
-				sushi/project_xcode.h
-				sushi/util.cc
-				sushi/util.h
-				sushi/xcode.cc
-				sushi/xcode.h;
+		source
+			sushi/filesystem.cc
+			sushi/filesystem.h
+			sushi/log.cc
+			sushi/log.h
+			sushi/project.cc
+			sushi/project.h
+			sushi/project_parser.cc
+			sushi/project_parser.h
+			sushi/project_parser.rl
+			sushi/project_xcode.cc
+			sushi/project_xcode.h
+			sushi/util.cc
+			sushi/util.h
+			sushi/xcode.cc
+			sushi/xcode.h;
 	}
 
 	# inherited by all tools
