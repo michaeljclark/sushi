@@ -58,6 +58,65 @@ void VSSolution::MinimumVisualStudioVersion(const char *value, size_t length)
 	log_debug("MinimumVisualStudioVersion: %s", std::string(value, length).c_str());
 }
 
+void VSSolution::ProjectTypeGUID(const char *value, size_t length)
+{
+	log_debug("ProjectTypeGUID: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectName(const char *value, size_t length)
+{
+	log_debug("ProjectName: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectPath(const char *value, size_t length)
+{
+	log_debug("ProjectPath: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectGUID(const char *value, size_t length)
+{
+	log_debug("ProjectGUID: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectDependsGUIDKey(const char *value, size_t length)
+{
+	log_debug("ProjectDependsGUIDKey: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectDependsGUIDValue(const char *value, size_t length)
+{
+	log_debug("ProjectDependsGUIDValue: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::SolutionConfigPlatformKey(const char *value, size_t length)
+{
+	log_debug("SolutionConfigPlatformKey: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::SolutionConfigPlatformValue(const char *value, size_t length)
+{
+	log_debug("SolutionConfigPlatformValue: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectConfigPlatformKey(const char *value, size_t length)
+{
+	log_debug("ProjectConfigPlatformKey: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectConfigPlatformValue(const char *value, size_t length)
+{
+	log_debug("ProjectConfigPlatformValue: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::SolutionPropertiesKey(const char *value, size_t length)
+{
+	log_debug("SolutionPropertiesKey: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::SolutionPropertiesValue(const char *value, size_t length)
+{
+	log_debug("SolutionPropertiesValue: %s", std::string(value, length).c_str());
+}
 void VSSolution::Done()
 {
 	log_debug("Done");

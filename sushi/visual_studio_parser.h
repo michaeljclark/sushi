@@ -19,6 +19,18 @@ struct VisualStudioParser
     virtual void CommentVersion(const char *value, size_t length) = 0;
     virtual void VisualStudioVersion(const char *value, size_t length) = 0;
     virtual void MinimumVisualStudioVersion(const char *value, size_t length) = 0;
+    virtual void ProjectTypeGUID(const char *value, size_t length) = 0;
+    virtual void ProjectName(const char *value, size_t length) = 0;
+    virtual void ProjectPath(const char *value, size_t length) = 0;
+    virtual void ProjectGUID(const char *value, size_t length) = 0;
+    virtual void ProjectDependsGUIDKey(const char *value, size_t length) = 0;
+    virtual void ProjectDependsGUIDValue(const char *value, size_t length) = 0;
+    virtual void SolutionConfigPlatformKey(const char *value, size_t length) = 0;
+    virtual void SolutionConfigPlatformValue(const char *value, size_t length) = 0;
+    virtual void ProjectConfigPlatformKey(const char *value, size_t length) = 0;
+    virtual void ProjectConfigPlatformValue(const char *value, size_t length) = 0;
+    virtual void SolutionPropertiesKey(const char *value, size_t length) = 0;
+    virtual void SolutionPropertiesValue(const char *value, size_t length) = 0;
     virtual void Done() = 0;
 };
 
