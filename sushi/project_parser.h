@@ -2,8 +2,8 @@
 //  project_parser.h
 //
 
-#ifndef prject_parser_h
-#define prject_parser_h
+#ifndef project_parser_h
+#define project_parser_h
 
 struct project_parser
 {
