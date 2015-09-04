@@ -134,6 +134,7 @@
     <ClInclude Include="..\..\sushi\project_xcode.h" />
     <ClInclude Include="..\..\sushi\util.h" />
     <ClInclude Include="..\..\sushi\visual_studio.h" />
+    <ClInclude Include="..\..\sushi\visual_studio_parser.h" />
     <ClInclude Include="..\..\sushi\xcode.h" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClCompile Include="..\..\sushi\project_xcode.cc" />
     <ClCompile Include="..\..\sushi\util.cc" />
     <ClCompile Include="..\..\sushi\visual_studio.cc" />
+    <ClCompile Include="..\..\sushi\visual_studio_parser.cc" />
     <ClCompile Include="..\..\sushi\xcode.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

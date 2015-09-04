@@ -37,6 +37,9 @@ project sushi {
 			sushi/util.h
 			sushi/visual_studio.cc
 			sushi/visual_studio.h
+			sushi/visual_studio_parser.cc
+			sushi/visual_studio_parser.h
+			sushi/visual_studio_parser.rl
 			sushi/xcode.cc
 			sushi/xcode.h;
 	}
@@ -61,6 +64,10 @@ project sushi {
 
 	tool pbx_read {
 		source app/pbx_read.cc;
+	}
+
+	tool vs_read {
+		source app/vs_read.cc;
 	}
 
 }

@@ -105,6 +105,7 @@ SUSHI_SRCS =        $(SUSHI_SRC_DIR)/cmdline_options.cc \
                     $(SUSHI_SRC_DIR)/project_xcode.cc \
                     $(SUSHI_SRC_DIR)/util.cc \
                     $(SUSHI_SRC_DIR)/visual_studio.cc \
+                    $(SUSHI_SRC_DIR)/visual_studio_parser.cc \
                     $(SUSHI_SRC_DIR)/xcode.cc
 SUSHI_OBJS =        $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHI_SRCS)))
 SUSHI_LIB =         $(LIB_DIR)/libsushi.a
@@ -121,12 +122,16 @@ PBXREAD_SRCS =      $(APP_SRC_DIR)/pbx_read.cc
 PBXREAD_OBJS =      $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXREAD_SRCS)))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
 
+VSREAD_SRCS =       $(APP_SRC_DIR)/vs_read.cc
+VSREAD_OBJS =       $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(VSREAD_SRCS)))
+VSREAD_BIN =        $(BIN_DIR)/vs_read
+
 SUSHICLI_SRCS =     $(APP_SRC_DIR)/maki.cc
 SUSHICLI_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHICLI_SRCS)))
 SUSHICLI_BIN =      $(BIN_DIR)/maki
 
-APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(SUSHICLI_SRCS)
-BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN) $(SUSHICLI_BIN)
+APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(SUSHICLI_SRCS)
+BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN) $(SUSHICLI_BIN)
 
 
 # build rules
@@ -144,6 +149,7 @@ $(SUSHI_LIB): $(SUSHI_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(TINYXML2_LIB): $(TINYXML2_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(VSREAD_BIN): $(VSREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 
 # build recipes
