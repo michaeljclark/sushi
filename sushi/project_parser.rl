@@ -26,7 +26,7 @@
     }
 
     Eol = ';' %w_end_statement;
-    newline = ('\r' | '\n' ) | '\n';
+    newline = ('\r' '\n' ) | '\n';
     ws = (' ' | '\t' | '\r' | '\n' )+;
     comment = '#' ( any - '\n' )* '\n';
     symbol = ( any - ';' - ws - '{' - '}' - '#' )+ >mark %w_symbol;
