@@ -13,7 +13,7 @@
 #include "visual_studio_parser.h"
 
 
-#line 96 "sushi/visual_studio_parser.rl"
+#line 98 "sushi/visual_studio_parser.rl"
 
 
 
@@ -1010,7 +1010,7 @@ static const int visual_studio_parser_error = 0;
 static const int visual_studio_parser_en_main = 1;
 
 
-#line 99 "sushi/visual_studio_parser.rl"
+#line 101 "sushi/visual_studio_parser.rl"
 
 bool VisualStudioParser::parse(const char *buffer, size_t len)
 {
@@ -1027,7 +1027,7 @@ bool VisualStudioParser::parse(const char *buffer, size_t len)
 	cs = visual_studio_parser_start;
 	}
 
-#line 110 "sushi/visual_studio_parser.rl"
+#line 112 "sushi/visual_studio_parser.rl"
     
 #line 1033 "sushi/visual_studio_parser.cc"
 	{
@@ -1201,7 +1201,7 @@ _again:
 	_out: {}
 	}
 
-#line 111 "sushi/visual_studio_parser.rl"
+#line 113 "sushi/visual_studio_parser.rl"
 
     return (cs != visual_studio_parser_error || cs == visual_studio_parser_first_final);
 }

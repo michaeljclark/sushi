@@ -45,6 +45,7 @@
     Hex = [0123456789ABCDEF];
     GUID = Hex{8} '-' Hex{4} '-' Hex{4} '-' Hex{4} '-' Hex{12};
     VersionNumber = [0123456789.]+;
+    
     MinimumVisualStudioVersion = 'MinimumVisualStudioVersion = ' %mark VersionNumber %w_MinimumVisualStudioVersion Newline;
     VisualStudioVersion = 'VisualStudioVersion = ' %mark VersionNumber %w_VisualStudioVersion Newline;
     CommentVersions = VersionNumber; # ( '2012' | '2013' | '14' );
@@ -52,6 +53,7 @@
     FormatVersions = VersionNumber; # ( '12.00' );
     FormatVersion = 'Microsoft Visual Studio Solution File, Format Version ' %mark FormatVersions %w_FormatVersion Newline;
     Header = UTF8_BOM Newline FormatVersion CommentVersion VisualStudioVersion? MinimumVisualStudioVersion?;
+
     ProjectTypeGUID = 'Project("{' %mark GUID %w_ProjectTypeGUID '}")';
     ProjectName = '"' %mark (any - '"')* %w_ProjectName '"';
     ProjectPath = '"' %mark (any - '"')* %w_ProjectPath '"';
