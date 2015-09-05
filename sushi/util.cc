@@ -45,49 +45,6 @@ std::string util::trim(std::string s) {
 	return ltrim(rtrim(s));
 }
 
-int util::canonicalize_path(char *path)
-{
-	char *r, *w;
-	int last_was_slash = 0;
-	r = w = path;
-	while(*r != 0)
-	{
-		/* convert backslash to foward slash */
-		if (*r == '\\') *r = '/';
-		/* Ignore duplicate /'s */
-		if (*r == '/' && last_was_slash) {
-			r++;
-			continue;
-		}
-		/* Calculate /../ in a secure way */
-		if (last_was_slash && *r == '.') {
-			if (*(r+1) == '.') {
-				/* skip past .. or ../ with read pointer */
-				if (*(r+2) == '/') r += 3;
-				else if (*(r+2) == 0) r += 2;
-				/* skip back to last / with write pointer */
-				if (w > path+1) {
-					w--;
-					while(*(w-1) != '/') { w--; }
-					continue;
-				} else {
-					return -1;
-				}
-			} else if (*(r+1) == '/') {
-				r += 2;
-				continue;
-			}
-		}
-		*w = *r;
-		last_was_slash = (*r == '/');
-		r++;
-		w++;
-	}
-	*w = 0;
-
-	return 0;
-}
-
 std::vector<std::string> util::split(std::string str, std::string separator,
 		bool includeEmptyElements, bool includeSeparators)
 {
@@ -106,18 +63,6 @@ std::vector<std::string> util::split(std::string str, std::string separator,
 		components.push_back(str.substr(last_index, str.size() - last_index));
 	}
 	return components;
-}
-
-std::vector<std::string> util::path_components(std::string path)
-{
-	std::vector<char> buf;
-	buf.resize(path.size() + 1);
-	memcpy(buf.data(), path.c_str(), path.size());
-	if (canonicalize_path(buf.data()) < 0) {
-		return std::vector<std::string>();
-	}
-	path = buf.data();
-	return split(path, "/", false);
 }
 
 std::string util::hex_encode(const unsigned char *buf, size_t len)

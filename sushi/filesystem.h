@@ -23,7 +23,9 @@ struct directory_entry
 
 struct filesystem
 {
-	bool list_files(std::vector<directory_entry> &files, std::string path_name);
+	static int canonicalize_path(char *path);
+	static std::vector<std::string> path_components(std::string path);
+	static bool list_files(std::vector<directory_entry> &files, std::string path_name);
 };
 
 #endif

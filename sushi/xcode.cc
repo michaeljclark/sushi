@@ -22,6 +22,7 @@
 
 #include "log.h"
 #include "util.h"
+#include "filesystem.h"
 #include "xcode.h"
 
 
@@ -355,7 +356,7 @@ PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool cr
 {
 	auto project = getProject();
 	auto mainGroup = getObject<PBXGroup>(project->mainGroup);
-	auto pathComponents = util::path_components(path);
+	auto pathComponents = filesystem::path_components(path);
 	if (pathComponents.size() == 0) {
 		return PBXFileReferencePtr();
 	}
