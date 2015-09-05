@@ -434,10 +434,9 @@ PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::strin
 {
 	// TODO - we shouldn't use a linear scan
 	for (auto &keyval : objects->object_val) {
-		auto &objKey = keyval.second;
-		if (objKey->type() != PBXTypeId) continue;
-		auto objId = std::static_pointer_cast<PBXId>(objKey);
-		auto obj = getObject<PBXObject>(*objId);
+		auto &val = keyval.second;
+		if (val->type() != PBXTypeObject) continue;
+		auto obj = std::static_pointer_cast<PBXObject>(val);
 		if (obj->type_name() != PBXBuildFile::type_name) continue;
 		auto buildFile = std::static_pointer_cast<PBXBuildFile>(obj);
 		if (buildFile->fileRef == fileRef->id) {
