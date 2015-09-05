@@ -165,11 +165,11 @@ $(OBJ_DIR)/tinyxml2/%.o : $(TINYXML2_SRC_DIR)/%.cpp ; $(call cmd, CXX $@, $(CXX)
 $(SUSHI_SRC_DIR)/%.cc : $(SUSHI_SRC_DIR)/%.rl ; $(call cmd, RAGEL $@, $(RAGEL) $< -o $@)
 
 $(DEP_DIR)/$(APP_SRC_DIR)/%.cc.P : $(APP_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(APP_SRC_DIR) ;
-	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(APP_SRC_DIR)/\1.o $(DEP_DIR)/$(APP_SRC_DIR)/\1.cc.P#"  > $@)
 $(DEP_DIR)/$(SUSHI_SRC_DIR)/%.cc.P : $(SUSHI_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(SUSHI_SRC_DIR) ;
-	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(SUSHI_SRC_DIR)/\1.o $(DEP_DIR)/$(SUSHI_SRC_DIR)/\1.cc.P#"  > $@)
 $(DEP_DIR)/$(TINYXML2_SRC_DIR)/%.cpp.P : $(TINYXML2_SRC_DIR)/%.cpp ; @mkdir -p $(DEP_DIR)/$(TINYXML2_SRC_DIR) ;
-	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/\1.o $(DEP_DIR)/\1.P#"  > $@)
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(TINYXML2_SRC_DIR)/\1.o $(DEP_DIR)/$(TINYXML2_SRC_DIR)/\1.cpp.P#"  > $@)
 
 # make dependencies
 include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(APP_SRCS)))
