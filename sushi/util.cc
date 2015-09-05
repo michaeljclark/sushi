@@ -65,6 +65,16 @@ std::vector<std::string> util::split(std::string str, std::string separator,
 	return components;
 }
 
+std::string util::join(std::vector<std::string> list, std::string separator)
+{
+	std::stringstream ss;
+	for (auto i = list.begin(); i != list.end(); i++) {
+		if (i != list.begin()) ss << separator;
+		ss << *i;
+	}
+	return ss.str();
+}
+
 std::string util::hex_encode(const unsigned char *buf, size_t len)
 {
 	std::string hex;
