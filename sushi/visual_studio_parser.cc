@@ -13,7 +13,7 @@
 #include "visual_studio_parser.h"
 
 
-#line 102 "sushi/visual_studio_parser.rl"
+#line 101 "sushi/visual_studio_parser.rl"
 
 
 
@@ -23,10 +23,9 @@ static const char _visual_studio_parser_actions[] = {
 	3, 1, 4, 1, 5, 1, 6, 1, 
 	7, 1, 8, 1, 9, 1, 10, 1, 
 	11, 1, 12, 1, 13, 1, 14, 1, 
-	15, 1, 16, 1, 17, 1, 18, 2, 
-	0, 6, 2, 0, 7, 2, 0, 10, 
-	2, 0, 11, 2, 0, 15, 2, 0, 
-	16, 2, 0, 17
+	15, 1, 16, 1, 17, 2, 0, 6, 
+	2, 0, 7, 2, 0, 10, 2, 0, 
+	14, 2, 0, 15, 2, 0, 16
 };
 
 static const short _visual_studio_parser_key_offsets[] = {
@@ -824,11 +823,11 @@ static const char _visual_studio_parser_trans_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 25, 0, 0, 0, 0, 
-	1, 27, 0, 0, 0, 1, 0, 29, 
-	0, 0, 0, 0, 0, 0, 51, 0, 
-	1, 0, 31, 0, 0, 0, 0, 31, 
-	0, 0, 0, 31, 0, 0, 0, 0, 
+	0, 0, 0, 23, 0, 0, 0, 0, 
+	1, 25, 0, 0, 0, 1, 0, 27, 
+	0, 0, 0, 0, 0, 0, 46, 0, 
+	1, 0, 29, 0, 0, 0, 0, 29, 
+	0, 0, 0, 29, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -846,10 +845,10 @@ static const char _visual_studio_parser_trans_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 54, 1, 0, 33, 
-	0, 0, 0, 0, 0, 0, 57, 0, 
-	1, 0, 35, 0, 0, 0, 0, 35, 
-	0, 0, 0, 35, 0, 0, 0, 0, 
+	0, 0, 0, 0, 49, 1, 0, 31, 
+	0, 0, 0, 0, 0, 0, 52, 0, 
+	1, 0, 33, 0, 0, 0, 0, 33, 
+	0, 0, 0, 33, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -873,9 +872,9 @@ static const char _visual_studio_parser_trans_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	45, 1, 0, 21, 0, 0, 0, 0, 
-	0, 0, 48, 0, 1, 0, 23, 0, 
-	0, 0, 0, 23, 0, 0, 0, 23, 
+	43, 1, 0, 21, 0, 0, 0, 0, 
+	0, 0, 1, 0, 1, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -905,8 +904,8 @@ static const char _visual_studio_parser_trans_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 11, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 39, 1, 13, 0, 0, 0, 0, 
-	0, 0, 0, 42, 1, 15, 0, 0, 
+	0, 37, 1, 13, 0, 0, 0, 0, 
+	0, 0, 0, 40, 1, 15, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 1, 
 	1, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -1069,8 +1068,8 @@ static const char _visual_studio_parser_eof_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 37, 37, 
-	37, 37
+	0, 0, 0, 0, 0, 0, 35, 35, 
+	35, 35
 };
 
 static const int visual_studio_parser_start = 1;
@@ -1080,7 +1079,7 @@ static const int visual_studio_parser_error = 0;
 static const int visual_studio_parser_en_main = 1;
 
 
-#line 105 "sushi/visual_studio_parser.rl"
+#line 104 "sushi/visual_studio_parser.rl"
 
 bool VisualStudioParser::parse(const char *buffer, size_t len)
 {
@@ -1092,14 +1091,14 @@ bool VisualStudioParser::parse(const char *buffer, size_t len)
     const char *eof = pe;
 
     
-#line 1096 "sushi/visual_studio_parser.cc"
+#line 1095 "sushi/visual_studio_parser.cc"
 	{
 	cs = visual_studio_parser_start;
 	}
 
-#line 116 "sushi/visual_studio_parser.rl"
+#line 115 "sushi/visual_studio_parser.rl"
     
-#line 1103 "sushi/visual_studio_parser.cc"
+#line 1102 "sushi/visual_studio_parser.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1214,37 +1213,33 @@ _match:
 	break;
 	case 10:
 #line 27 "sushi/visual_studio_parser.rl"
-	{ SolutionConfigPlatformKey(mark, p - mark); }
+	{ SolutionConfigPlatform(mark, p - mark); }
 	break;
 	case 11:
 #line 28 "sushi/visual_studio_parser.rl"
-	{ SolutionConfigPlatformValue(mark, p - mark); }
+	{ ProjectConfigPlatformGUID(mark, p - mark); }
 	break;
 	case 12:
 #line 29 "sushi/visual_studio_parser.rl"
-	{ ProjectConfigPlatformGUID(mark, p - mark); }
+	{ ProjectConfigPlatformConfig(mark, p - mark); }
 	break;
 	case 13:
 #line 30 "sushi/visual_studio_parser.rl"
-	{ ProjectConfigPlatformConfig(mark, p - mark); }
+	{ ProjectConfigPlatformProp(mark, p - mark); }
 	break;
 	case 14:
 #line 31 "sushi/visual_studio_parser.rl"
-	{ ProjectConfigPlatformProp(mark, p - mark); }
+	{ ProjectConfigPlatformValue(mark, p - mark); }
 	break;
 	case 15:
 #line 32 "sushi/visual_studio_parser.rl"
-	{ ProjectConfigPlatformValue(mark, p - mark); }
+	{ SolutionPropertiesKey(mark, p - mark); }
 	break;
 	case 16:
 #line 33 "sushi/visual_studio_parser.rl"
-	{ SolutionPropertiesKey(mark, p - mark); }
-	break;
-	case 17:
-#line 34 "sushi/visual_studio_parser.rl"
 	{ SolutionPropertiesValue(mark, p - mark); }
 	break;
-#line 1248 "sushi/visual_studio_parser.cc"
+#line 1243 "sushi/visual_studio_parser.cc"
 		}
 	}
 
@@ -1260,14 +1255,14 @@ _again:
 	unsigned int __nacts = (unsigned int) *__acts++;
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
-	case 18:
-#line 36 "sushi/visual_studio_parser.rl"
+	case 17:
+#line 35 "sushi/visual_studio_parser.rl"
 	{ 
         Done();
         {p++; goto _out; }
     }
 	break;
-#line 1271 "sushi/visual_studio_parser.cc"
+#line 1266 "sushi/visual_studio_parser.cc"
 		}
 	}
 	}
@@ -1275,7 +1270,7 @@ _again:
 	_out: {}
 	}
 
-#line 117 "sushi/visual_studio_parser.rl"
+#line 116 "sushi/visual_studio_parser.rl"
 
     return (cs != visual_studio_parser_error || cs == visual_studio_parser_first_final);
 }

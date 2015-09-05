@@ -11,6 +11,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <set>
 #include <mutex>
 
 #include "log.h"
@@ -27,4 +28,5 @@ int main(int argc, char **argv) {
 	}
 	VSSolution sol;
 	sol.read(argv[1]);
+	sol.write(std::cout);
 }

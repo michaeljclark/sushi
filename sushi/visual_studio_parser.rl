@@ -24,8 +24,7 @@
     action w_ProjectPath                 { ProjectPath(mark, fpc - mark); }
     action w_ProjectGUID                 { ProjectGUID(mark, fpc - mark); }
     action w_ProjectDependsGUID          { ProjectDependsGUID(mark, fpc - mark); }
-    action w_SolutionConfigPlatformKey   { SolutionConfigPlatformKey(mark, fpc - mark); }
-    action w_SolutionConfigPlatformValue { SolutionConfigPlatformValue(mark, fpc - mark); }
+    action w_SolutionConfigPlatform      { SolutionConfigPlatform(mark, fpc - mark); }
     action w_ProjectConfigPlatformGUID   { ProjectConfigPlatformGUID(mark, fpc - mark); }
     action w_ProjectConfigPlatformConfig { ProjectConfigPlatformConfig(mark, fpc - mark); }
     action w_ProjectConfigPlatformProp   { ProjectConfigPlatformProp(mark, fpc - mark); }
@@ -67,8 +66,8 @@
     ProjectEnd = 'EndProject' Newline;
     Project = ProjectClause ProjectSectionDepedencies* ProjectEnd;
 
-    SolutionConfigurationPlatformKey = Tab Tab %mark (any - WhiteSpace)* %w_SolutionConfigPlatformKey;
-    SolutionConfigurationPlatformValue = ' = ' %mark (any - WhiteSpace)* %w_SolutionConfigPlatformValue;
+    SolutionConfigurationPlatformKey = Tab Tab %mark (any - WhiteSpace)* %w_SolutionConfigPlatform;
+    SolutionConfigurationPlatformValue = ' = ' %mark (any - WhiteSpace)*;
     SolutionConfigurationPlatform = SolutionConfigurationPlatformKey SolutionConfigurationPlatformValue Newline;
     SolutionConfigurationPlatformsClause = Tab 'GlobalSection(SolutionConfigurationPlatforms) = preSolution' Newline;
     SolutionConfigurationPlatformsEnd = Tab 'EndGlobalSection' Newline;
