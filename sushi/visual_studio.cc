@@ -78,14 +78,9 @@ void VSSolution::ProjectGUID(const char *value, size_t length)
 	log_debug("ProjectGUID: %s", std::string(value, length).c_str());
 }
 
-void VSSolution::ProjectDependsGUIDKey(const char *value, size_t length)
+void VSSolution::ProjectDependsGUID(const char *value, size_t length)
 {
-	log_debug("ProjectDependsGUIDKey: %s", std::string(value, length).c_str());
-}
-
-void VSSolution::ProjectDependsGUIDValue(const char *value, size_t length)
-{
-	log_debug("ProjectDependsGUIDValue: %s", std::string(value, length).c_str());
+	log_debug("ProjectDependsGUID: %s", std::string(value, length).c_str());
 }
 
 void VSSolution::SolutionConfigPlatformKey(const char *value, size_t length)
@@ -98,9 +93,19 @@ void VSSolution::SolutionConfigPlatformValue(const char *value, size_t length)
 	log_debug("SolutionConfigPlatformValue: %s", std::string(value, length).c_str());
 }
 
-void VSSolution::ProjectConfigPlatformKey(const char *value, size_t length)
+void VSSolution::ProjectConfigPlatformGUID(const char *value, size_t length)
 {
-	log_debug("ProjectConfigPlatformKey: %s", std::string(value, length).c_str());
+	log_debug("ProjectConfigPlatformGUID: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectConfigPlatformConfig(const char *value, size_t length)
+{
+	log_debug("ProjectConfigPlatformConfig: %s", std::string(value, length).c_str());
+}
+
+void VSSolution::ProjectConfigPlatformProp(const char *value, size_t length)
+{
+	log_debug("ProjectConfigPlatformProp: %s", std::string(value, length).c_str());
 }
 
 void VSSolution::ProjectConfigPlatformValue(const char *value, size_t length)

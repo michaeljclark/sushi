@@ -17,11 +17,12 @@ struct VSSolution : VisualStudioParser
     void ProjectName(const char *value, size_t length);
     void ProjectPath(const char *value, size_t length);
     void ProjectGUID(const char *value, size_t length);
-    void ProjectDependsGUIDKey(const char *value, size_t length);
-    void ProjectDependsGUIDValue(const char *value, size_t length);
+    void ProjectDependsGUID(const char *value, size_t length);
     void SolutionConfigPlatformKey(const char *value, size_t length);
     void SolutionConfigPlatformValue(const char *value, size_t length);
-    void ProjectConfigPlatformKey(const char *value, size_t length);
+    void ProjectConfigPlatformGUID(const char *value, size_t length);
+    void ProjectConfigPlatformConfig(const char *value, size_t length);
+    void ProjectConfigPlatformProp(const char *value, size_t length);
     void ProjectConfigPlatformValue(const char *value, size_t length);
     void SolutionPropertiesKey(const char *value, size_t length);
     void SolutionPropertiesValue(const char *value, size_t length);

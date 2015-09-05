@@ -23,11 +23,12 @@
     action w_ProjectName                 { ProjectName(mark, fpc - mark); }
     action w_ProjectPath                 { ProjectPath(mark, fpc - mark); }
     action w_ProjectGUID                 { ProjectGUID(mark, fpc - mark); }
-    action w_ProjectDependsGUIDKey       { ProjectDependsGUIDKey(mark, fpc - mark); }
-    action w_ProjectDependsGUIDValue     { ProjectDependsGUIDValue(mark, fpc - mark); }
+    action w_ProjectDependsGUID          { ProjectDependsGUID(mark, fpc - mark); }
     action w_SolutionConfigPlatformKey   { SolutionConfigPlatformKey(mark, fpc - mark); }
     action w_SolutionConfigPlatformValue { SolutionConfigPlatformValue(mark, fpc - mark); }
-    action w_ProjectConfigPlatformKey    { ProjectConfigPlatformKey(mark, fpc - mark); }
+    action w_ProjectConfigPlatformGUID   { ProjectConfigPlatformGUID(mark, fpc - mark); }
+    action w_ProjectConfigPlatformConfig { ProjectConfigPlatformConfig(mark, fpc - mark); }
+    action w_ProjectConfigPlatformProp   { ProjectConfigPlatformProp(mark, fpc - mark); }
     action w_ProjectConfigPlatformValue  { ProjectConfigPlatformValue(mark, fpc - mark); }
     action w_SolutionPropertiesKey       { SolutionPropertiesKey(mark, fpc - mark); }
     action w_SolutionPropertiesValue     { SolutionPropertiesValue(mark, fpc - mark); }
@@ -45,7 +46,7 @@
     Hex = [0123456789ABCDEF];
     GUID = Hex{8} '-' Hex{4} '-' Hex{4} '-' Hex{4} '-' Hex{12};
     VersionNumber = [0123456789.]+;
-    
+
     MinimumVisualStudioVersion = 'MinimumVisualStudioVersion = ' %mark VersionNumber %w_MinimumVisualStudioVersion Newline;
     VisualStudioVersion = 'VisualStudioVersion = ' %mark VersionNumber %w_VisualStudioVersion Newline;
     CommentVersions = VersionNumber; # ( '2012' | '2013' | '14' );
@@ -60,7 +61,7 @@
     ProjectGUID = '"{' %mark GUID %w_ProjectGUID '}"';
     ProjectClause = ProjectTypeGUID ' = ' ProjectName ', ' ProjectPath ', ' ProjectGUID Newline;
     ProjectSectionDepedenciesClause = Tab 'ProjectSection(ProjectDependencies) = postProject' Newline;
-    ProjectSectionDepedency = Tab Tab '{' %mark GUID %w_ProjectDependsGUIDKey '} = {' %mark GUID %w_ProjectDependsGUIDValue '}' Newline;
+    ProjectSectionDepedency = Tab Tab '{' %mark GUID %w_ProjectDependsGUID '} = {' GUID '}' Newline;
     ProjectSectionDepedenciesEnd = Tab 'EndProjectSection' Newline;
     ProjectSectionDepedencies = ProjectSectionDepedenciesClause ProjectSectionDepedency* ProjectSectionDepedenciesEnd;
     ProjectEnd = 'EndProject' Newline;
@@ -73,7 +74,10 @@
     SolutionConfigurationPlatformsEnd = Tab 'EndGlobalSection' Newline;
     SolutionConfigurationPlatforms = SolutionConfigurationPlatformsClause SolutionConfigurationPlatform* SolutionConfigurationPlatformsEnd;
 
-    ProjectConfigurationPlatformKey = Tab Tab %mark (any - WhiteSpace)* %w_ProjectConfigPlatformKey;
+    ProjectConfigurationPlatformGUID = Tab Tab '{' %mark GUID %w_ProjectConfigPlatformGUID '}';
+    ProjectConfigurationPlatformConfig = '.' %mark (any - '.')+ %w_ProjectConfigPlatformConfig;
+    ProjectConfigurationPlatformProperty = '.' %mark (any - WhiteSpace)+ %w_ProjectConfigPlatformProp;
+    ProjectConfigurationPlatformKey =  ProjectConfigurationPlatformGUID ProjectConfigurationPlatformConfig ProjectConfigurationPlatformProperty;
     ProjectConfigurationPlatformValue = ' = ' %mark (any - WhiteSpace)* %w_ProjectConfigPlatformValue;
     ProjectConfigurationPlatform = ProjectConfigurationPlatformKey ProjectConfigurationPlatformValue Newline;
     ProjectConfigurationPlatformsClause = Tab 'GlobalSection(ProjectConfigurationPlatforms) = postSolution' Newline;
