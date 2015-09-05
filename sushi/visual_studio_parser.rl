@@ -1,5 +1,5 @@
 //
-//  project_parser.rl
+//  visual_studio_parser.rl
 //
 
 #include <cstdio>

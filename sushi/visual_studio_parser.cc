@@ -1,7 +1,7 @@
 
 #line 1 "sushi/visual_studio_parser.rl"
 //
-//  project_parser.rl
+//  visual_studio_parser.rl
 //
 
 #include <cstdio>
