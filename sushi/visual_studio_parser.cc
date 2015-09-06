@@ -1083,21 +1083,21 @@ static const int visual_studio_parser_en_main = 1;
 
 bool VisualStudioParser::parse(const char *buffer, size_t len)
 {
-    int cs = visual_studio_parser_en_main;
-    
-    const char *mark = NULL;
-    const char *p = buffer;
-    const char *pe = buffer + strlen(buffer);
-    const char *eof = pe;
+	int cs = visual_studio_parser_en_main;
+	
+	const char *mark = NULL;
+	const char *p = buffer;
+	const char *pe = buffer + strlen(buffer);
+	const char *eof = pe;
 
-    
+	
 #line 1095 "sushi/visual_studio_parser.cc"
 	{
 	cs = visual_studio_parser_start;
 	}
 
 #line 115 "sushi/visual_studio_parser.rl"
-    
+	
 #line 1102 "sushi/visual_studio_parser.cc"
 	{
 	int _klen;
@@ -1258,9 +1258,9 @@ _again:
 	case 17:
 #line 35 "sushi/visual_studio_parser.rl"
 	{ 
-        Done();
-        {p++; goto _out; }
-    }
+		Done();
+		{p++; goto _out; }
+	}
 	break;
 #line 1266 "sushi/visual_studio_parser.cc"
 		}
@@ -1272,5 +1272,5 @@ _again:
 
 #line 116 "sushi/visual_studio_parser.rl"
 
-    return (cs != visual_studio_parser_error || cs == visual_studio_parser_first_final);
+	return (cs != visual_studio_parser_error || cs == visual_studio_parser_first_final);
 }

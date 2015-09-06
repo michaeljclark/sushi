@@ -88,21 +88,21 @@ static const int project_parser_en_main = 4;
 
 bool project_parser::parse(const char *buffer, size_t len)
 {
-    int cs = project_parser_en_main;
-    
-    const char *mark = NULL;
-    const char *p = buffer;
-    const char *pe = buffer + strlen(buffer);
-    const char *eof = pe;
+	int cs = project_parser_en_main;
+	
+	const char *mark = NULL;
+	const char *p = buffer;
+	const char *pe = buffer + strlen(buffer);
+	const char *eof = pe;
 
-    
+	
 #line 100 "sushi/project_parser.cc"
 	{
 	cs = project_parser_start;
 	}
 
 #line 54 "sushi/project_parser.rl"
-    
+	
 #line 107 "sushi/project_parser.cc"
 	{
 	int _klen;
@@ -228,9 +228,9 @@ _again:
 	case 5:
 #line 23 "sushi/project_parser.rl"
 	{ 
-        project_done();
-        {p++; goto _out; }
-    }
+		project_done();
+		{p++; goto _out; }
+	}
 	break;
 #line 236 "sushi/project_parser.cc"
 		}
@@ -242,5 +242,5 @@ _again:
 
 #line 55 "sushi/project_parser.rl"
 
-    return (cs != project_parser_error || cs == project_parser_first_final);
+	return (cs != project_parser_error || cs == project_parser_first_final);
 }
