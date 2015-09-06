@@ -170,6 +170,7 @@ struct VSImport : VSObjectImpl<VSImport>
 
 	std::string project;
 	std::string condition;
+	std::string label;
 
 	void fromXML(tinyxml2::XMLElement *element);
 	void toXML(tinyxml2::XMLElement *parent);

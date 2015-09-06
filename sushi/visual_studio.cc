@@ -310,6 +310,8 @@ void VSImport::fromXML(tinyxml2::XMLElement *element)
 	if (project) this->project = project;
 	const char* condition = element->Attribute("Condition");
 	if (condition) this->condition = condition;
+	const char* label = element->Attribute("Label");
+	if (label) this->label = label;
 }
 
 void VSImport::toXML(tinyxml2::XMLElement *parent)
@@ -322,6 +324,9 @@ void VSImport::toXML(tinyxml2::XMLElement *parent)
 	}
 	if (condition.length() > 0) {
 		element->SetAttribute("Condition", condition.c_str());
+	}
+	if (label.length() > 0) {
+		element->SetAttribute("Label", label.c_str());
 	}
 }
 
