@@ -34,14 +34,14 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 	std::string solution_file = argv[1];
-	std::string new_solution_file = solution_file + ".test";
 	VSSolution sol;
 	sol.read(solution_file);
 
+	std::string new_solution_file = solution_file + ".new";
 	std::cout << "writing " << new_solution_file << std::endl;
 	sol.write(new_solution_file);
 	for (auto project : sol.projects) {
-		std::string new_project_file_path = filesystem::path_relative_to_path(project->path, solution_file) + ".test";
+		std::string new_project_file_path = filesystem::path_relative_to_path(project->path, solution_file) + ".new";
 		std::cout << "writing " << new_project_file_path << std::endl;
 		project->project->write(new_project_file_path);
 	}
