@@ -18,8 +18,11 @@
 #include <set>
 #include <mutex>
 
+#include "tinyxml2.h"
+
 #include "log.h"
 #include "util.h"
+#include "filesystem.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 
@@ -30,7 +33,16 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "usage: %s <xcodeproj>\n", argv[0]);
 		exit(1);
 	}
+	std::string solution_file = argv[1];
+	std::string new_solution_file = solution_file + ".test";
 	VSSolution sol;
-	sol.read(argv[1]);
-	sol.write(std::cout);
+	sol.read(solution_file);
+
+	std::cout << "writing " << new_solution_file << std::endl;
+	sol.write(new_solution_file);
+	for (auto project : sol.projects) {
+		std::string new_project_file_path = filesystem::path_relative_to_path(project->path, solution_file) + ".test";
+		std::cout << "writing " << new_project_file_path << std::endl;
+		project->project->write(new_project_file_path);
+	}
 }

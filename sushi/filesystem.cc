@@ -77,6 +77,17 @@ std::vector<std::string> filesystem::path_components(std::string path)
 	return util::split(path, "/", false);
 }
 
+std::string filesystem::path_relative_to_path(std::string path, std::string relative_to)
+{
+	std::vector<std::string> relative_comps = path_components(relative_to);
+	if (relative_comps.size() > 0) {
+		relative_comps.pop_back();
+	}
+	std::vector<std::string> path_comps = path_components(path);
+	relative_comps.insert(relative_comps.end(), path_comps.begin(), path_comps.end());
+	return util::join(relative_comps, "/");
+}
+
 #ifdef _WIN32
 
 bool filesystem::list_files(std::vector<directory_entry> &files, std::string path_name)
