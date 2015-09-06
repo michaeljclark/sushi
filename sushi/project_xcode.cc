@@ -42,17 +42,17 @@ lib_output_data project_xcode::lib_output(project_root_ptr root, project_lib_ptr
 		lib_type = lib->lib_type;
 	}
 	if (lib_type == "static") {
-		return lib_output_data {
+		return lib_output_data(
 			PBXFileReference::type_library_archive,
 			PBXNativeTarget::type_library_static,
 			"lib" + lib->lib_name + ".a"
-		};
+		);
 	} else {
-		return lib_output_data {
+		return lib_output_data(
 			PBXFileReference::type_library_dylib,
 			PBXNativeTarget::type_library_dynamic,
 			lib->lib_name + ".dylib"
-		};
+		);
 	}
 }
 
@@ -87,7 +87,7 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 			lib_data.output_file,
 			lib_data.file_type,
 			lib_data.target_type,
-			{ },
+			std::vector<std::string>(),
 			lib->source);
 	}
 

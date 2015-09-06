@@ -35,6 +35,10 @@ struct statement_record
 	int maxargs;
 	std::string parent_block_spec;
 	statement_function statement_fn;
+
+	statement_record() {}
+	statement_record(int minargs, int maxargs, std::string parent_block_spec, statement_function statement_fn)
+		: minargs(minargs), maxargs(maxargs), parent_block_spec(parent_block_spec), statement_fn(statement_fn) {}
 };
 
 struct block_record
@@ -43,6 +47,10 @@ struct block_record
 	int maxargs;
 	std::string parent_block_spec;
 	block_begin_function begin_block_fn;
+
+	block_record() {}
+	block_record(int minargs, int maxargs, std::string parent_block_spec, block_begin_function begin_block_fn)
+		: minargs(minargs), maxargs(maxargs), parent_block_spec(parent_block_spec), begin_block_fn(begin_block_fn) {}
 };
 
 struct project_item

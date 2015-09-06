@@ -104,15 +104,15 @@ bool filesystem::list_files(std::vector<directory_entry> &files, std::string pat
 			return false;
 		}
 	}
-	files.push_back({entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
-		directory_entry_type_dir : directory_entry_type_file});
+	files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+		directory_entry_type_dir : directory_entry_type_file));
 	
 	BOOL ret;
 	do {
 		ret = FindNextFile(dir, &entry);
 		if (ret) {
-			files.push_back({entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
-				directory_entry_type_dir : directory_entry_type_file});
+			files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+				directory_entry_type_dir : directory_entry_type_file));
 		} else {
 			if (GetLastError() == ERROR_NO_MORE_FILES) {
 				break;
@@ -147,8 +147,8 @@ bool filesystem::list_files(std::vector<directory_entry> &files, std::string pat
 			closedir(dir);
 			return false;
 		}
-		files.push_back({entry.d_name, entry.d_type & DT_DIR ?
-			directory_entry_type_dir : directory_entry_type_file});
+		files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
+			directory_entry_type_dir : directory_entry_type_file));
 	} while (result != NULL);
 	
 	closedir(dir);

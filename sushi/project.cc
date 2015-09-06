@@ -102,15 +102,15 @@ void project::init()
 {
 	std::call_once(function_map_init, []()
 	{
-		block_fn_map["project"] = { 2,  2, "<root>", &block_project_begin };
-		block_fn_map["config"] = {2,  2, "project", &block_config_begin };
-		block_fn_map["lib"] = {2,  2, "project", &block_lib_begin };
-		block_fn_map["tool"] = {2,  2, "project", &block_tool_begin };
-		statement_fn_map["type"] = {2,  2, "lib", &statement_type };
-		statement_fn_map["define"] = {3,  3, "lib|tool|config", &statement_define };
-		statement_fn_map["cflags"] = {2,  -1, "lib|tool|config", &statement_cflags };
-		statement_fn_map["source"] = {2,  -1, "lib|tool", &statement_source };
-		statement_fn_map["libs"] = {2,  -1, "tool", &statement_libs };
+		block_fn_map["project"] = block_record(2,  2, "<root>", &block_project_begin);
+		block_fn_map["config"] = block_record(2,  2, "project", &block_config_begin);
+		block_fn_map["lib"] = block_record(2,  2, "project", &block_lib_begin);
+		block_fn_map["tool"] = block_record(2,  2, "project", &block_tool_begin);
+		statement_fn_map["type"] = statement_record(2,  2, "lib", &statement_type);
+		statement_fn_map["define"] = statement_record(3,  3, "lib|tool|config", &statement_define);
+		statement_fn_map["cflags"] = statement_record(2,  -1, "lib|tool|config", &statement_cflags);
+		statement_fn_map["source"] = statement_record(2,  -1, "lib|tool", &statement_source);
+		statement_fn_map["libs"] = statement_record(2,  -1, "tool", &statement_libs);
 	});
 }
 

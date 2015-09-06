@@ -816,19 +816,19 @@ std::once_flag PBXFileReference::extTypeMapInit;
 std::map<std::string,FileTypeMetaData*> PBXFileReference::extTypeMap;
 
 FileTypeMetaData PBXFileReference::typeMetaData[] = {
-	{{ext_c_source}, type_c_source, FileTypeCompiler},
-	{{ext_c_header}, type_c_header, FileTypeHeader},
-	{{ext_objc_source}, type_objc_source, FileTypeCompiler},
-	{{ext_objcpp_source}, type_objccpp_source, FileTypeCompiler},
-	{{ext_cpp_source_1, ext_cpp_source_2}, type_cpp_source, FileTypeCompiler},
-	{{ext_cpp_header_1, ext_cpp_header_2}, type_cpp_header, FileTypeHeader},
-	{{ext_plist}, type_plist, FileTypeResource},
-	{{ext_text}, type_text, FileTypeResource},
-	{{ext_library_archive}, type_library_archive, FileTypeLinkLibrary},
-	{{ext_application}, type_application, FileTypeApplication},
-	{{ext_bundle}, type_bundle, FileTypeResource},
-	{{ext_framework}, type_framework, FileTypeLinkFramework},
-	{{}, std::string(), FileTypeNone}
+	FileTypeMetaData(type_c_source, FileTypeCompiler, ext_c_source),
+	FileTypeMetaData(type_c_header, FileTypeHeader, ext_c_header),
+	FileTypeMetaData(type_objc_source, FileTypeCompiler, ext_objc_source),
+	FileTypeMetaData(type_objccpp_source, FileTypeCompiler, ext_objcpp_source),
+	FileTypeMetaData(type_cpp_source, FileTypeCompiler, ext_cpp_source_1, ext_cpp_source_2),
+	FileTypeMetaData(type_cpp_header, FileTypeHeader, ext_cpp_header_1, ext_cpp_header_2),
+	FileTypeMetaData(type_plist, FileTypeResource, ext_plist),
+	FileTypeMetaData(type_text, FileTypeResource, ext_text),
+	FileTypeMetaData(type_library_archive, FileTypeLinkLibrary, ext_library_archive),
+	FileTypeMetaData(type_application, FileTypeApplication, ext_application),
+	FileTypeMetaData(type_bundle, FileTypeResource, ext_bundle),
+	FileTypeMetaData(type_framework, FileTypeLinkFramework, ext_framework),
+	FileTypeMetaData(std::string(), FileTypeNone)
 };
 
 std::string PBXFileReference::getExtensionFromPath(std::string path)

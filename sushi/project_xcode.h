@@ -10,6 +10,9 @@ struct lib_output_data
 	std::string file_type;
 	std::string target_type;
 	std::string output_file;
+
+	lib_output_data(std::string file_type, std::string target_type, std::string output_file)
+		: file_type(file_type), target_type(target_type), output_file(output_file) {}
 };
 
 struct project_xcode

@@ -387,9 +387,20 @@ enum FileType {
 };
 
 struct FileTypeMetaData {
-	std::vector<std::string> extensions;
 	std::string xcodeType;
 	uint64_t flags;
+	std::vector<std::string> extensions;
+
+	FileTypeMetaData(std::string xcodeType, uint64_t flags) : xcodeType(xcodeType), flags(flags) {}
+	FileTypeMetaData(std::string xcodeType, uint64_t flags, std::string ext1) : xcodeType(xcodeType), flags(flags)
+	{
+		extensions.push_back(ext1);
+	}
+	FileTypeMetaData(std::string xcodeType, uint64_t flags, std::string ext1, std::string ext2) : xcodeType(xcodeType), flags(flags)
+	{
+		extensions.push_back(ext1);
+		extensions.push_back(ext2);
+	}
 };
 
 struct PBXFileReference : PBXObjectImpl<PBXFileReference> {

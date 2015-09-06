@@ -19,6 +19,8 @@ struct directory_entry
 {
 	std::string name;
 	directory_entry_type type;
+
+	directory_entry(std::string name, directory_entry_type type) : name(name), type(type) {}
 };
 
 struct filesystem
