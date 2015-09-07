@@ -30,14 +30,16 @@
 
 uint32_t PBXId::next_id = 0;
 
-PBXId PBXId::createRootId() {
+PBXId PBXId::createRootId()
+{
 	PBXId newid;
 	newid.id.id_obj = next_id++;
 	util::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
 	return newid;
 }
 
-PBXId PBXId::createId(const PBXId &o) {
+PBXId PBXId::createId(const PBXId &o)
+{
 	PBXId newid;
 	newid.id.id_obj = next_id++;
 	memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));;
@@ -46,19 +48,23 @@ PBXId PBXId::createId(const PBXId &o) {
 
 PBXId::PBXId() : id(), comment() {}
 
-PBXId::PBXId(std::string id_str) : comment() {
+PBXId::PBXId(std::string id_str) : comment()
+{
 	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 }
 
-PBXId::PBXId(std::string id_str, std::string comment) : comment(comment) {
+PBXId::PBXId(std::string id_str, std::string comment) : comment(comment)
+{
 	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
 }
 
-PBXId::PBXId(const PBXId& o) : comment(o.comment) {
+PBXId::PBXId(const PBXId& o) : comment(o.comment)
+{
 	memcpy(id.id_val, o.id.id_val, sizeof(id.id_val));
 }
 
-std::string PBXId::str() {
+std::string PBXId::str()
+{
 	return util::hex_encode(id.id_val, sizeof(id.id_val));
 }
 
@@ -72,7 +78,8 @@ bool PBXId::operator==(const PBXId &o) { return this->id == o.id; }
 
 PBXType PBXMap::type() { return PBXTypeMap; }
 
-void PBXMap::clear() {
+void PBXMap::clear()
+{
 	object_val.clear();
 	key_order.clear();
 }
@@ -92,7 +99,8 @@ void PBXMap::putObject(PBXObjectPtr obj)
 	put(obj->id.str(), obj->id.comment, obj);
 }
 
-void PBXMap::replace(std::string key, PBXValuePtr val) {
+void PBXMap::replace(std::string key, PBXValuePtr val)
+{
 	if (object_val.find(key) != object_val.end()) {
 		object_val[key] = val;
 	} else {
@@ -258,11 +266,13 @@ void PBXMap::setMap(std::string key, PBXMapPtr map)
 
 PBXType PBXArray::type() { return PBXTypeArray; }
 
-void PBXArray::add(PBXValuePtr val) {
+void PBXArray::add(PBXValuePtr val)
+{
 	array_val.push_back(val);
 }
 
-void PBXArray::addIdRef(PBXObjectPtr obj) {
+void PBXArray::addIdRef(PBXObjectPtr obj)
+{
 	array_val.push_back(std::make_shared<PBXId>(obj->id));
 }
 
@@ -280,7 +290,7 @@ const std::string PBXObject::default_type_name =             "PBXObject";
 
 PBXType PBXObject::type() { return PBXTypeObject; }
 
-const std::string& PBXObject::type_name() { return default_type_name; };
+const std::string& PBXObject::type_name() { return default_type_name; }
 
 
 /* PBX classes */
@@ -1649,7 +1659,17 @@ PBXParseError PBXParser::parse(std::vector<char> &buf)
 
 /* PBX parser implementation */
 
-void PBXParserImpl::begin_object() {
+bool PBXParserImpl::literal_is_hex_id(std::string str)
+{
+	if (str.size() != 24) return false;
+	for (size_t i = 0; i < str.length(); i++) {
+		if (strchr(util::HEX_DIGITS, str[i]) == NULL) return false;
+	}
+	return true;
+}
+
+void PBXParserImpl::begin_object()
+{
 	if (debug) {
 		log_debug("begin_object");
 	}
@@ -1675,7 +1695,8 @@ void PBXParserImpl::begin_object() {
 	}
 }
 
-void PBXParserImpl::end_object() {
+void PBXParserImpl::end_object()
+{
 	if (debug) {
 		log_debug("end_object");
 	}
@@ -1689,14 +1710,16 @@ void PBXParserImpl::end_object() {
 	value_stack.pop_back();
 }
 
-void PBXParserImpl::object_comment(std::string str) {
+void PBXParserImpl::object_comment(std::string str)
+{
 	if (debug) {
 		log_debug("object_comment: \"%s\"", str.c_str());
 	}
 	current_attr_comment = str;
 }
 
-void PBXParserImpl::object_attr(std::string str) {
+void PBXParserImpl::object_attr(std::string str)
+{
 	if (debug) {
 		log_debug("object_attr: \"%s\"", str.c_str());
 	}
@@ -1704,18 +1727,20 @@ void PBXParserImpl::object_attr(std::string str) {
 	current_attr_comment = std::string();
 }
 
-void PBXParserImpl::object_attr_comment(std::string str) {
+void PBXParserImpl::object_attr_comment(std::string str)
+{
 	if (debug) {
 		log_debug("object_attr_comment: \"%s\"", str.c_str());
 	}
 	current_attr_comment = str;
 }
 
-void PBXParserImpl::object_value_literal(std::string str) {
+void PBXParserImpl::object_value_literal(std::string str)
+{
 	if (debug) {
 		log_debug("object_value_literal: \"%s\"", str.c_str());
 	}
-	bool is_id = util::literal_is_hex_id(str);
+	bool is_id = literal_is_hex_id(str);
 	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
@@ -1760,7 +1785,8 @@ void PBXParserImpl::object_value_literal(std::string str) {
 	}
 }
 
-void PBXParserImpl::object_value_comment(std::string str) {
+void PBXParserImpl::object_value_comment(std::string str)
+{
 	if (debug) {
 		log_debug("object_value_comment: \"%s\"", str.c_str());
 	}
@@ -1769,7 +1795,8 @@ void PBXParserImpl::object_value_comment(std::string str) {
 	}
 }
 
-void PBXParserImpl::begin_array() {
+void PBXParserImpl::begin_array()
+{
 	if (debug) {
 		log_debug("begin_array");
 	}
@@ -1792,18 +1819,20 @@ void PBXParserImpl::begin_array() {
 	}
 }
 
-void PBXParserImpl::end_array() {
+void PBXParserImpl::end_array()
+{
 	if (debug) {
 		log_debug("end_array");
 	}
 	value_stack.pop_back();
 }
 
-void PBXParserImpl::array_value_literal(std::string str) {
+void PBXParserImpl::array_value_literal(std::string str)
+{
 	if (debug) {
 		log_debug("array_value_literal: \"%s\"", str.c_str());
 	}
-	bool is_id = util::literal_is_hex_id(str);
+	bool is_id = literal_is_hex_id(str);
 	if (value_stack.size() == 0) {
 		log_fatal_exit("value stack empty");
 	}
@@ -1815,7 +1844,8 @@ void PBXParserImpl::array_value_literal(std::string str) {
 	}
 }
 
-void PBXParserImpl::array_value_comment(std::string str) {
+void PBXParserImpl::array_value_comment(std::string str)
+{
 	if (debug) {
 		log_debug("array_value_comment: \"%s\"", str.c_str());
 	}
@@ -1827,7 +1857,32 @@ void PBXParserImpl::array_value_comment(std::string str) {
 
 /* PBX writer */
 
-void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
+const char* PBXWriter::LITERAL_CHARS = "/._";
+
+bool PBXWriter::literal_requires_quotes(std::string str)
+{
+	if (str.size() == 0) return true;
+	for (size_t i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
+	}
+	return false;
+}
+
+std::string PBXWriter::escape_quotes(std::string str)
+{
+	std::stringstream ss;
+	for (size_t i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if (c == '"') ss << "\\";
+		ss << c;
+	}
+	return ss.str();
+}
+
+
+void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent)
+{
 	switch (value->type()) {
 		case PBXTypeXcodeproj:
 			out << pbxproj_slash_bang << std::endl;
@@ -1868,8 +1923,8 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent) {
 		case PBXTypeLiteral:
 		{
 			PBXLiteral &lit = static_cast<PBXLiteral&>(*value);
-			if (util::literal_requires_quotes(lit.literal_val)) {
-				out << "\"" << util::escape_quotes(lit.literal_val) << "\"";
+			if (literal_requires_quotes(lit.literal_val)) {
+				out << "\"" << escape_quotes(lit.literal_val) << "\"";
 			} else {
 				out << lit.literal_val;
 			}

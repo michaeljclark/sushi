@@ -15,6 +15,7 @@
 
 #include "log.h"
 #include "util.h"
+#include "filesystem.h"
 #include "project_parser.h"
 #include "project.h"
 
@@ -118,7 +119,7 @@ project::project() { init(); }
 
 void project::read(std::string project_file)
 {
-	std::vector<char> buf = util::read_file(project_file);
+	std::vector<char> buf = filesystem::read_file(project_file);
 	if (!parse(buf.data(), buf.size())) {
 		log_fatal_exit("project: parse error");
 	}

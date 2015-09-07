@@ -3,12 +3,10 @@
 //
 
 #include <cstdio>
-#include <cctype>
 #include <cstring>
 #include <cstdlib>
 #include <cstdarg>
 #include <cstdint>
-#include <cerrno>
 #include <string>
 #include <sstream>
 #include <iostream>

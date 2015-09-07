@@ -15,19 +15,13 @@
 #include <algorithm>
 #include <functional>
 
-#include <sys/stat.h>
-
 #include "log.h"
 #include "util.h"
 
-#ifdef _WIN32
-#define fileno _fileno
-#endif
 
 /* utility */
 
 const char* util::HEX_DIGITS = "0123456789ABCDEF";
-const char* util::LITERAL_CHARS = "/._";
 
 std::string util::ltrim(std::string s) {
 	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
@@ -102,58 +96,4 @@ void util::generate_random(unsigned char *buf, size_t len)
 	for (size_t i = 0; i < len; i++) {
 		buf[i] = (unsigned char)distribution(generator);
 	}
-}
-
-bool util::literal_requires_quotes(std::string str)
-{
-	if (str.size() == 0) return true;
-	for (size_t i = 0; i < str.length(); i++) {
-		char c = str[i];
-		if (!isalnum(c) && strchr(LITERAL_CHARS, c) == NULL) return true;
-	}
-	return false;
-}
-
-std::string util::escape_quotes(std::string str)
-{
-	std::stringstream ss;
-	for (size_t i = 0; i < str.length(); i++) {
-		char c = str[i];
-		if (c == '"') ss << "\\";
-		ss << c;
-	}
-	return ss.str();
-}
-
-bool util::literal_is_hex_id(std::string str)
-{
-	if (str.size() != 24) return false;
-	for (size_t i = 0; i < str.length(); i++) {
-		if (strchr(HEX_DIGITS, str[i]) == NULL) return false;
-	}
-	return true;
-}
-
-std::vector<char> util::read_file(std::string filename)
-{
-	std::vector<char> buf;
-	struct stat stat_buf;
-
-	FILE *file = fopen(filename.c_str(), "r");
-	if (!file) {
-		log_fatal_exit("error fopen: %s: %s", filename.c_str(), strerror(errno));
-	}
-
-	if (fstat(fileno(file), &stat_buf) < 0) {
-		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
-	}
-
-	buf.resize(stat_buf.st_size);
-	size_t bytes_read = fread(buf.data(), 1, stat_buf.st_size, file);
-	if (bytes_read != (size_t)stat_buf.st_size) {
-		log_fatal_exit("error fread: %s", filename.c_str());
-	}
-	fclose(file);
-
-	return buf;
 }

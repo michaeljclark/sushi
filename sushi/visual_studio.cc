@@ -44,7 +44,7 @@ VSSolution::VSSolution()
 
 void VSSolution::read(std::string solution_file)
 {
-	std::vector<char> buf = util::read_file(solution_file);
+	std::vector<char> buf = filesystem::read_file(solution_file);
 	if (!parse(buf.data(), buf.size())) {
 		log_fatal_exit("VSSolution: parse error");
 	}
@@ -233,7 +233,7 @@ VSProject::VSProject() : doc(false) {}
 void VSProject::read(std::string project_file)
 {
 	doc.Clear();
-	std::vector<char> buf = util::read_file(project_file);
+	std::vector<char> buf = filesystem::read_file(project_file);
 	tinyxml2::XMLError err = doc.Parse(buf.data());
 	if (err != tinyxml2::XML_NO_ERROR) {
 		log_fatal_exit("VSProject: error reading: %s: xml_error=%d", project_file.c_str(), err);

@@ -20,7 +20,8 @@ typedef std::shared_ptr<PBXObject> PBXObjectPtr;
 typedef std::shared_ptr<PBXMap> PBXMapPtr;
 typedef std::shared_ptr<PBXArray> PBXArrayPtr;
 
-enum PBXType {
+enum PBXType
+{
 	PBXTypeXcodeproj,
 	PBXTypeId,
 	PBXTypeMap, 
@@ -29,7 +30,8 @@ enum PBXType {
 	PBXTypeObject
 };
 
-struct PBXKey {
+struct PBXKey
+{
 	std::string str;
 	std::string comment;
 
@@ -40,12 +42,14 @@ struct PBXKey {
 	bool operator==(const PBXKey &o) const { return str == o.str; }
 };
 
-struct PBXValue {
+struct PBXValue
+{
 	virtual ~PBXValue() {}
 	virtual PBXType type() = 0;
 };
 
-union PBXIdUnion {
+union PBXIdUnion
+{
         unsigned char id_val[12];
         struct {
                 unsigned char id_local[4];
@@ -57,7 +61,8 @@ union PBXIdUnion {
         bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }
 };
 
-struct PBXId : PBXValue {
+struct PBXId : PBXValue
+{
 	PBXIdUnion id;
 	std::string comment;
 
@@ -78,7 +83,8 @@ struct PBXId : PBXValue {
 	bool operator==(const PBXId &o);
 };
 
-struct PBXMap : PBXValue {
+struct PBXMap : PBXValue
+{
 	std::map<std::string,PBXValuePtr> object_val;
 	std::vector<PBXKey> key_order;
 
@@ -105,7 +111,8 @@ struct PBXMap : PBXValue {
 	void setMap(std::string key, PBXMapPtr map);
 };
 
-struct PBXArray : PBXValue {
+struct PBXArray : PBXValue
+{
 	std::vector<PBXValuePtr> array_val;
 
 	virtual PBXType type();
@@ -114,7 +121,8 @@ struct PBXArray : PBXValue {
 	void addIdRef(PBXObjectPtr obj);
 };
 
-struct PBXLiteral : PBXValue {
+struct PBXLiteral : PBXValue
+{
 	std::string literal_val;
 
 	PBXLiteral(std::string literal_val);
@@ -122,7 +130,8 @@ struct PBXLiteral : PBXValue {
 	virtual PBXType type();
 };
 
-struct PBXObject : PBXMap {
+struct PBXObject : PBXMap
+{
 	PBXId id;
 	Xcodeproj *xcodeproj;
 
@@ -201,28 +210,33 @@ struct PBXObjectFactory;
 typedef std::shared_ptr<PBXObjectFactory> PBXObjectFactoryPtr;
 template <typename T> struct PBXObjectFactoryImpl;
 
-struct PBXObjectFactory {
+struct PBXObjectFactory
+{
 	virtual ~PBXObjectFactory() {}
 	virtual PBXObjectPtr create() = 0;
 };
 
 template <typename T>
-struct PBXObjectFactoryImpl : PBXObjectFactory {
+struct PBXObjectFactoryImpl : PBXObjectFactory
+{
 	PBXObjectPtr create() { return std::make_shared<T>(); }
 };
 
-template <typename T> struct PBXObjectImpl : PBXObject {
+template <typename T> struct PBXObjectImpl : PBXObject
+{
 	const std::string& type_name() { return T::type_name; }
 };
 
-struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
+struct Xcodeproj : PBXObjectImpl<Xcodeproj>
+{
 	static const std::string type_name;
 	virtual PBXType type() { return PBXTypeXcodeproj; }
 
 	static std::once_flag factoryInit;
 	static std::map<std::string,PBXObjectFactoryPtr> factoryMap;
 
-	template <typename T> static void registerFactory() {
+	template <typename T> static void registerFactory()
+	{
 		factoryMap.insert(std::pair<std::string,PBXObjectFactoryPtr>
 			(T::type_name, PBXObjectFactoryPtr(new PBXObjectFactoryImpl<T>())));
 	}
@@ -250,15 +264,18 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 	void syncFromMap();
 	void syncToMap();
 
-	PBXProjectPtr getProject() {
+	PBXProjectPtr getProject()
+	{
 		return std::static_pointer_cast<PBXProject>(objects->getObject(rootObject));
 	}
 
-	template<typename T> std::shared_ptr<T> getObject(PBXId id) {
+	template<typename T> std::shared_ptr<T> getObject(PBXId id)
+	{
 		return std::static_pointer_cast<T>(objects->getObject(id));
 	}
 
-	PBXObjectPtr createObject(std::string class_name, const PBXId &id, const PBXMap &map) {
+	PBXObjectPtr createObject(std::string class_name, const PBXId &id, const PBXMap &map)
+	{
 		init();
 		auto it = factoryMap.find(class_name);
 		PBXObjectPtr ptr = it != factoryMap.end() ? it->second->create() : std::make_shared<PBXObject>();
@@ -269,7 +286,8 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 		return ptr;
 	}
 
-	template<typename T> std::shared_ptr<T> createObject(std::string comment) {
+	template<typename T> std::shared_ptr<T> createObject(std::string comment)
+	{
 		auto obj = std::make_shared<T>();
 		obj->id = PBXId::createId(rootObject);
 		obj->id.comment = comment;
@@ -279,7 +297,8 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj> {
 	}
 };
 
-struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
+struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget>
+{
 	static const std::string type_name;
 
 	PBXId buildConfigurationList;
@@ -294,7 +313,8 @@ struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget> {
 	void syncToMap();
 };
 
-struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
+struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -307,7 +327,8 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
+struct PBXBuildFile : PBXObjectImpl<PBXBuildFile>
+{
 	static const std::string type_name;
 
 	PBXId fileRef;
@@ -318,7 +339,8 @@ struct PBXBuildFile : PBXObjectImpl<PBXBuildFile> {
 	void syncToMap();
 };
 
-struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
+struct PBXBuildRule : PBXObjectImpl<PBXBuildRule>
+{
 	static const std::string type_name;
 
 	std::string compilerSpec;
@@ -334,7 +356,8 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule> {
 	void syncToMap();
 };
 
-struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
+struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle>
+{
 	static const std::string type_name;
 
 	PBXMapPtr buildSettings;
@@ -346,7 +369,8 @@ struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle> {
 	void syncToMap();
 };
 
-struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
+struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy>
+{
 	static const std::string type_name;
 
 	PBXId containerPortal;
@@ -360,7 +384,8 @@ struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy> {
 	void syncToMap();
 };
 
-struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
+struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -375,7 +400,8 @@ struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase> {
 	void syncToMap();
 };
 
-enum FileType {
+enum FileType
+{
 	FileTypeNone           = 0x0000,
 	FileTypeCompiler       = 0x0001,
 	FileTypeAssembler      = 0x0002,
@@ -386,7 +412,8 @@ enum FileType {
 	FileTypeApplication    = 0x0040
 };
 
-struct FileTypeMetaData {
+struct FileTypeMetaData
+{
 	std::string xcodeType;
 	uint64_t flags;
 	std::vector<std::string> extensions;
@@ -403,7 +430,8 @@ struct FileTypeMetaData {
 	}
 };
 
-struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
+struct PBXFileReference : PBXObjectImpl<PBXFileReference>
+{
 	static const std::string type_name;
 
 	static const std::string ext_c_source;
@@ -456,7 +484,8 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference> {
 	void syncToMap();
 };
 
-struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
+struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -469,7 +498,8 @@ struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXGroup : PBXObjectImpl<PBXGroup> {
+struct PBXGroup : PBXObjectImpl<PBXGroup>
+{
 	static const std::string type_name;
 
 	PBXArrayPtr children;
@@ -484,7 +514,8 @@ struct PBXGroup : PBXObjectImpl<PBXGroup> {
 	void sortChildren();
 };
 
-struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
+struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -497,7 +528,8 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
+struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget>
+{
 	static const std::string type_name;
 
 	std::string buildArgumentsString;
@@ -515,7 +547,8 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget> {
 	void syncToMap();
 };
 
-struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
+struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget>
+{
 	static const std::string type_name;
 
 	static const std::string type_application;
@@ -540,7 +573,8 @@ struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget> {
 	void syncToMap();
 };
 
-struct PBXProject : PBXObjectImpl<PBXProject> {
+struct PBXProject : PBXObjectImpl<PBXProject>
+{
 	static const std::string type_name;
 
 	PBXMapPtr attributes;
@@ -562,7 +596,8 @@ struct PBXProject : PBXObjectImpl<PBXProject> {
 	void syncToMap();
 };
 
-struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
+struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy>
+{
 	static const std::string type_name;
 
 	std::string type;
@@ -576,7 +611,8 @@ struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy> {
 	void syncToMap();
 };
 
-struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
+struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -589,7 +625,8 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
+struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -606,7 +643,8 @@ struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
+struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase>
+{
 	static const std::string type_name;
 
 	int buildActionMask;
@@ -619,7 +657,8 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase> {
 	void syncToMap();
 };
 
-struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
+struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency>
+{
 	static const std::string type_name;
 
 	PBXId target;
@@ -631,7 +670,8 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency> {
 	void syncToMap();
 };
 
-struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
+struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup>
+{
 	static const std::string type_name;
 
 	PBXArrayPtr children;
@@ -645,7 +685,8 @@ struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup> {
 	void syncToMap();
 };
 
-struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
+struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration>
+{
 	static const std::string type_name;
 
 	PBXMapPtr buildSettings;
@@ -657,7 +698,8 @@ struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration> {
 	void syncToMap();
 };
 
-struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
+struct XCConfigurationList : PBXObjectImpl<XCConfigurationList>
+{
 	static const std::string type_name;
 
 	PBXArrayPtr buildConfigurations;
@@ -670,14 +712,16 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList> {
 	void syncToMap();
 };
 
-struct XCVersionGroup : PBXObjectImpl<XCVersionGroup> {
+struct XCVersionGroup : PBXObjectImpl<XCVersionGroup>
+{
 	static const std::string type_name;
 };
 
 
 /* PBX parser state machine */
 
-enum PBXParseState {
+enum PBXParseState
+{
 	PBXParseStateNone                       = 0,
 	PBXParseStateSlashBang                  = 1,
 	PBXParseStateEatWhitespace              = 2,
@@ -699,7 +743,8 @@ enum PBXParseState {
 	PBXParseStateTrailingWhitespace         = 18,
 };
 
-enum PBXParseError {
+enum PBXParseError
+{
 	PBXParseErrorNone                       = 0,
 	PBXParseErrorInvalidSlashBang           = 1,
 	PBXParseErrorExpectedEquals             = 2,
@@ -710,7 +755,8 @@ enum PBXParseError {
 	PBXParseErrorExpectedWhitespace         = 7
 };
 
-struct PBXParser {
+struct PBXParser
+{
 	PBXParseError parse(std::vector<char> &buf);
 
 	virtual void begin_object() = 0;
@@ -729,8 +775,11 @@ struct PBXParser {
 
 /* PBX parser implementation */
 
-struct PBXParserImpl : PBXParser {
+struct PBXParserImpl : PBXParser
+{
 	static const bool debug = false;
+
+	static bool literal_is_hex_id(std::string str);
 
 	XcodeprojPtr xcodeproj;
 	PBXValuePtr valptr;
@@ -754,7 +803,11 @@ struct PBXParserImpl : PBXParser {
 
 /* PBX writer */
 
-struct PBXWriter {
+struct PBXWriter
+{
+	static const char* LITERAL_CHARS;
+	static bool literal_requires_quotes(std::string str);
+	static std::string escape_quotes(std::string str);
 	static void write(PBXValuePtr value, std::ostream &out, int indent);
 };
 

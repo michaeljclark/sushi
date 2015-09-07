@@ -107,13 +107,15 @@ struct VSObjectFactory;
 typedef std::shared_ptr<VSObjectFactory> VSObjectFactoryPtr;
 template <typename T> struct VSObjectFactoryImpl;
 
-struct VSObjectFactory {
+struct VSObjectFactory
+{
 	virtual ~VSObjectFactory() {}
 	virtual VSObjectPtr create() = 0;
 };
 
 template <typename T>
-struct VSObjectFactoryImpl : VSObjectFactory {
+struct VSObjectFactoryImpl : VSObjectFactory
+{
 	VSObjectPtr create() { return std::make_shared<T>(); }
 };
 
@@ -125,7 +127,8 @@ struct VSObject
 	virtual void toXML(tinyxml2::XMLElement *parent) = 0;
 };
 
-template <typename T> struct VSObjectImpl : VSObject {
+template <typename T> struct VSObjectImpl : VSObject
+{
 	const std::string& type_name() { return T::type_name; }
 };
 

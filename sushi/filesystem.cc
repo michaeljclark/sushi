@@ -5,22 +5,51 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdarg>
+#include <cerrno>
 #include <string>
 #include <vector>
 #include <memory>
 #include <algorithm>
 
-#include "log.h"
-#include "util.h"
-#include "filesystem.h"
+#include <sys/stat.h>
 
 #ifdef _WIN32
 #include <windows.h>
+#define fileno _fileno
 #else
 #include <dirent.h>
 #endif
 
+#include "log.h"
+#include "util.h"
+#include "filesystem.h"
+
+
 /* filesystem */
+
+std::vector<char> filesystem::read_file(std::string filename)
+{
+	std::vector<char> buf;
+	struct stat stat_buf;
+
+	FILE *file = fopen(filename.c_str(), "r");
+	if (!file) {
+		log_fatal_exit("error fopen: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	if (fstat(fileno(file), &stat_buf) < 0) {
+		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	buf.resize(stat_buf.st_size);
+	size_t bytes_read = fread(buf.data(), 1, stat_buf.st_size, file);
+	if (bytes_read != (size_t)stat_buf.st_size) {
+		log_fatal_exit("error fread: %s", filename.c_str());
+	}
+	fclose(file);
+
+	return buf;
+}
 
 int filesystem::canonicalize_path(char *path)
 {
