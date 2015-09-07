@@ -28,7 +28,7 @@
 
 int main(int argc, char **argv) {
 	if (argc != 2) {
-		fprintf(stderr, "usage: %s <xcodeproj>\n", argv[0]);
+		fprintf(stderr, "usage: %s <vssolution>\n", argv[0]);
 		exit(1);
 	}
 	std::string solution_file = argv[1];
