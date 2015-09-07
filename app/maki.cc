@@ -26,10 +26,14 @@
 
 int main(int argc, char **argv)
 {
-	// TODO parse command line options
-	// currently hardcoded to produce Xcode project
+	// TODO - parse command line options
+	if (argc != 2) {
+		fprintf(stderr, "usage: %s <sushi>\n", argv[0]);
+		exit(1);
+	}
+	// TODO - currently hardcoded to produce Xcode project
 	project proj;
-	proj.read("Makifile");
+	proj.read(argv[1]);
 	XcodeprojPtr xcodeproj = project_xcode::create_project(proj.root);
 	PBXWriter::write(xcodeproj, std::cout, 0);
 	std::cout << std::endl;
