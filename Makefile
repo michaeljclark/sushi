@@ -87,7 +87,8 @@ CPPFLAGS +=         -D_FILE_OFFSET_BITS=64
 endif
 
 # directories
-APP_SRC_DIR =       app
+TEST_SRC_DIR =      test
+MAKI_SRC_DIR =      maki
 SUSHI_SRC_DIR =     sushi
 TINYXML2_SRC_DIR =  tinyxml2
 BUILD_DIR =         build
@@ -114,31 +115,32 @@ TINYXML2_SRCS =		$(TINYXML2_SRC_DIR)/tinyxml2.cpp
 TINYXML2_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cpp,.o,$(TINYXML2_SRCS)))
 TINYXML2_LIB =      $(LIB_DIR)/libtinyxml2.a
 
-PBXCREATE_SRCS =    $(APP_SRC_DIR)/pbx_create.cc
+PBXCREATE_SRCS =    $(TEST_SRC_DIR)/pbx_create.cc
 PBXCREATE_OBJS =    $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXCREATE_SRCS)))
 PBXCREATE_BIN =     $(BIN_DIR)/pbx_create
 
-PBXREAD_SRCS =      $(APP_SRC_DIR)/pbx_read.cc
+PBXREAD_SRCS =      $(TEST_SRC_DIR)/pbx_read.cc
 PBXREAD_OBJS =      $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXREAD_SRCS)))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
 
-VSREAD_SRCS =       $(APP_SRC_DIR)/vs_read.cc
+VSREAD_SRCS =       $(TEST_SRC_DIR)/vs_read.cc
 VSREAD_OBJS =       $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(VSREAD_SRCS)))
 VSREAD_BIN =        $(BIN_DIR)/vs_read
 
-SUSHICLI_SRCS =     $(APP_SRC_DIR)/maki.cc
-SUSHICLI_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(SUSHICLI_SRCS)))
-SUSHICLI_BIN =      $(BIN_DIR)/maki
+MAKI_SRCS =         $(MAKI_SRC_DIR)/maki.cc
+MAKI_OBJS =         $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(MAKI_SRCS)))
+MAKI_BIN =          $(BIN_DIR)/maki
 
-APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(SUSHICLI_SRCS)
-BINARIES =          $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN) $(SUSHICLI_BIN)
+APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(MAKI_SRCS)
+BINARIES =          $(MAKI_BIN)
+TESTS =             $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN)
 
 
 # build rules
-all: dirs $(LIBS) $(BINARIES)
+all: dirs $(LIBS) $(BINARIES) $(TESTS)
 
 .PHONY: dirs
-dirs: ; @mkdir -p $(OBJ_DIR)/app $(OBJ_DIR)/sushi $(OBJ_DIR)/tinyxml2 $(LIB_DIR) $(BIN_DIR)
+dirs: ; @mkdir -p $(OBJ_DIR)/test $(OBJ_DIR)/maki $(OBJ_DIR)/sushi $(OBJ_DIR)/tinyxml2 $(LIB_DIR) $(BIN_DIR)
 clean: ; @echo "CLEAN $(BUILD_DIR)"; rm -rf $(BUILD_DIR)
 
 backup: clean ; dir=$$(basename $$(pwd)) ; cd .. && tar -czf $${dir}-backup-$$(date '+%Y%m%d').tar.gz $${dir}
@@ -150,7 +152,7 @@ $(TINYXML2_LIB): $(TINYXML2_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(VSREAD_BIN): $(VSREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
-$(SUSHICLI_BIN): $(SUSHICLI_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(MAKI_BIN): $(MAKI_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 
 # build recipes
 ifdef V
@@ -159,19 +161,23 @@ else
 cmd = @echo "$1"; $2
 endif
 
-$(OBJ_DIR)/app/%.o : $(APP_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
+$(OBJ_DIR)/test/%.o : $(TEST_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
+$(OBJ_DIR)/maki/%.o : $(MAKI_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
 $(OBJ_DIR)/sushi/%.o : $(SUSHI_SRC_DIR)/%.cc ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
 $(OBJ_DIR)/tinyxml2/%.o : $(TINYXML2_SRC_DIR)/%.cpp ; $(call cmd, CXX $@, $(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@)
 $(SUSHI_SRC_DIR)/%.cc : $(SUSHI_SRC_DIR)/%.rl ; $(call cmd, RAGEL $@, $(RAGEL) $< -o $@)
 
-$(DEP_DIR)/$(APP_SRC_DIR)/%.cc.P : $(APP_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(APP_SRC_DIR) ;
-	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(APP_SRC_DIR)/\1.o $(DEP_DIR)/$(APP_SRC_DIR)/\1.cc.P#"  > $@)
+$(DEP_DIR)/$(TEST_SRC_DIR)/%.cc.P : $(TEST_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(TEST_SRC_DIR) ;
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(TEST_SRC_DIR)/\1.o $(DEP_DIR)/$(TEST_SRC_DIR)/\1.cc.P#"  > $@)
+$(DEP_DIR)/$(MAKI_SRC_DIR)/%.cc.P : $(MAKI_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(MAKI_SRC_DIR) ;
+	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(MAKI_SRC_DIR)/\1.o $(DEP_DIR)/$(MAKI_SRC_DIR)/\1.cc.P#"  > $@)
 $(DEP_DIR)/$(SUSHI_SRC_DIR)/%.cc.P : $(SUSHI_SRC_DIR)/%.cc ; @mkdir -p $(DEP_DIR)/$(SUSHI_SRC_DIR) ;
 	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(SUSHI_SRC_DIR)/\1.o $(DEP_DIR)/$(SUSHI_SRC_DIR)/\1.cc.P#"  > $@)
 $(DEP_DIR)/$(TINYXML2_SRC_DIR)/%.cpp.P : $(TINYXML2_SRC_DIR)/%.cpp ; @mkdir -p $(DEP_DIR)/$(TINYXML2_SRC_DIR) ;
 	$(call cmd, MKDEP $@, $(CXX) $(CXXFLAGS) -MM $< | sed "s#\(.*\)\.o#$(OBJ_DIR)/$(TINYXML2_SRC_DIR)/\1.o $(DEP_DIR)/$(TINYXML2_SRC_DIR)/\1.cpp.P#"  > $@)
 
 # make dependencies
-include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(APP_SRCS)))
+include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(TEST_SRCS)))
+include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(MAKI_SRCS)))
 include $(addprefix $(DEP_DIR)/,$(subst .cc,.cc.P,$(SUSHI_SRCS)))
 include $(addprefix $(DEP_DIR)/,$(subst .cpp,.cpp.P,$(TINYXML2_SRCS)))

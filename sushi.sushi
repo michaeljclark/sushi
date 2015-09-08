@@ -55,19 +55,19 @@ project sushi {
 	}
 
 	tool maki {
-		source app/maki.cc;
+		source maki/maki.cc;
 	}
 
 	tool pbx_create {
-		source app/pbx_create.cc;
+		source test/pbx_create.cc;
 	}
 
 	tool pbx_read {
-		source app/pbx_read.cc;
+		source test/pbx_read.cc;
 	}
 
 	tool vs_read {
-		source app/vs_read.cc;
+		source test/vs_read.cc;
 	}
 
 }
