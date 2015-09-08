@@ -22,5 +22,5 @@ make -j4
 
 To create the Xcode project for Sushi:
 ```
-./build/darwin_x86_64/bin/maki maki.sushi > sushi.xcodeproj/project.pbxproj
+./build/darwin_x86_64/bin/maki sushi.sushi > sushi.xcodeproj/project.pbxproj
 ```
