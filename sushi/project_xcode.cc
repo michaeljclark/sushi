@@ -78,7 +78,7 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// construct empty Xcode project
 	xcodeproj->createEmptyProject(root->project_name, "macosx");
 
-	// create library targers
+	// create library targets
 	for (auto lib : root->lib_list) {
 		if (lib->lib_name == "*") continue;
 		auto lib_data = lib_output(root, lib);
