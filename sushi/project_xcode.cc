@@ -49,12 +49,12 @@ lib_output_data project_xcode::lib_output(project_lib_ptr lib)
 
 std::vector<std::string> project_xcode::lib_deps(project_root_ptr root, std::vector<std::string> libs)
 {
-    std::vector<std::string> lib_deps;
-    for (auto lib_name : libs) {
-        auto lib = root->get_lib(lib_name);
-        lib_deps.push_back(lib_output(lib).output_file);
-    }
-    return lib_deps;
+	std::vector<std::string> lib_deps;
+	for (auto lib_name : libs) {
+		auto lib = root->get_lib(lib_name);
+		lib_deps.push_back(lib_output(lib).output_file);
+	}
+	return lib_deps;
 }
 
 XcodeprojPtr project_xcode::create_project(project_root_ptr root)
