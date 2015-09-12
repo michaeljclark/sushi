@@ -17,7 +17,6 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <mutex>
 #include <random>
 
 #include "log.h"
@@ -325,7 +324,7 @@ const std::string XCVersionGroup::type_name =                "XCVersionGroup";
 
 /* Xcodeproj */
 
-std::once_flag Xcodeproj::factoryInit;
+bool Xcodeproj::factoryInit = false;
 std::map<std::string,PBXObjectFactoryPtr> Xcodeproj::factoryMap;
 
 Xcodeproj::Xcodeproj()
@@ -338,7 +337,7 @@ Xcodeproj::Xcodeproj()
 
 void Xcodeproj::init()
 {
-	std::call_once(factoryInit, [](){
+	if (!factoryInit) {
 		registerFactory<PBXAggregateTarget>();
 		registerFactory<PBXAppleScriptBuildPhase>();
 		registerFactory<PBXBuildFile>();
@@ -361,7 +360,8 @@ void Xcodeproj::init()
 		registerFactory<XCBuildConfiguration>();
 		registerFactory<XCConfigurationList>();
 		registerFactory<XCVersionGroup>();
-	});
+		factoryInit = true;
+	};
 }
 
 PBXFileReferencePtr Xcodeproj::getFileReferenceForPath(std::string path, bool create)
@@ -824,7 +824,7 @@ const std::string PBXFileReference::type_bundle           = "wrapper.cfbundle";
 const std::string PBXFileReference::type_framework        = "wrapper.framework";
 const std::string PBXFileReference::type_executable       = "compiled.mach-o.executable";
 
-std::once_flag PBXFileReference::extTypeMapInit;
+bool PBXFileReference::extTypeMapInit = false;
 std::map<std::string,FileTypeMetaData*> PBXFileReference::extTypeMap;
 
 FileTypeMetaData PBXFileReference::typeMetaData[] = {
@@ -857,7 +857,7 @@ FileTypeMetaData* PBXFileReference::getFileMetaForPath(std::string path)
 
 FileTypeMetaData* PBXFileReference::getFileMetaForExtension(std::string extension)
 {
-	std::call_once(extTypeMapInit, [](){
+	if (!extTypeMapInit) {
 		FileTypeMetaData *meta = typeMetaData;
 		while (meta->flags != FileTypeNone) {
 			for (std::string ext : meta->extensions) {
@@ -865,7 +865,8 @@ FileTypeMetaData* PBXFileReference::getFileMetaForExtension(std::string extensio
 			}
 			meta++;
 		}
-	});
+		extTypeMapInit = true;
+	};
 	auto it = extTypeMap.find(extension);
 	return (it != extTypeMap.end()) ? it->second : nullptr;
 }

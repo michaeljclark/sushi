@@ -13,7 +13,6 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <mutex>
 
 #include "log.h"
 #include "util.h"

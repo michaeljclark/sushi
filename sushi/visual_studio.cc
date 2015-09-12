@@ -19,7 +19,6 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <mutex>
 #include <random>
 
 #include "tinyxml2.h"
@@ -457,12 +456,12 @@ void VSSolution::Done()
 
 const std::string VSProject::xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
 
-std::once_flag VSProject::factoryInit;
+bool VSProject::factoryInit = false;
 std::map<std::string,VSObjectFactoryPtr> VSProject::factoryMap;
 
 void VSProject::init()
 {
-	std::call_once(factoryInit, [](){
+	if (!factoryInit) {
 		registerFactory<VSImport>();
 		registerFactory<VSImportGroup>();
 		registerFactory<VSItemGroup>();
@@ -472,7 +471,8 @@ void VSProject::init()
 		registerFactory<VSClCompile>();
 		registerFactory<VSClInclude>();
 		registerFactory<VSLink>();
-	});
+		factoryInit = true;
+	};
 }
 
 VSProject::VSProject() : doc(false) {}

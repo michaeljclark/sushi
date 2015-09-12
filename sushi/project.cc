@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <mutex>
 #include <map>
 #include <set>
 
@@ -24,7 +23,7 @@
 /* project */
 
 const bool project::debug = false;
-std::once_flag project::function_map_init;
+bool project::function_map_init = false;
 statement_function_map project::statement_fn_map;
 block_function_map project::block_fn_map;
 
@@ -110,8 +109,7 @@ void project::statement_libs(project *project, statement &line)
 
 void project::init()
 {
-	std::call_once(function_map_init, []()
-	{
+	if (!function_map_init) {
 		block_fn_map["project"] = block_record(2,  2, "<root>", &block_project_begin);
 		block_fn_map["config"] = block_record(2,  2, "project", &block_config_begin);
 		block_fn_map["lib"] = block_record(2,  2, "project", &block_lib_begin);
@@ -122,7 +120,8 @@ void project::init()
 		statement_fn_map["depends"] = statement_record(2,  2, "lib|tool", &statement_depends);
 		statement_fn_map["source"] = statement_record(2,  -1, "lib|tool", &statement_source);
 		statement_fn_map["libs"] = statement_record(2,  -1, "tool", &statement_libs);
-	});
+		function_map_init = true;
+	};
 }
 
 project::project() { init(); }

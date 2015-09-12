@@ -231,7 +231,7 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj>
 	static const std::string type_name;
 	virtual PBXType type() { return PBXTypeXcodeproj; }
 
-	static std::once_flag factoryInit;
+	static bool factoryInit;
 	static std::map<std::string,PBXObjectFactoryPtr> factoryMap;
 
 	template <typename T> static void registerFactory()
@@ -463,7 +463,7 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference>
 	static const std::string type_framework;
 	static const std::string type_executable;
 
-	static std::once_flag extTypeMapInit;
+	static bool extTypeMapInit;
 	static std::map<std::string,FileTypeMetaData*> extTypeMap;
 	static FileTypeMetaData typeMetaData[];
 

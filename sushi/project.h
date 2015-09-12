@@ -117,7 +117,7 @@ struct project : project_parser
 {
 	static const bool debug;
 
-	static std::once_flag function_map_init;
+	static bool function_map_init;
 	static statement_function_map statement_fn_map;
 	static block_function_map block_fn_map;
 

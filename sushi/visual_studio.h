@@ -148,7 +148,7 @@ struct VSProject
 {
 	static const std::string xmlns;
 
-	static std::once_flag factoryInit;
+	static bool factoryInit;
 	static std::map<std::string,VSObjectFactoryPtr> factoryMap;
 
 	template <typename T> static void registerFactory() {
