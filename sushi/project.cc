@@ -12,6 +12,7 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <functional>
 
 #include "log.h"
 #include "util.h"

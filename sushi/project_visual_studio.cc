@@ -20,6 +20,7 @@
 #include <set>
 #include <mutex>
 #include <random>
+#include <functional>
 
 #include "tinyxml2.h"
 

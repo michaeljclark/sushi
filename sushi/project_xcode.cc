@@ -17,8 +17,7 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <mutex>
-#include <random>
+#include <functional>
 
 #include "log.h"
 #include "util.h"
