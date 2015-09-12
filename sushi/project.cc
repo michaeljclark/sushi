@@ -12,6 +12,7 @@
 #include <memory>
 #include <mutex>
 #include <map>
+#include <set>
 
 #include "log.h"
 #include "util.h"
@@ -83,6 +84,14 @@ void project::statement_cflags(project *project, statement &line)
 	}
 }
 
+void project::statement_depends(project *project, statement &line)
+{
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		target->depends.push_back(line[i]);
+	}
+}
+
 void project::statement_source(project *project, statement &line)
 {
 	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
@@ -110,6 +119,7 @@ void project::init()
 		statement_fn_map["type"] = statement_record(2,  2, "lib", &statement_type);
 		statement_fn_map["define"] = statement_record(3,  3, "lib|tool|config", &statement_define);
 		statement_fn_map["cflags"] = statement_record(2,  -1, "lib|tool|config", &statement_cflags);
+		statement_fn_map["depends"] = statement_record(2,  2, "lib|tool", &statement_depends);
 		statement_fn_map["source"] = statement_record(2,  -1, "lib|tool", &statement_source);
 		statement_fn_map["libs"] = statement_record(2,  -1, "tool", &statement_libs);
 	});
@@ -204,3 +214,107 @@ void project::project_done()
 	if (debug) log_debug("project_done");
 }
 
+
+/* project_root */
+
+std::vector<std::string> project_root::get_config_list()
+{
+	std::set<std::string> set;
+	for (auto config : config_list) {
+		if (config->config_name == "*") continue;
+		set.insert(config->config_name);
+	}
+	std::vector<std::string> list;
+	for (std::string item : set) {
+		list.push_back(item);
+	}
+	return list;
+}
+
+std::vector<std::string> project_root::get_lib_list()
+{
+	std::set<std::string> set;
+	for (auto lib : lib_list) {
+		if (lib->lib_name == "*") continue;
+		set.insert(lib->lib_name);
+	}
+	std::vector<std::string> list;
+	for (std::string item : set) {
+		list.push_back(item);
+	}
+	return list;
+}
+
+std::vector<std::string> project_root::get_tool_list()
+{
+	std::set<std::string> set;
+	for (auto tool : tool_list) {
+		if (tool->tool_name == "*") continue;
+		set.insert(tool->tool_name);
+	}
+	std::vector<std::string> list;
+	for (std::string item : set) {
+		list.push_back(item);
+	}
+	return list;
+}
+
+project_config_ptr project_root::get_config(std::string name)
+{
+	project_config_ptr merged_config = std::make_shared<project_config>();
+	merged_config->config_name = name;
+	for (auto config : config_list) {
+		if (config->config_name != "*") continue;
+		for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
+		merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+	}
+	for (auto config : config_list) {
+		if (config->config_name != name) continue;
+		for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
+		merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+	}
+	return merged_config;
+}
+
+project_lib_ptr project_root::get_lib(std::string name)
+{
+	project_lib_ptr merged_lib = std::make_shared<project_lib>();
+	merged_lib->lib_name = name;
+	for (auto lib : lib_list) {
+		if (lib->lib_name != "*") continue;
+		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
+		for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
+		merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
+		merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
+	}
+	for (auto lib : lib_list) {
+		if (lib->lib_name != name) continue;
+		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
+		for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
+		merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
+		merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
+		merged_lib->source.insert(merged_lib->source.end(), lib->source.begin(), lib->source.end());
+	}
+	return merged_lib;
+}
+
+project_tool_ptr project_root::get_tool(std::string name)
+{
+	project_tool_ptr merged_tool = std::make_shared<project_tool>();
+	merged_tool->tool_name = name;
+	for (auto tool : tool_list) {
+		if (tool->tool_name != "*") continue;
+		for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
+		merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
+		merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+	}
+	for (auto tool : tool_list) {
+		if (tool->tool_name != name) continue;
+		for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
+		merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
+		merged_tool->depends.insert(merged_tool->depends.end(), tool->depends.begin(), tool->depends.end());
+		merged_tool->source.insert(merged_tool->source.end(), tool->source.begin(), tool->source.end());
+		merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+	}
+	return merged_tool;
+}

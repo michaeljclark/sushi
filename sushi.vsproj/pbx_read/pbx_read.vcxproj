@@ -19,8 +19,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <ProjectGuid>{D637BD9A-2C03-40C2-B595-2A10CF06A28F}</ProjectGuid>
-        <RootNamespace>maki</RootNamespace>
+        <ProjectGuid>{56119C93-5B80-436B-0EFD-7C6F228FEE7D}</ProjectGuid>
+        <RootNamespace>pbx_read</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
@@ -130,7 +130,7 @@
     </ItemDefinitionGroup>
     <ItemGroup/>
     <ItemGroup>
-        <ClCompile Include="..\..\maki\maki.cc"/>
+        <ClCompile Include="..\..\test\pbx_read.cc"/>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets"/>

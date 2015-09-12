@@ -79,8 +79,8 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	xcodeproj->createEmptyProject(root->project_name, "macosx");
 
 	// create library targets
-	for (auto lib : root->lib_list) {
-		if (lib->lib_name == "*") continue;
+	for (auto lib_name : root->get_lib_list()) {
+		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(root, lib);
 		xcodeproj->createNativeTarget(
 			lib->lib_name,
@@ -91,20 +91,10 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 			lib->source);
 	}
 
-	// find base library dependencies
-	std::vector<std::string> base_libs;
-	for (auto tool : root->tool_list) {
-		if (tool->tool_name == "*") {
-			auto libs = lib_deps(root, tool->libs);
-			base_libs.insert(base_libs.end(), libs.begin(), libs.end());
-		}
-	}
-
 	// create tool targets
-	for (auto tool : root->tool_list) {
-		if (tool->tool_name == "*") continue;
+	for (auto tool_name : root->get_tool_list()) {
+		auto tool = root->get_tool(tool_name);
 		std::vector<std::string> tool_libs = lib_deps(root, tool->libs);
-		tool_libs.insert(tool_libs.end(), base_libs.begin(), base_libs.end());
 		xcodeproj->createNativeTarget(
 			tool->tool_name,
 			tool->tool_name,

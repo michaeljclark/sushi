@@ -37,9 +37,259 @@ const bool VSSolution::debug = false;
 
 const std::string VSSolution::VisualCPPProjectGUID = "8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942";
 
-VSSolution::VSSolution()
+VSSolution::VSSolution() {}
+
+void VSSolution::setDefaultVersion()
 {
 	format_version = "12.00";
+	comment_version = "14";
+	visual_studio_version = "14.0.23107.0";
+	minimum_visual_studio_version = "10.0.40219.1";
+}
+
+void VSSolution::createDefaultConfigurations()
+{
+	configurations.clear();
+	configurations.insert("Debug|x64");
+	configurations.insert("Debug|x86");
+	configurations.insert("Release|x64");
+	configurations.insert("Release|x86");
+
+	auto hideSolutionNodeProperty = std::make_shared<VSSolutionProperty>();
+	hideSolutionNodeProperty->name = "HideSolutionNode";
+	hideSolutionNodeProperty->value = "FALSE";
+	properties.clear();
+	properties.push_back(hideSolutionNodeProperty);
+}
+
+VSProjectPtr VSSolution::createProject(std::string project_name, std::string project_type,
+	std::vector<std::string> depends, std::vector<std::string> libs, std::vector<std::string> source)
+{
+	VSSolutionProjectPtr solutionProject = std::make_shared<VSSolutionProject>();
+
+	uuid project_uuid;
+	util::generate_uuid(project_uuid);
+
+	solutionProject->type_guid = VSSolution::VisualCPPProjectGUID;
+	solutionProject->name = project_name;
+	solutionProject->path = project_name + "\\" + project_name + ".vcxproj";
+	solutionProject->guid = util::format_uuid(project_uuid);
+	for (std::string dependency : depends) {
+		if (std::find(solutionProject->dependenciesToResolve.begin(), solutionProject->dependenciesToResolve.end(),
+				dependency) == solutionProject->dependenciesToResolve.end()) {
+			solutionProject->dependenciesToResolve.push_back(dependency);
+		}
+	}
+	for (std::string dependency : libs) {
+		if (std::find(solutionProject->dependenciesToResolve.begin(), solutionProject->dependenciesToResolve.end(),
+				dependency) == solutionProject->dependenciesToResolve.end()) {
+			solutionProject->dependenciesToResolve.push_back(dependency);
+		}
+	}
+	projects.push_back(solutionProject);
+
+	VSProjectPtr project = std::make_shared<VSProject>();
+	project->defaultTargets = "Build";
+	solutionProject->project = project;
+
+	VSItemGroupPtr projectConfigItemGroup = std::make_shared<VSItemGroup>();
+	projectConfigItemGroup->label = "ProjectConfigurations";
+	project->objectList.push_back(projectConfigItemGroup);
+
+	for (auto config : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+
+		VSSolutionProjectConfigurationPtr activeConfig = std::make_shared<VSSolutionProjectConfiguration>();
+		activeConfig->guid = solutionProject->guid;
+		activeConfig->config = config;
+		activeConfig->property = "ActiveCfg";
+		activeConfig->value = projectConfig->include;
+		projectConfigurations.push_back(activeConfig);
+
+		VSSolutionProjectConfigurationPtr build0Config = std::make_shared<VSSolutionProjectConfiguration>();
+		build0Config->guid = solutionProject->guid;
+		build0Config->config = config;
+		build0Config->property = "Build.0";
+		build0Config->value = projectConfig->include;
+		projectConfigurations.push_back(build0Config);
+
+		projectConfigItemGroup->objectList.push_back(projectConfig);
+	}
+
+	VSPropertyGroupPtr globalProperties = std::make_shared<VSPropertyGroup>();
+	globalProperties->label = "Globals";
+	globalProperties->properties["ProjectGuid"] = std::string("{") + solutionProject->guid + std::string("}");
+	globalProperties->properties["RootNamespace"] = project_name;
+	globalProperties->properties["WindowsTargetPlatformVersion"] = "8.1";
+	project->objectList.push_back(globalProperties);
+
+	VSImportPtr defaultsImport = std::make_shared<VSImport>();
+	defaultsImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.Default.props";
+	project->objectList.push_back(defaultsImport);
+
+	for (auto config : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+		VSPropertyGroupPtr propertyGroup = std::make_shared<VSPropertyGroup>();
+		propertyGroup->label = "Configuration";
+		propertyGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
+		propertyGroup->properties["ConfigurationType"] = project_type;
+		propertyGroup->properties["PlatformToolset"] = "v110";
+		propertyGroup->properties["CharacterSet"] = "MultiByte";
+		if (projectConfig->configuration == "Release") {
+			propertyGroup->properties["WholeProgramOptimization"] = "true";
+			propertyGroup->properties["UseDebugLibraries"] = "false";
+		} else if (projectConfig->configuration == "Debug") {
+			propertyGroup->properties["UseDebugLibraries"] = "true";
+		}
+		project->objectList.push_back(propertyGroup);
+	}
+
+	VSImportPtr cppImport = std::make_shared<VSImport>();
+	cppImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.props";
+	project->objectList.push_back(cppImport);
+
+	VSImportGroupPtr extensionSettingsImportGroup = std::make_shared<VSImportGroup>();
+	extensionSettingsImportGroup->label = "ExtensionSettings";
+	project->objectList.push_back(extensionSettingsImportGroup);
+
+	VSImportGroupPtr sharedImportGroup = std::make_shared<VSImportGroup>();
+	sharedImportGroup->label = "Shared";
+	project->objectList.push_back(sharedImportGroup);
+
+	for (auto config : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+		VSImportGroupPtr userConfigImportGroup = std::make_shared<VSImportGroup>();
+		userConfigImportGroup->label = "PropertySheets";
+		userConfigImportGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
+		VSImportPtr userConfigImport = std::make_shared<VSImport>();
+		userConfigImport->project = "$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props";
+		userConfigImport->condition = "exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')";
+		userConfigImport->label = "LocalAppDataPlatform";
+		userConfigImportGroup->objectList.push_back(userConfigImport);
+		project->objectList.push_back(userConfigImportGroup);
+	}
+
+	VSPropertyGroupPtr userMacros = std::make_shared<VSPropertyGroup>();
+	userMacros->label = "UserMacros";
+	project->objectList.push_back(userMacros);
+
+	std::string additionalIncludes;
+	std::string additionalLibs;
+	for (auto dependency : depends) {
+		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
+		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", dependency.c_str()));
+	}
+	for (auto lib : libs) {
+		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
+		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", lib.c_str()));
+		if (additionalLibs.size() > 0) additionalLibs.append(";");
+		additionalLibs.append(format_string("%s.lib", lib.c_str()));
+	}
+
+	for (auto config : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+		VSItemDefinitionGroupPtr compileAndLink = std::make_shared<VSItemDefinitionGroup>();
+		compileAndLink->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
+		VSClCompilePtr compile = std::make_shared<VSClCompile>();
+		compile->properties["WarningLevel"] = "Level3";
+		compile->properties["SDLCheck"] = "true";
+		compile->properties["PreprocessorDefinitions"] = "_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)";
+		if (additionalIncludes.size() > 0) {
+			compile->properties["AdditionalIncludeDirectories"] = additionalIncludes + ";%(AdditionalIncludeDirectories)";
+		}
+		if (projectConfig->configuration == "Release") {
+			compile->properties["Optimization"] = "MaxSpeed";
+			compile->properties["IntrinsicFunctions"] = "true";
+		} else if (projectConfig->configuration == "Debug") {
+			compile->properties["Optimization"] = "Disabled";
+		}
+		compileAndLink->objectList.push_back(compile);
+		VSLinkPtr link = std::make_shared<VSLink>();
+		link->properties["GenerateDebugInformation"] = "true";
+		link->properties["AdditionalLibraryDirectories"] = "$(OutDir)";
+		if (additionalLibs.size() > 0) {
+			link->properties["AdditionalDependencies"] = additionalLibs + ";%(AdditionalDependencies)";
+		}
+		if (projectConfig->configuration == "Release") {
+			link->properties["EnableCOMDATFolding"] = "true";
+			link->properties["OptimizeReferences"] = "true";
+		}
+		compileAndLink->objectList.push_back(link);
+		project->objectList.push_back(compileAndLink);
+	}
+
+	VSItemGroupPtr headerItemGroup = std::make_shared<VSItemGroup>();
+	for (std::string source_file : source) {
+		if (source_file.find(".h") == source_file.length() - 2)
+		{
+			std::vector<std::string> comps = filesystem::path_components(source_file);
+			comps.insert(comps.begin(), "..");
+			comps.insert(comps.begin(), "..");
+			VSClIncludePtr include = std::make_shared<VSClInclude>();
+			include->include = util::join(comps, "\\");
+			headerItemGroup->objectList.push_back(include);
+		}
+	}
+	project->objectList.push_back(headerItemGroup);
+
+	VSItemGroupPtr sourceItemGroup = std::make_shared<VSItemGroup>();
+	for (std::string source_file : source) {
+		if (source_file.find(".cc") == source_file.length() - 3 ||
+				source_file.find(".cpp") == source_file.length() - 4)
+		{
+			std::vector<std::string> comps = filesystem::path_components(source_file);
+			comps.insert(comps.begin(), "..");
+			comps.insert(comps.begin(), "..");
+			VSClCompilePtr compile = std::make_shared<VSClCompile>();
+			compile->include = util::join(comps, "\\");
+			sourceItemGroup->objectList.push_back(compile);
+		}
+	}
+	project->objectList.push_back(sourceItemGroup);
+
+	VSImportPtr targetsImport = std::make_shared<VSImport>();
+	targetsImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.targets";
+	project->objectList.push_back(targetsImport);
+
+	VSImportGroupPtr extensionTargetsImportGroup = std::make_shared<VSImportGroup>();
+	extensionTargetsImportGroup->label = "ExtensionTargets";
+	project->objectList.push_back(extensionTargetsImportGroup);
+
+	return project;
+}
+
+VSProjectConfigurationPtr VSSolution::legacyConfig(std::string config)
+{
+	VSProjectConfigurationPtr projectConfig = std::make_shared<VSProjectConfiguration>();
+	std::vector<std::string> configParts = util::split(config, "|");
+	if (configParts[1] == "x86") configParts[1] = "Win32";
+	projectConfig->configuration = configParts[0];
+	projectConfig->platform = configParts[1];
+	projectConfig->include = configParts[0] + "|" + configParts[1];
+	return projectConfig;
+}
+
+std::string VSSolution::findGuidForProject(std::string project_name)
+{
+	for (auto solutionProject : projects) {
+		if (solutionProject->name == project_name) return solutionProject->guid;
+	}
+	return "";
+}
+
+void VSSolution::resolveDependencies()
+{
+	for (auto solutionProject : projects) {
+		for (std::string dependency : solutionProject->dependenciesToResolve) {
+			std::string dependencyGuid = findGuidForProject(dependency);
+			if (dependencyGuid.size() > 0) {
+				if (std::find(solutionProject->dependencies.begin(), solutionProject->dependencies.end(),
+						dependencyGuid) == solutionProject->dependencies.end()) {
+					solutionProject->dependencies.push_back(dependencyGuid);
+				}
+			}
+		}
+	}
 }
 
 void VSSolution::read(std::string solution_file)
@@ -57,6 +307,7 @@ void VSSolution::read(std::string solution_file)
 
 void VSSolution::write(std::string solution_file)
 {
+	resolveDependencies();
 	std::ofstream out(solution_file.c_str());
 	out << "\xef\xbb\xbf\r\n";
 	out << "Microsoft Visual Studio Solution File, Format Version " << format_version << "\r\n";

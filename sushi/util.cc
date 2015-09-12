@@ -6,6 +6,7 @@
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
+#include <cstdint>
 #include <cerrno>
 #include <ctime>
 #include <string>
@@ -69,22 +70,38 @@ std::string util::join(std::vector<std::string> list, std::string separator)
 	return ss.str();
 }
 
-std::string util::hex_encode(const unsigned char *buf, size_t len)
+std::string util::hex_encode(const unsigned char *buf, size_t len, bool byte_swap)
 {
 	std::string hex;
-	for (size_t i = 0; i < len; i++) {
-		char b = buf[i];
-		hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
-		hex.append(HEX_DIGITS + (b & 0x0F), 1);
+	if (byte_swap) {
+		for (size_t i = len; i > 0; i--) {
+			char b = buf[i-1];
+			hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
+			hex.append(HEX_DIGITS + (b & 0x0F), 1);
+		}
+	} else {
+		for (size_t i = 0; i < len; i++) {
+			char b = buf[i];
+			hex.append(HEX_DIGITS + ((b >> 4) & 0x0F), 1);
+			hex.append(HEX_DIGITS + (b & 0x0F), 1);
+		}
 	}
 	return hex;
 }
 
-void util::hex_decode(std::string hex, unsigned char *buf, size_t len)
+void util::hex_decode(std::string hex, unsigned char *buf, size_t len, bool byte_swap)
 {
-	for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
-		const char tmp[3] = { hex[i*2], hex[i*2+1], 0 };
-		*buf++ = (char)strtoul(tmp, NULL, 16);
+	if (hex.length() % 2 != 0) return;
+	if (byte_swap) {
+		for (size_t i = hex.length()/2; i > 0; i--) {
+			const char tmp[3] = { hex[(i - 1) << 1], hex[((i - 1) << 1) + 1], 0 };
+			*buf++ = (char)strtoul(tmp, NULL, 16);
+		}
+	} else {
+		for (size_t i = 0; i < hex.length()/2 && i < len; i++) {
+			const char tmp[3] = { hex[i << 1], hex[(i << 1) + 1], 0 };
+			*buf++ = (char)strtoul(tmp, NULL, 16);
+		}
 	}
 }
 
@@ -92,8 +109,28 @@ void util::generate_random(unsigned char *buf, size_t len)
 {
 	static std::default_random_engine generator;
 	static std::uniform_int_distribution<unsigned int> distribution(0, 255);
-	generator.seed((unsigned int)time(NULL));
 	for (size_t i = 0; i < len; i++) {
 		buf[i] = (unsigned char)distribution(generator);
 	}
+}
+
+void util::generate_uuid(uuid &u)
+{
+	generate_random(u.data, 16);
+	u.val.data3 = (u.val.data3 & 0x0FFF) | 0x4000; /* random uuid */
+}
+
+std::string util::format_uuid(uuid &u)
+{
+	std::stringstream ss;
+	ss << hex_encode(&u.data[0], 4, host_endian.value == endian_little);
+	ss << "-";
+	ss << hex_encode(&u.data[4], 2, host_endian.value == endian_little);
+	ss << "-";
+	ss << hex_encode(&u.data[6], 2, host_endian.value == endian_little);
+	ss << "-";
+	ss << hex_encode(&u.data[8], 2, host_endian.value == endian_little);
+	ss << "-";
+	ss << hex_encode(&u.data[10], 6, false);
+	return ss.str();
 }

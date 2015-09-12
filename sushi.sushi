@@ -20,6 +20,7 @@ project sushi {
 	}
 
 	lib sushi {
+		depends tinyxml2;
 		source	sushi/cmdline_options.cc
 			sushi/cmdline_options.h
 			sushi/filesystem.cc
@@ -31,6 +32,8 @@ project sushi {
 			sushi/project_parser.cc
 			sushi/project_parser.h
 			sushi/project_parser.rl
+			sushi/project_visual_studio.cc
+			sushi/project_visual_studio.h
 			sushi/project_xcode.cc
 			sushi/project_xcode.h
 			sushi/util.cc
@@ -68,6 +71,10 @@ project sushi {
 
 	tool vs_read {
 		source test/vs_read.cc;
+	}
+
+	tool uuid {
+		source test/uuid.cc;
 	}
 
 }

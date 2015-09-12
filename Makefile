@@ -104,6 +104,7 @@ SUSHI_SRCS =        $(SUSHI_SRC_DIR)/cmdline_options.cc \
                     $(SUSHI_SRC_DIR)/project.cc \
                     $(SUSHI_SRC_DIR)/project_parser.cc \
                     $(SUSHI_SRC_DIR)/project_xcode.cc \
+                    $(SUSHI_SRC_DIR)/project_visual_studio.cc \
                     $(SUSHI_SRC_DIR)/util.cc \
                     $(SUSHI_SRC_DIR)/visual_studio.cc \
                     $(SUSHI_SRC_DIR)/visual_studio_parser.cc \
@@ -127,13 +128,17 @@ VSREAD_SRCS =       $(TEST_SRC_DIR)/vs_read.cc
 VSREAD_OBJS =       $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(VSREAD_SRCS)))
 VSREAD_BIN =        $(BIN_DIR)/vs_read
 
+UUID_SRCS =         $(TEST_SRC_DIR)/uuid.cc
+UUID_OBJS =         $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(UUID_SRCS)))
+UUID_BIN =          $(BIN_DIR)/uuid
+
 MAKI_SRCS =         $(MAKI_SRC_DIR)/maki.cc
 MAKI_OBJS =         $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(MAKI_SRCS)))
 MAKI_BIN =          $(BIN_DIR)/maki
 
-APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(MAKI_SRCS)
+APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(UUID_SRCS) $(MAKI_SRCS)
 BINARIES =          $(MAKI_BIN)
-TESTS =             $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN)
+TESTS =             $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN) $(UUID_BIN)
 
 
 # build rules
@@ -152,6 +157,7 @@ $(TINYXML2_LIB): $(TINYXML2_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(VSREAD_BIN): $(VSREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(UUID_BIN): $(UUID_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(MAKI_BIN): $(MAKI_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 
 # build recipes

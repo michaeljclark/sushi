@@ -17,6 +17,28 @@ typedef std::shared_ptr<VSSolutionProject> VSSolutionProjectPtr;
 typedef std::shared_ptr<VSSolutionProjectConfiguration> VSSolutionProjectConfigurationPtr;
 typedef std::shared_ptr<VSProject> VSProjectPtr;
 
+struct VSObject;
+struct VSImport;
+struct VSImportGroup;
+struct VSItemGroup;
+struct VSItemDefinitionGroup;
+struct VSPropertyGroup;
+struct VSProjectConfiguration;
+struct VSClCompile;
+struct VSClInclude;
+struct VSLink;
+
+typedef std::shared_ptr<VSObject> VSObjectPtr;
+typedef std::shared_ptr<VSItemGroup> VSItemGroupPtr;
+typedef std::shared_ptr<VSImport> VSImportPtr;
+typedef std::shared_ptr<VSImportGroup> VSImportGroupPtr;
+typedef std::shared_ptr<VSItemDefinitionGroup> VSItemDefinitionGroupPtr;
+typedef std::shared_ptr<VSPropertyGroup> VSPropertyGroupPtr;
+typedef std::shared_ptr<VSProjectConfiguration> VSProjectConfigurationPtr;
+typedef std::shared_ptr<VSClCompile> VSClCompilePtr;
+typedef std::shared_ptr<VSClInclude> VSClIncludePtr;
+typedef std::shared_ptr<VSLink> VSLinkPtr;
+
 struct VSSolutionProject
 {
 	std::string type_guid;
@@ -25,6 +47,8 @@ struct VSSolutionProject
 	std::string guid;
 	std::vector<std::string> dependencies;
 	VSProjectPtr project;
+
+	std::vector<std::string> dependenciesToResolve;
 };
 
 struct VSSolutionProjectConfiguration
@@ -59,6 +83,15 @@ struct VSSolution : VisualStudioParser
 
 	VSSolution();
 
+	void setDefaultVersion();
+	void createDefaultConfigurations();
+	VSProjectPtr createProject(std::string project_name, std::string project_type,
+		std::vector<std::string> depends, std::vector<std::string> libs, std::vector<std::string> source);
+
+	VSProjectConfigurationPtr legacyConfig(std::string config);
+	std::string findGuidForProject(std::string project_name);
+	void resolveDependencies();
+
 	void read(std::string solution_file);
 	void write(std::string solution_file);
 
@@ -81,27 +114,6 @@ struct VSSolution : VisualStudioParser
 	void Done();
 };
 
-struct VSObject;
-struct VSImport;
-struct VSImportGroup;
-struct VSItemGroup;
-struct VSItemDefinitionGroup;
-struct VSPropertyGroup;
-struct VSProjectConfiguration;
-struct VSClCompile;
-struct VSClInclude;
-struct VSLink;
-
-typedef std::shared_ptr<VSObject> VSObjectPtr;
-typedef std::shared_ptr<VSItemGroup> VSItemGroupPtr;
-typedef std::shared_ptr<VSImport> VSImportPtr;
-typedef std::shared_ptr<VSImportGroup> VSImportGroupPtr;
-typedef std::shared_ptr<VSItemDefinitionGroup> VSItemDefinitionGroupPtr;
-typedef std::shared_ptr<VSPropertyGroup> VSPropertyGroupPtr;
-typedef std::shared_ptr<VSProjectConfiguration> VSProjectConfigurationPtr;
-typedef std::shared_ptr<VSClCompile> VSClCompilePtr;
-typedef std::shared_ptr<VSClInclude> VSClIncludePtr;
-typedef std::shared_ptr<VSLink> VSLinkPtr;
 
 struct VSObjectFactory;
 typedef std::shared_ptr<VSObjectFactory> VSObjectFactoryPtr;

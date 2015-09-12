@@ -33,16 +33,18 @@ uint32_t PBXId::next_id = 0;
 PBXId PBXId::createRootId()
 {
 	PBXId newid;
-	newid.id.id_obj = next_id++;
 	util::generate_random(newid.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));
+	uint32_t id = htobe32(next_id++);
+	memcpy(newid.id.id_comp.id_local, &id, 4);
 	return newid;
 }
 
 PBXId PBXId::createId(const PBXId &o)
 {
 	PBXId newid;
-	newid.id.id_obj = next_id++;
 	memcpy(newid.id.id_comp.id_project, o.id.id_comp.id_project, sizeof(newid.id.id_comp.id_project));;
+	uint32_t id = htobe32(next_id++);
+	memcpy(newid.id.id_comp.id_local, &id, 4);
 	return newid;
 }
 
@@ -50,12 +52,12 @@ PBXId::PBXId() : id(), comment() {}
 
 PBXId::PBXId(std::string id_str) : comment()
 {
-	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+	util::hex_decode(id_str, id.id_val, sizeof(id.id_val), false);
 }
 
 PBXId::PBXId(std::string id_str, std::string comment) : comment(comment)
 {
-	util::hex_decode(id_str, id.id_val, sizeof(id.id_val));
+	util::hex_decode(id_str, id.id_val, sizeof(id.id_val), false);
 }
 
 PBXId::PBXId(const PBXId& o) : comment(o.comment)
@@ -65,7 +67,7 @@ PBXId::PBXId(const PBXId& o) : comment(o.comment)
 
 std::string PBXId::str()
 {
-	return util::hex_encode(id.id_val, sizeof(id.id_val));
+	return util::hex_encode(id.id_val, sizeof(id.id_val), false);
 }
 
 PBXType PBXId::type() { return PBXTypeId; }
@@ -1885,12 +1887,12 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent)
 {
 	switch (value->type()) {
 		case PBXTypeXcodeproj:
-			out << pbxproj_slash_bang << std::endl;
+			out << pbxproj_slash_bang << '\n';
 		case PBXTypeObject:
 			static_cast<PBXObject&>(*value).syncToMap();
 		case PBXTypeMap:
 		{
-			out << "{" << std::endl;
+			out << "{" << '\n';
 			PBXMap &map = static_cast<PBXMap&>(*value);
 			for (const PBXKey &key : map.key_order) {
 				PBXValuePtr &val = map.object_val[key.str];
@@ -1901,7 +1903,7 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent)
 				}
 				out << " = ";
 				write(val, out, indent + 1);
-				out << ";" << std::endl;
+				out << ";" << '\n';
 			}
 			for (int i = 0; i < indent; i++) out << "\t";
 			out << "}";
@@ -1909,12 +1911,12 @@ void PBXWriter::write(PBXValuePtr value, std::ostream &out, int indent)
 		}
 		case PBXTypeArray:
 		{
-			out << "(" << std::endl;
+			out << "(" << '\n';
 			PBXArray &arr = static_cast<PBXArray&>(*value);
 			for (PBXValuePtr &val : arr.array_val) {
 				for (int i = 0; i <= indent; i++) out << "\t";
 				write(val, out, indent + 1);
-				out << "," << std::endl;
+				out << "," << '\n';
 			}
 			for (int i = 0; i < indent; i++) out << "\t";
 			out << ")";

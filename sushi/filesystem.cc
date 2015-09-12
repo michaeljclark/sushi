@@ -14,8 +14,10 @@
 #include <sys/stat.h>
 
 #ifdef _WIN32
+#include <direct.h>
 #include <windows.h>
 #define fileno _fileno
+#define mkdir(file,mode) _mkdir(file)
 #else
 #include <dirent.h>
 #endif
@@ -104,6 +106,20 @@ std::vector<std::string> filesystem::path_components(std::string path)
 	}
 	path = buf.data();
 	return util::split(path, "/", false);
+}
+
+void filesystem::make_directories(std::string path)
+{
+	std::vector<std::string> comps = path_components(path);
+	if (comps.size() > 1) {
+		comps.pop_back();
+		for (size_t i = 1; i <= comps.size(); i++) {
+			std::vector<std::string> dirComps;
+			for (size_t j = 0; j < i; j++) dirComps.push_back(comps[j]);
+			std::string path = util::join(dirComps, "/");
+			mkdir(path.c_str(), 0777);
+		}
+	}
 }
 
 std::string filesystem::path_relative_to_path(std::string path, std::string relative_to)

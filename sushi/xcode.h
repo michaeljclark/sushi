@@ -52,10 +52,9 @@ union PBXIdUnion
 {
         unsigned char id_val[12];
         struct {
-                unsigned char id_local[4];
-                unsigned char id_project[8];
+            unsigned char id_local[4];
+			unsigned char id_project[8];
         } id_comp;
-        uint32_t id_obj;
 
         bool operator<(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == -1; }
         bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }

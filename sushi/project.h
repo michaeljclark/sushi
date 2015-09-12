@@ -68,6 +68,14 @@ struct project_root : project_item
 	std::vector<project_config_ptr> config_list;
 	std::vector<project_lib_ptr> lib_list;
 	std::vector<project_tool_ptr> tool_list;
+
+	std::vector<std::string> get_config_list();
+	std::vector<std::string> get_lib_list();
+	std::vector<std::string> get_tool_list();
+
+	project_config_ptr get_config(std::string name);
+	project_lib_ptr get_lib(std::string name);
+	project_tool_ptr get_tool(std::string name);
 };
 
 struct project_config : project_item
@@ -84,6 +92,7 @@ struct project_target : project_config
 	virtual std::string target_name() = 0;
 
 	std::vector<std::string> source;
+	std::vector<std::string> depends;
 };
 
 struct project_lib : project_target
@@ -119,6 +128,7 @@ struct project : project_parser
 	static void statement_type(project *project, statement &line);
 	static void statement_define(project *project, statement &line);
 	static void statement_cflags(project *project, statement &line);
+	static void statement_depends(project *project, statement &line);
 	static void statement_source(project *project, statement &line);
 	static void statement_libs(project *project, statement &line);
 

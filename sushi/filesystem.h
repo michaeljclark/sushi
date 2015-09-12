@@ -28,6 +28,7 @@ struct filesystem
 	static std::vector<char> read_file(std::string filename);
 	static int canonicalize_path(char *path);
 	static std::vector<std::string> path_components(std::string path);
+	static void make_directories(std::string path);
 	static std::string path_relative_to_path(std::string path, std::string relative_to);
 	static bool list_files(std::vector<directory_entry> &files, std::string path_name);
 };

@@ -7,6 +7,17 @@
 
 /* utility */
 
+union uuid
+{
+	unsigned char data[16];
+	struct {
+		uint32_t data1;
+		uint16_t data2;
+		uint16_t data3;
+		uint64_t data4;
+	} val;
+};
+
 struct util
 {
 	static const char* HEX_DIGITS;
@@ -17,9 +28,94 @@ struct util
 	static std::vector<std::string> split(std::string str, std::string separator,
 		bool includeEmptyElements = true, bool includeSeparators = false);
 	static std::string join(std::vector<std::string> list, std::string separator);
-	static std::string hex_encode(const unsigned char *buf, size_t len);
-	static void hex_decode(std::string hex, unsigned char *buf, size_t len);
+	static std::string hex_encode(const unsigned char *buf, size_t len, bool byte_swap);
+	static void hex_decode(std::string hex, unsigned char *buf, size_t len, bool byte_swap);
 	static void generate_random(unsigned char *buf, size_t len);
+	static void generate_uuid(uuid &u);
+	static std::string format_uuid(uuid &u);
 };
+
+enum endian {
+    endian_little = 0x03020100ul,
+    endian_big    = 0x00010203ul,
+};
+
+union endianness { unsigned char bytes[4]; uint32_t value; };
+
+static const endianness host_endian = { { 0, 1, 2, 3 } };
+
+#ifndef bswap16
+#if defined __GNUC__
+#define bswap16(x) __builtin_bswap16(x)
+#else
+#define bswap16(x) ((uint16_t)((((uint16_t) (x) & 0xff00) >> 8) | \
+                    (((uint16_t) (x) & 0x00ff) << 8)))
+#endif
+#endif
+
+#ifndef bswap32
+#if defined __GNUC__
+#define bswap32(x) __builtin_bswap32(x)
+#else
+#define bswap32(x) ((uint32_t)((((uint32_t) (x) & 0xff000000) >> 24) | \
+                    (((uint32_t) (x) & 0x00ff0000) >> 8) | \
+                    (((uint32_t) (x) & 0x0000ff00) << 8) | \
+                    (((uint32_t) (x) & 0x000000ff) << 24)))
+#endif
+#endif
+
+#ifndef bswap64
+#if defined __GNUC__
+#define bswap64(x) __builtin_bswap64(x)
+#else
+#define bswap64(x) ((uint64_t)((((uint64_t) (x) & 0xff00000000000000ull) >> 56) | \
+                    (((uint64_t) (x) & 0x00ff000000000000ull) >> 40) | \
+                    (((uint64_t) (x) & 0x0000ff0000000000ull) >> 24) | \
+                    (((uint64_t) (x) & 0x000000ff00000000ull) >> 8) | \
+                    (((uint64_t) (x) & 0x00000000ff000000ull) << 8) | \
+                    (((uint64_t) (x) & 0x0000000000ff0000ull) << 24) | \
+                    (((uint64_t) (x) & 0x000000000000ff00ull) << 40) | \
+                    (((uint64_t) (x) & 0x00000000000000ffull) << 56)))
+#endif
+#endif
+
+#ifndef htobe16
+#define htobe16(x) host_endian.value == endian_little ? bswap16((x)) : ((uint16_t)(x))
+#endif
+#ifndef htole16
+#define htole16(x) host_endian.value == endian_little ? ((uint16_t)(x)) : bswap16((x))
+#endif
+#ifndef be16toh
+#define be16toh(x) host_endian.value == endian_little ? bswap16((x)) : ((uint16_t)(x))
+#endif
+#ifndef le16toh
+#define le16toh(x) host_endian.value == endian_little ? ((uint16_t)(x)) : bswap16((x))
+#endif
+
+#ifndef htobe32
+#define htobe32(x) host_endian.value == endian_little ? bswap32((x)) : ((uint32_t)(x))
+#endif
+#ifndef htole32
+#define htole32(x) host_endian.value == endian_little ? ((uint32_t)(x)) : bswap32((x))
+#endif
+#ifndef be32toh
+#define be32toh(x) host_endian.value == endian_little ? bswap32((x)) : ((uint32_t)(x))
+#endif
+#ifndef le32toh
+#define le32toh(x) host_endian.value == endian_little ? ((uint32_t)(x)) : bswap32((x))
+#endif
+
+#ifndef htobe64
+#define htobe64(x) host_endian.value == endian_little ? bswap64((x)) : ((uint64_t)(x))
+#endif
+#ifndef htole64
+#define htole64(x) host_endian.value == endian_little ? ((uint64_t)(x)) : bswap64((x))
+#endif
+#ifndef be64toh
+#define be64toh(x) host_endian.value == endian_little ? bswap64((x)) : ((uint64_t)(x))
+#endif
+#ifndef le64toh
+#define le64toh(x) host_endian.value == endian_little ? ((uint64_t)(x)) : bswap64((x))
+#endif
 
 #endif

@@ -19,8 +19,8 @@
         </ProjectConfiguration>
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <ProjectGuid>{D637BD9A-2C03-40C2-B595-2A10CF06A28F}</ProjectGuid>
-        <RootNamespace>maki</RootNamespace>
+        <ProjectGuid>{D25F1596-2222-4C12-63DC-E30EFB2034F8}</ProjectGuid>
+        <RootNamespace>vs_read</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     </PropertyGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
@@ -130,7 +130,7 @@
     </ItemDefinitionGroup>
     <ItemGroup/>
     <ItemGroup>
-        <ClCompile Include="..\..\maki\maki.cc"/>
+        <ClCompile Include="..\..\test\vs_read.cc"/>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets"/>
