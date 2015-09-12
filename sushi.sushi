@@ -4,6 +4,8 @@ project sushi {
 	config * {
 		define x_apple_sdk macosx;
 		define x_apple_target 10.10;
+		define x_microsoft_compiler v140;
+		define x_microsoft_target 8.1;
 	}
 
 	config Debug {
