@@ -89,7 +89,8 @@ VSProjectPtr VSSolution::createProject(std::string project_name, std::string pro
 	projects.push_back(solutionProject);
 
 	VSProjectPtr project = std::make_shared<VSProject>();
-	project->defaultTargets = "Build";
+    project->toolsVersion = "14.0";
+    project->defaultTargets = "Build";
 	solutionProject->project = project;
 
 	VSItemGroupPtr projectConfigItemGroup = std::make_shared<VSItemGroup>();
@@ -172,6 +173,9 @@ VSProjectPtr VSSolution::createProject(std::string project_name, std::string pro
 	VSPropertyGroupPtr userMacros = std::make_shared<VSPropertyGroup>();
 	userMacros->label = "UserMacros";
 	project->objectList.push_back(userMacros);
+
+    VSPropertyGroupPtr empty = std::make_shared<VSPropertyGroup>();
+    project->objectList.push_back(empty);
 
 	std::string additionalIncludes;
 	std::string additionalLibs;
