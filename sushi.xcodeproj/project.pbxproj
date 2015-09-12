@@ -383,7 +383,7 @@
 				000000338EE1457CF0225058 /* Debug */,
 				000000348EE1457CF0225058 /* Release */,
 			);
-			defaultConfigurationIsVisible = 1937077036;
+			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		000000338EE1457CF0225058 /* Debug */ = {
