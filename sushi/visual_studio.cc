@@ -51,9 +51,9 @@ void VSSolution::createDefaultConfigurations()
 {
 	configurations.clear();
 	configurations.insert("Debug|x64");
-	configurations.insert("Debug|x86");
+	configurations.insert("Debug|Win32");
 	configurations.insert("Release|x64");
-	configurations.insert("Release|x86");
+	configurations.insert("Release|Win32");
 
 	auto hideSolutionNodeProperty = std::make_shared<VSSolutionProperty>();
 	hideSolutionNodeProperty->name = "HideSolutionNode";
@@ -133,7 +133,7 @@ VSProjectPtr VSSolution::createProject(std::string project_name, std::string pro
 		propertyGroup->label = "Configuration";
 		propertyGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
 		propertyGroup->properties["ConfigurationType"] = project_type;
-		propertyGroup->properties["PlatformToolset"] = "v110";
+		propertyGroup->properties["PlatformToolset"] = "v140";
 		propertyGroup->properties["CharacterSet"] = "MultiByte";
 		if (projectConfig->configuration == "Release") {
 			propertyGroup->properties["WholeProgramOptimization"] = "true";

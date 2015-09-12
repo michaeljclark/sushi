@@ -26,5 +26,5 @@ To create the Xcode project for Sushi:
 
 To create the Visual Studio solution for sushi:
 ```
-./build/darwin_x86_64/bin/maki sushi.sushi vs2012
+./build/darwin_x86_64/bin/maki sushi.sushi vs2015
 ```

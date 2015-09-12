@@ -35,7 +35,7 @@
 int main(int argc, char **argv)
 {
 	if (argc != 3) {
-		fprintf(stderr, "usage: %s <project.sushi> (xcode|vs2012)\n", argv[0]);
+		fprintf(stderr, "usage: %s <project.sushi> (xcode|vs2015)\n", argv[0]);
 		exit(1);
 	}
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 		std::ofstream out(project_file.c_str());
 		PBXWriter::write(xcodeproj, out, 0);
 		out << "\n";
-	} else if (strcmp(argv[2], "vs2012") == 0) {
+	} else if (strcmp(argv[2], "vs2015") == 0) {
 		VSSolutionPtr sol = project_visual_studio::create_solution(proj.root);
 		std::string solution_file = proj.root->project_name + ".vsproj/" + proj.root->project_name + ".sln";
 		std::cout << "writing " << solution_file << std::endl;
