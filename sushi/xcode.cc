@@ -1351,6 +1351,7 @@ XCConfigurationList::XCConfigurationList()
 {
 	buildConfigurations = std::make_shared<PBXArray>();
 	defaultConfigurationName = "Release";
+	defaultConfigurationIsVisible = 0;
 }
 
 void XCConfigurationList::syncFromMap()
