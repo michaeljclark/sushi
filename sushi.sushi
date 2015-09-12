@@ -23,9 +23,7 @@ project sushi {
 
 	lib sushi {
 		depends tinyxml2;
-		source	sushi/cmdline_options.cc
-			sushi/cmdline_options.h
-			sushi/filesystem.cc
+		source	sushi/filesystem.cc
 			sushi/filesystem.h
 			sushi/log.cc
 			sushi/log.h
