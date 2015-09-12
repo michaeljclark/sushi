@@ -1107,6 +1107,7 @@ PBXProject::PBXProject()
 	attributes = std::make_shared<PBXMap>();
 	compatibilityVersion = "Xcode 3.2";
 	developmentRegion = "English";
+	hasScannedForEncodings = 0;
 	knownRegions = std::make_shared<PBXArray>();
 	knownRegions->add(std::make_shared<PBXLiteral>("en"));
 	projectReferences = std::make_shared<PBXArray>();
