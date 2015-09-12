@@ -30,18 +30,9 @@
 
 /* project_xcode */
 
-lib_output_data project_xcode::lib_output(project_root_ptr root, project_lib_ptr lib)
+lib_output_data project_xcode::lib_output(project_lib_ptr lib)
 {
-	std::string lib_type;
-	for (auto lib : root->lib_list) {
-		if (lib->lib_name == "*") {
-			lib_type = lib->lib_type;
-		}
-	}
-	if (lib->lib_type.length() > 0) {
-		lib_type = lib->lib_type;
-	}
-	if (lib_type == "static") {
+	if (lib->lib_type == "static") {
 		return lib_output_data(
 			PBXFileReference::type_library_archive,
 			PBXNativeTarget::type_library_static,
@@ -58,17 +49,12 @@ lib_output_data project_xcode::lib_output(project_root_ptr root, project_lib_ptr
 
 std::vector<std::string> project_xcode::lib_deps(project_root_ptr root, std::vector<std::string> libs)
 {
-	std::vector<std::string> lib_deps;
-	for (auto lib_name : libs) {
-		auto li = std::find_if(root->lib_list.begin(), root->lib_list.end(),
-			[&lib_name](project_lib_ptr const& lib) { return lib->lib_name == lib_name; });
-		if (li != root->lib_list.end()) {
-			lib_deps.push_back(lib_output(root, *li).output_file);
-		} else {
-			log_fatal_exit("can't find library definition for '%s'", lib_name.c_str());
-		}
-	}
-	return lib_deps;
+    std::vector<std::string> lib_deps;
+    for (auto lib_name : libs) {
+        auto lib = root->get_lib(lib_name);
+        lib_deps.push_back(lib_output(lib).output_file);
+    }
+    return lib_deps;
 }
 
 XcodeprojPtr project_xcode::create_project(project_root_ptr root)
@@ -81,7 +67,7 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
-		auto lib_data = lib_output(root, lib);
+		auto lib_data = lib_output(lib);
 		xcodeproj->createNativeTarget(
 			lib->lib_name,
 			lib_data.output_file,
@@ -94,13 +80,12 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// create tool targets
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
-		std::vector<std::string> tool_libs = lib_deps(root, tool->libs);
 		xcodeproj->createNativeTarget(
 			tool->tool_name,
 			tool->tool_name,
 			PBXFileReference::type_executable,
 			PBXNativeTarget::type_tool,
-			tool_libs,
+			lib_deps(root, tool->libs),
 			tool->source);
 	}
 
