@@ -30,16 +30,16 @@
 
 /* project_xcode */
 
-lib_output_data project_xcode::lib_output(project_lib_ptr lib)
+xcode_lib_output_data project_xcode::lib_output(project_lib_ptr lib)
 {
 	if (lib->lib_type == "static") {
-		return lib_output_data(
+		return xcode_lib_output_data(
 			PBXFileReference::type_library_archive,
 			PBXNativeTarget::type_library_static,
 			"lib" + lib->lib_name + ".a"
 		);
 	} else {
-		return lib_output_data(
+		return xcode_lib_output_data(
 			PBXFileReference::type_library_dylib,
 			PBXNativeTarget::type_library_dynamic,
 			lib->lib_name + ".dylib"
