@@ -13,8 +13,8 @@ Work in progress...
 ## To do
 
 * Implement cflags
-* Implement define so compiler and sdk can be overridden
-* Implement globbing to make projects more concise
+* Implement define to allow compiler and sdk to be overridden
+* Implement globbing to make project definition more concise
 * Implement cross-project dependencies
 
 ## Building
