@@ -86,7 +86,7 @@ struct VSSolution : VisualStudioParser
 	void setDefaultVersion();
 	void createDefaultConfigurations();
 	VSProjectPtr createProject(std::string project_name, std::string project_type,
-		std::vector<std::string> depends, std::vector<std::string> libs, std::vector<std::string> source);
+		std::vector<std::string> depends, std::vector<std::string> link_libs, std::vector<std::string> source);
 
 	VSProjectConfigurationPtr legacyConfig(std::string config);
 	std::string findGuidForProject(std::string project_name);

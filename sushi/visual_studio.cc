@@ -63,7 +63,7 @@ void VSSolution::createDefaultConfigurations()
 }
 
 VSProjectPtr VSSolution::createProject(std::string project_name, std::string project_type,
-	std::vector<std::string> depends, std::vector<std::string> libs, std::vector<std::string> source)
+	std::vector<std::string> depends, std::vector<std::string> link_libs, std::vector<std::string> source)
 {
 	VSSolutionProjectPtr solutionProject = std::make_shared<VSSolutionProject>();
 
@@ -75,12 +75,6 @@ VSProjectPtr VSSolution::createProject(std::string project_name, std::string pro
 	solutionProject->path = project_name + "\\" + project_name + ".vcxproj";
 	solutionProject->guid = util::format_uuid(project_uuid);
 	for (std::string dependency : depends) {
-		if (std::find(solutionProject->dependenciesToResolve.begin(), solutionProject->dependenciesToResolve.end(),
-				dependency) == solutionProject->dependenciesToResolve.end()) {
-			solutionProject->dependenciesToResolve.push_back(dependency);
-		}
-	}
-	for (std::string dependency : libs) {
 		if (std::find(solutionProject->dependenciesToResolve.begin(), solutionProject->dependenciesToResolve.end(),
 				dependency) == solutionProject->dependenciesToResolve.end()) {
 			solutionProject->dependenciesToResolve.push_back(dependency);
@@ -183,11 +177,9 @@ VSProjectPtr VSSolution::createProject(std::string project_name, std::string pro
 		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
 		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", dependency.c_str()));
 	}
-	for (auto lib : libs) {
-		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
-		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", lib.c_str()));
+	for (auto link_lib : link_libs) {
 		if (additionalLibs.size() > 0) additionalLibs.append(";");
-		additionalLibs.append(format_string("%s.lib", lib.c_str()));
+		additionalLibs.append(link_lib);
 	}
 
 	for (auto config : configurations) {
