@@ -26,10 +26,8 @@
 				0000002E8EE1457CF0225058 /* sushi */,
 				000000398EE1457CF0225058 /* tinyxml2 */,
 				000000458EE1457CF0225058 /* maki */,
-				0000004F8EE1457CF0225058 /* pbx_create */,
-				000000588EE1457CF0225058 /* pbx_read */,
-				000000618EE1457CF0225058 /* uuid */,
-				0000006A8EE1457CF0225058 /* vs_read */,
+				0000004F8EE1457CF0225058 /* pbx_read */,
+				000000588EE1457CF0225058 /* vs_read */,
 			);
 		};
 		000000028EE1457CF0225058 /* Build configuration list for PBXProject "sushi" */ = {
@@ -78,10 +76,8 @@
 				0000002D8EE1457CF0225058 /* libsushi.a */,
 				000000388EE1457CF0225058 /* libtinyxml2.a */,
 				000000448EE1457CF0225058 /* maki */,
-				0000004E8EE1457CF0225058 /* pbx_create */,
-				000000578EE1457CF0225058 /* pbx_read */,
-				000000608EE1457CF0225058 /* uuid */,
-				000000698EE1457CF0225058 /* vs_read */,
+				0000004E8EE1457CF0225058 /* pbx_read */,
+				000000578EE1457CF0225058 /* vs_read */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -535,7 +531,7 @@
 			productReference = 000000448EE1457CF0225058 /* maki */;
 			productType = "com.apple.product-type.tool";
 		};
-		000000468EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_create" */ = {
+		000000468EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				000000478EE1457CF0225058 /* Debug */,
@@ -571,42 +567,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000004D8EE1457CF0225058 /* pbx_create.cc in Sources */,
+				0000004D8EE1457CF0225058 /* pbx_read.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0000004B8EE1457CF0225058 /* test */ = {
 			isa = PBXGroup;
 			children = (
-				0000004C8EE1457CF0225058 /* pbx_create.cc */,
-				000000558EE1457CF0225058 /* pbx_read.cc */,
-				0000005E8EE1457CF0225058 /* uuid.cc */,
-				000000678EE1457CF0225058 /* vs_read.cc */,
+				0000004C8EE1457CF0225058 /* pbx_read.cc */,
+				000000558EE1457CF0225058 /* vs_read.cc */,
 			);
 			name = test;
 			path = test;
 			sourceTree = "<group>";
 		};
-		0000004C8EE1457CF0225058 /* pbx_create.cc */ = {
+		0000004C8EE1457CF0225058 /* pbx_read.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
-			path = pbx_create.cc;
+			path = pbx_read.cc;
 			sourceTree = "<group>";
 		};
-		0000004D8EE1457CF0225058 /* pbx_create.cc in Sources */ = {
+		0000004D8EE1457CF0225058 /* pbx_read.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 0000004C8EE1457CF0225058 /* pbx_create.cc */;
+			fileRef = 0000004C8EE1457CF0225058 /* pbx_read.cc */;
 		};
-		0000004E8EE1457CF0225058 /* pbx_create */ = {
+		0000004E8EE1457CF0225058 /* pbx_read */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
-			path = pbx_create;
+			path = pbx_read;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0000004F8EE1457CF0225058 /* pbx_create */ = {
+		0000004F8EE1457CF0225058 /* pbx_read */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000468EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_create" */;
+			buildConfigurationList = 000000468EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */;
 			buildPhases = (
 				0000004A8EE1457CF0225058 /* Sources */,
 				000000498EE1457CF0225058 /* Frameworks */,
@@ -615,12 +609,12 @@
 			);
 			dependencies = (
 			);
-			name = pbx_create;
-			productName = pbx_create;
-			productReference = 0000004E8EE1457CF0225058 /* pbx_create */;
+			name = pbx_read;
+			productName = pbx_read;
+			productReference = 0000004E8EE1457CF0225058 /* pbx_read */;
 			productType = "com.apple.product-type.tool";
 		};
-		000000508EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
+		000000508EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				000000518EE1457CF0225058 /* Debug */,
@@ -656,30 +650,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				000000568EE1457CF0225058 /* pbx_read.cc in Sources */,
+				000000568EE1457CF0225058 /* vs_read.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		000000558EE1457CF0225058 /* pbx_read.cc */ = {
+		000000558EE1457CF0225058 /* vs_read.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
-			path = pbx_read.cc;
+			path = vs_read.cc;
 			sourceTree = "<group>";
 		};
-		000000568EE1457CF0225058 /* pbx_read.cc in Sources */ = {
+		000000568EE1457CF0225058 /* vs_read.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 000000558EE1457CF0225058 /* pbx_read.cc */;
+			fileRef = 000000558EE1457CF0225058 /* vs_read.cc */;
 		};
-		000000578EE1457CF0225058 /* pbx_read */ = {
+		000000578EE1457CF0225058 /* vs_read */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
-			path = pbx_read;
+			path = vs_read;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		000000588EE1457CF0225058 /* pbx_read */ = {
+		000000588EE1457CF0225058 /* vs_read */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000508EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */;
+			buildConfigurationList = 000000508EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */;
 			buildPhases = (
 				000000548EE1457CF0225058 /* Sources */,
 				000000538EE1457CF0225058 /* Frameworks */,
@@ -688,155 +682,9 @@
 			);
 			dependencies = (
 			);
-			name = pbx_read;
-			productName = pbx_read;
-			productReference = 000000578EE1457CF0225058 /* pbx_read */;
-			productType = "com.apple.product-type.tool";
-		};
-		000000598EE1457CF0225058 /* Build configuration list for PBXNativeTarget "uuid" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0000005A8EE1457CF0225058 /* Debug */,
-				0000005B8EE1457CF0225058 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0000005A8EE1457CF0225058 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		0000005B8EE1457CF0225058 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		0000005C8EE1457CF0225058 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0000003E8EE1457CF0225058 /* libsushi.a in Frameworks */,
-				0000003F8EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0000005D8EE1457CF0225058 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0000005F8EE1457CF0225058 /* uuid.cc in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0000005E8EE1457CF0225058 /* uuid.cc */ = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = uuid.cc;
-			sourceTree = "<group>";
-		};
-		0000005F8EE1457CF0225058 /* uuid.cc in Sources */ = {
-			isa = PBXBuildFile;
-			fileRef = 0000005E8EE1457CF0225058 /* uuid.cc */;
-		};
-		000000608EE1457CF0225058 /* uuid */ = {
-			isa = PBXFileReference;
-			explicitFileType = "compiled.mach-o.executable";
-			includeInIndex = 0;
-			path = uuid;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		000000618EE1457CF0225058 /* uuid */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 000000598EE1457CF0225058 /* Build configuration list for PBXNativeTarget "uuid" */;
-			buildPhases = (
-				0000005D8EE1457CF0225058 /* Sources */,
-				0000005C8EE1457CF0225058 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = uuid;
-			productName = uuid;
-			productReference = 000000608EE1457CF0225058 /* uuid */;
-			productType = "com.apple.product-type.tool";
-		};
-		000000628EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				000000638EE1457CF0225058 /* Debug */,
-				000000648EE1457CF0225058 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		000000638EE1457CF0225058 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		000000648EE1457CF0225058 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		000000658EE1457CF0225058 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0000003E8EE1457CF0225058 /* libsushi.a in Frameworks */,
-				0000003F8EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		000000668EE1457CF0225058 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				000000688EE1457CF0225058 /* vs_read.cc in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		000000678EE1457CF0225058 /* vs_read.cc */ = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = vs_read.cc;
-			sourceTree = "<group>";
-		};
-		000000688EE1457CF0225058 /* vs_read.cc in Sources */ = {
-			isa = PBXBuildFile;
-			fileRef = 000000678EE1457CF0225058 /* vs_read.cc */;
-		};
-		000000698EE1457CF0225058 /* vs_read */ = {
-			isa = PBXFileReference;
-			explicitFileType = "compiled.mach-o.executable";
-			includeInIndex = 0;
-			path = vs_read;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0000006A8EE1457CF0225058 /* vs_read */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 000000628EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */;
-			buildPhases = (
-				000000668EE1457CF0225058 /* Sources */,
-				000000658EE1457CF0225058 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
 			name = vs_read;
 			productName = vs_read;
-			productReference = 000000698EE1457CF0225058 /* vs_read */;
+			productReference = 000000578EE1457CF0225058 /* vs_read */;
 			productType = "com.apple.product-type.tool";
 		};
 	};

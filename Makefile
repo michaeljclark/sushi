@@ -115,10 +115,6 @@ TINYXML2_SRCS =		$(TINYXML2_SRC_DIR)/tinyxml2.cpp
 TINYXML2_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cpp,.o,$(TINYXML2_SRCS)))
 TINYXML2_LIB =      $(LIB_DIR)/libtinyxml2.a
 
-PBXCREATE_SRCS =    $(TEST_SRC_DIR)/pbx_create.cc
-PBXCREATE_OBJS =    $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXCREATE_SRCS)))
-PBXCREATE_BIN =     $(BIN_DIR)/pbx_create
-
 PBXREAD_SRCS =      $(TEST_SRC_DIR)/pbx_read.cc
 PBXREAD_OBJS =      $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXREAD_SRCS)))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
@@ -135,9 +131,9 @@ MAKI_SRCS =         $(MAKI_SRC_DIR)/maki.cc
 MAKI_OBJS =         $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(MAKI_SRCS)))
 MAKI_BIN =          $(BIN_DIR)/maki
 
-APP_SRCS =          $(PBXCREATE_SRCS) $(PBXREAD_SRCS) $(VSREAD_SRCS) $(UUID_SRCS) $(MAKI_SRCS)
+APP_SRCS =          $(PBXREAD_SRCS) $(VSREAD_SRCS) $(UUID_SRCS) $(MAKI_SRCS)
 BINARIES =          $(MAKI_BIN)
-TESTS =             $(PBXCREATE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN) $(UUID_BIN)
+TESTS =             $(PBXREAD_BIN) $(VSREAD_BIN) $(UUID_BIN)
 
 
 # build rules

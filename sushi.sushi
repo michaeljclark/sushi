@@ -61,20 +61,12 @@ project sushi {
 		source maki/maki.cc;
 	}
 
-	tool pbx_create {
-		source test/pbx_create.cc;
-	}
-
 	tool pbx_read {
 		source test/pbx_read.cc;
 	}
 
 	tool vs_read {
 		source test/vs_read.cc;
-	}
-
-	tool uuid {
-		source test/uuid.cc;
 	}
 
 }

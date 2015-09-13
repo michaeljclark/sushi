@@ -19,7 +19,7 @@
         </ProjectConfiguration>
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <ProjectGuid>{56119C93-5B80-436B-0EFD-7C6F228FEE7D}</ProjectGuid>
+        <ProjectGuid>{DB08DB9C-0214-46DF-5AA3-828CDDD0A6FE}</ProjectGuid>
         <RootNamespace>pbx_read</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     </PropertyGroup>
