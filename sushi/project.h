@@ -83,8 +83,8 @@ struct project_config : project_item
 	virtual std::string block_name() { return "config"; }
 
 	std::string config_name;
-	std::map<std::string,std::string> defines;
-	std::vector<std::string> cflags;
+	std::map<std::string,std::string> vars;
+	std::vector<std::string> defines;
 };
 
 struct project_target : project_config
@@ -126,8 +126,8 @@ struct project : project_parser
 	static void block_lib_begin(project *project, statement &line);
 	static void block_tool_begin(project *project, statement &line);
 	static void statement_type(project *project, statement &line);
+	static void statement_set(project *project, statement &line);
 	static void statement_define(project *project, statement &line);
-	static void statement_cflags(project *project, statement &line);
 	static void statement_depends(project *project, statement &line);
 	static void statement_source(project *project, statement &line);
 	static void statement_libs(project *project, statement &line);

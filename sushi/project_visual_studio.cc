@@ -65,14 +65,14 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 	// construct empty solution
 	auto config = root->get_config("*");
 	VSSolutionPtr solution = std::make_shared<VSSolution>();
-	solution->createEmptySolution(config->defines);
+	solution->createEmptySolution(config->vars);
 
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(lib);
 		solution->createProject(
-			config->defines,
+			config->vars,
 			lib->lib_name,
 			lib_data.target_type,
 			lib->depends,
@@ -87,7 +87,7 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 		auto depends = tool->depends;
 		depends.insert(depends.end(), tool->libs.begin(), tool->libs.end());
 		solution->createProject(
-			config->defines,
+			config->vars,
 			tool->tool_name,
 			"Application",
 			depends,

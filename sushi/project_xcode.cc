@@ -61,14 +61,14 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	// construct empty Xcode project
 	auto config = root->get_config("*");
 	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
-	xcodeproj->createEmptyProject(config->defines, root->project_name);
+	xcodeproj->createEmptyProject(config->vars, root->project_name);
 
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(lib);
 		xcodeproj->createNativeTarget(
-			lib->defines,
+			config->vars,
 			lib->lib_name,
 			lib_data.output_file,
 			lib_data.file_type,
@@ -82,7 +82,7 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
 		xcodeproj->createNativeTarget(
-			tool->defines,
+			config->vars,
 			tool->tool_name,
 			tool->tool_name,
 			PBXFileReference::type_executable,

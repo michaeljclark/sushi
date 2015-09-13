@@ -459,7 +459,7 @@ PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::strin
 	return buildFile;
 }
 
-void Xcodeproj::createEmptyProject(std::map<std::string,std::string> defines,
+void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
                             std::string projectName)
 {
 	// Create Project
@@ -475,10 +475,10 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> defines,
 	// find deployment target and sdk
 	std::string sdkroot = "macosx";
 	std::string target = "10.10";
-	auto sdkroot_i = defines.find("x_apple_sdkroot");
-	auto target_i = defines.find("x_apple_target");
-	if (sdkroot_i != defines.end()) sdkroot = sdkroot_i->second;
-	if (target_i != defines.end()) target = target_i->second;
+	auto sdkroot_i = vars.find("x_apple_sdkroot");
+	auto target_i = vars.find("x_apple_target");
+	if (sdkroot_i != vars.end()) sdkroot = sdkroot_i->second;
+	if (target_i != vars.end()) target = target_i->second;
 
 	// Create Debug Build Configuration
 	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");

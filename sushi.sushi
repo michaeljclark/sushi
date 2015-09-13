@@ -2,18 +2,18 @@ project sushi {
 
 	# inherited by all configurations
 	config * {
-		define x_apple_sdkroot macosx;
-		define x_apple_target 10.10;
-		define x_ms_platform_toolset v140;
-		define x_ms_platform_version 8.1;
+		set x_apple_sdkroot macosx;
+		set x_apple_target 10.10;
+		set x_ms_platform_toolset v140;
+		set x_ms_platform_version 8.1;
 	}
 
 	config Debug {
-		cflags DEBUG;
+		define DEBUG;
 	}
 
 	config Release {
-		cflags NDEBUG;
+		define NDEBUG;
 	}
 
 	# inherited by all libraries

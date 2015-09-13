@@ -83,8 +83,8 @@ struct VSSolution : VisualStudioParser
 
 	VSSolution();
 
-	void createEmptySolution(std::map<std::string,std::string> defines);
-	VSProjectPtr createProject(std::map<std::string,std::string> defines,
+	void createEmptySolution(std::map<std::string,std::string> vars);
+	VSProjectPtr createProject(std::map<std::string,std::string> vars,
                                std::string project_name, std::string project_type,
                                std::vector<std::string> depends,
                                std::vector<std::string> link_libs,

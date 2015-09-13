@@ -38,7 +38,7 @@ const std::string VSSolution::VisualCPPProjectGUID = "8BC9CEB8-8B4A-11D0-8D11-00
 
 VSSolution::VSSolution() {}
 
-void VSSolution::createEmptySolution(std::map<std::string,std::string> defines)
+void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 {
 	format_version = "12.00";
 	comment_version = "14";
@@ -58,7 +58,7 @@ void VSSolution::createEmptySolution(std::map<std::string,std::string> defines)
 	properties.push_back(hideSolutionNodeProperty);
 }
 
-VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines,
+VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	std::string project_name, std::string project_type,
 	std::vector<std::string> depends,
 	std::vector<std::string> link_libs,
@@ -67,10 +67,10 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines
 	// find deployment target and sdk
 	std::string platformToolset = "v110";
 	std::string platformVersion = "8.1";
-	auto platformToolset_i = defines.find("x_ms_platform_toolset");
-	auto platformVersion_i = defines.find("x_ms_platform_version");
-	if (platformToolset_i != defines.end()) platformToolset = platformToolset_i->second;
-	if (platformVersion_i != defines.end()) platformVersion = platformVersion_i->second;
+	auto platformToolset_i = vars.find("x_ms_platform_toolset");
+	auto platformVersion_i = vars.find("x_ms_platform_version");
+	if (platformToolset_i != vars.end()) platformToolset = platformToolset_i->second;
+	if (platformVersion_i != vars.end()) platformVersion = platformVersion_i->second;
 
 	VSSolutionProjectPtr solutionProject = std::make_shared<VSSolutionProject>();
 

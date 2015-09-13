@@ -12,7 +12,6 @@ Work in progress...
 
 ## To do
 
-* Implement cflags
 * Implement condition predicates for blocks
 * Implement globbing to make project definition more concise
 * Implement cross-project dependencies

@@ -70,17 +70,17 @@ void project::statement_type(project *project, statement &line)
 	}
 }
 
+void project::statement_set(project *project, statement &line)
+{
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	config->vars[line[1]] = line[2];
+}
+
 void project::statement_define(project *project, statement &line)
 {
 	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
-	config->defines[line[1]] = line[2];
-}
-
-void project::statement_cflags(project *project, statement &line)
-{
-	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		config->cflags.push_back(line[i]);
+		config->defines.push_back(line[i]);
 	}
 }
 
@@ -116,8 +116,8 @@ void project::init()
 		block_fn_map["lib"] = block_record(2,  2, "project", &block_lib_begin);
 		block_fn_map["tool"] = block_record(2,  2, "project", &block_tool_begin);
 		statement_fn_map["type"] = statement_record(2,  2, "lib", &statement_type);
-		statement_fn_map["define"] = statement_record(3,  3, "lib|tool|config", &statement_define);
-		statement_fn_map["cflags"] = statement_record(2,  -1, "lib|tool|config", &statement_cflags);
+		statement_fn_map["set"] = statement_record(3,  3, "lib|tool|config", &statement_set);
+		statement_fn_map["define"] = statement_record(2,  -1, "lib|tool|config", &statement_define);
 		statement_fn_map["depends"] = statement_record(2,  2, "lib|tool", &statement_depends);
 		statement_fn_map["source"] = statement_record(2,  -1, "lib|tool", &statement_source);
 		statement_fn_map["libs"] = statement_record(2,  -1, "tool", &statement_libs);
@@ -266,14 +266,14 @@ project_config_ptr project_root::get_config(std::string name, bool inherit)
 	if (inherit) {
 		for (auto config : config_list) {
 			if (config->config_name != "*") continue;
-			for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
-			merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+			for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
+			merged_config->defines.insert(merged_config->defines.end(), config->defines.begin(), config->defines.end());
 		}
 	}
 	for (auto config : config_list) {
 		if (config->config_name != name) continue;
-		for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
-		merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+		for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
+		merged_config->defines.insert(merged_config->defines.end(), config->defines.begin(), config->defines.end());
 	}
 	return merged_config;
 }
@@ -286,16 +286,16 @@ project_lib_ptr project_root::get_lib(std::string name, bool inherit)
 		for (auto lib : lib_list) {
 			if (lib->lib_name != "*") continue;
 			if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
-			for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
-			merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
+			for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
+			merged_lib->defines.insert(merged_lib->defines.end(), lib->defines.begin(), lib->defines.end());
 			merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
 		}
 	}
 	for (auto lib : lib_list) {
 		if (lib->lib_name != name) continue;
 		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
-		for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
-		merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
+		for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
+		merged_lib->defines.insert(merged_lib->defines.end(), lib->defines.begin(), lib->defines.end());
 		merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
 		merged_lib->source.insert(merged_lib->source.end(), lib->source.begin(), lib->source.end());
 	}
@@ -309,15 +309,15 @@ project_tool_ptr project_root::get_tool(std::string name, bool inherit)
 	if (inherit) {
 		for (auto tool : tool_list) {
 			if (tool->tool_name != "*") continue;
-			for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
-			merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
+			for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
+			merged_tool->defines.insert(merged_tool->defines.end(), tool->defines.begin(), tool->defines.end());
 			merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
 		}
 	}
 	for (auto tool : tool_list) {
 		if (tool->tool_name != name) continue;
-		for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
-		merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
+		for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
+		merged_tool->defines.insert(merged_tool->defines.end(), tool->defines.begin(), tool->defines.end());
 		merged_tool->depends.insert(merged_tool->depends.end(), tool->depends.begin(), tool->depends.end());
 		merged_tool->source.insert(merged_tool->source.end(), tool->source.begin(), tool->source.end());
 		merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
