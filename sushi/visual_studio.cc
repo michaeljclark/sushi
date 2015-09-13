@@ -38,16 +38,13 @@ const std::string VSSolution::VisualCPPProjectGUID = "8BC9CEB8-8B4A-11D0-8D11-00
 
 VSSolution::VSSolution() {}
 
-void VSSolution::setDefaultVersion()
+void VSSolution::createEmptySolution(std::map<std::string,std::string> defines)
 {
 	format_version = "12.00";
 	comment_version = "14";
 	visual_studio_version = "14.0.23107.0";
 	minimum_visual_studio_version = "10.0.40219.1";
-}
 
-void VSSolution::createDefaultConfigurations()
-{
 	configurations.clear();
 	configurations.insert("Debug|x64");
 	configurations.insert("Debug|Win32");
@@ -61,8 +58,11 @@ void VSSolution::createDefaultConfigurations()
 	properties.push_back(hideSolutionNodeProperty);
 }
 
-VSProjectPtr VSSolution::createProject(std::string project_name, std::string project_type,
-	std::vector<std::string> depends, std::vector<std::string> link_libs, std::vector<std::string> source)
+VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines,
+	std::string project_name, std::string project_type,
+	std::vector<std::string> depends,
+	std::vector<std::string> link_libs,
+	std::vector<std::string> source)
 {
 	VSSolutionProjectPtr solutionProject = std::make_shared<VSSolutionProject>();
 

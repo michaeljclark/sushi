@@ -254,8 +254,10 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj>
 	PBXFileReferencePtr getProductReference(std::string path);
 	PBXBuildFilePtr getBuildFile(PBXFileReferencePtr &fileRef, std::string comment);
 	
-	void createEmptyProject(std::string projectName, std::string sdkRoot);
-	void createNativeTarget(std::string targetName, std::string targetProduct,
+	void createEmptyProject(std::map<std::string,std::string> defines,
+                            std::string projectName);
+	void createNativeTarget(std::map<std::string,std::string> defines,
+                            std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
                             std::vector<std::string> libraries,
                             std::vector<std::string> source);

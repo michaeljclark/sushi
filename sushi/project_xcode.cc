@@ -58,34 +58,38 @@ std::vector<std::string> project_xcode::lib_deps(project_root_ptr root, std::vec
 
 XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 {
-	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
-
 	// construct empty Xcode project
-	xcodeproj->createEmptyProject(root->project_name, "macosx");
+	auto config = root->get_config("*");
+	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
+	xcodeproj->createEmptyProject(config->defines, root->project_name);
 
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(lib);
 		xcodeproj->createNativeTarget(
+			lib->defines,
 			lib->lib_name,
 			lib_data.output_file,
 			lib_data.file_type,
 			lib_data.target_type,
 			std::vector<std::string>(),
-			lib->source);
+			lib->source
+		);
 	}
 
 	// create tool targets
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
 		xcodeproj->createNativeTarget(
+			tool->defines,
 			tool->tool_name,
 			tool->tool_name,
 			PBXFileReference::type_executable,
 			PBXNativeTarget::type_tool,
 			lib_deps(root, tool->libs),
-			tool->source);
+			tool->source
+		);
 	}
 
 	return xcodeproj;

@@ -459,7 +459,8 @@ PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::strin
 	return buildFile;
 }
 
-void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
+void Xcodeproj::createEmptyProject(std::map<std::string,std::string> defines,
+                            std::string projectName)
 {
 	// Create Project
 	rootObject = PBXId::createRootId();
@@ -477,7 +478,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
     debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
     debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
     debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
-    debugConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
+    debugConfiguration->buildSettings->setString("SDKROOT", "macosx");
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
@@ -486,7 +487,7 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
     releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
     releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
 	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
-    releaseConfiguration->buildSettings->setString("SDKROOT", sdkRoot);
+    releaseConfiguration->buildSettings->setString("SDKROOT", "macosx");
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group
@@ -502,7 +503,8 @@ void Xcodeproj::createEmptyProject(std::string projectName, std::string sdkRoot)
 	project->productRefGroup = productsGroup->id;
 }
 
-void Xcodeproj::createNativeTarget(std::string targetName, std::string targetProduct,
+void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
+                            std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
                             std::vector<std::string> libraries,
                             std::vector<std::string> source)

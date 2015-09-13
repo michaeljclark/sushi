@@ -62,19 +62,23 @@ std::vector<std::string> project_visual_studio::lib_deps(project_root_ptr root, 
 
 VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 {
+	// construct empty solution
+	auto config = root->get_config("*");
 	VSSolutionPtr solution = std::make_shared<VSSolution>();
-	solution->setDefaultVersion();
-	solution->createDefaultConfigurations();
+	solution->createEmptySolution(config->defines);
 
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(lib);
-		solution->createProject(lib->lib_name,
+		solution->createProject(
+			lib->defines,
+			lib->lib_name,
 			lib_data.target_type,
 			lib->depends,
 			std::vector<std::string>(),
-			lib->source);
+			lib->source
+		);
 	}
 
 	// create tool targets
@@ -82,11 +86,14 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 		auto tool = root->get_tool(tool_name);
 		auto depends = tool->depends;
 		depends.insert(depends.end(), tool->libs.begin(), tool->libs.end());
-		solution->createProject(tool->tool_name,
+		solution->createProject(
+			tool->defines,
+			tool->tool_name,
 			"Application",
 			depends,
 			lib_deps(root, tool->libs),
-			tool->source);
+			tool->source
+		);
 	}
 
 	return solution;
