@@ -73,9 +73,9 @@ struct project_root : project_item
 	std::vector<std::string> get_lib_list();
 	std::vector<std::string> get_tool_list();
 
-	project_config_ptr get_config(std::string name);
-	project_lib_ptr get_lib(std::string name);
-	project_tool_ptr get_tool(std::string name);
+	project_config_ptr get_config(std::string name, bool inherit = true);
+	project_lib_ptr get_lib(std::string name, bool inherit = true);
+	project_tool_ptr get_tool(std::string name, bool inherit = true);
 };
 
 struct project_config : project_item

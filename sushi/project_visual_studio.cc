@@ -72,7 +72,7 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 		auto lib = root->get_lib(lib_name);
 		auto lib_data = lib_output(lib);
 		solution->createProject(
-			lib->defines,
+			config->defines,
 			lib->lib_name,
 			lib_data.target_type,
 			lib->depends,
@@ -87,7 +87,7 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 		auto depends = tool->depends;
 		depends.insert(depends.end(), tool->libs.begin(), tool->libs.end());
 		solution->createProject(
-			tool->defines,
+			config->defines,
 			tool->tool_name,
 			"Application",
 			depends,

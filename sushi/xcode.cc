@@ -472,13 +472,21 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> defines,
 		("Build configuration list for PBXProject \"" + projectName + "\"");
 	project->buildConfigurationList = configurationList->id;
 
+	// find deployment target and sdk
+	std::string sdkroot = "macosx";
+	std::string target = "10.10";
+	auto sdkroot_i = defines.find("x_apple_sdkroot");
+	auto target_i = defines.find("x_apple_target");
+	if (sdkroot_i != defines.end()) sdkroot = sdkroot_i->second;
+	if (target_i != defines.end()) target = target_i->second;
+
 	// Create Debug Build Configuration
 	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
 	debugConfiguration->name = "Debug";
     debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
     debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
-    debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
-    debugConfiguration->buildSettings->setString("SDKROOT", "macosx");
+    debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
+    debugConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
@@ -486,8 +494,8 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> defines,
 	releaseConfiguration->name = "Release";
     releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
     releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
-	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", "10.10");
-    releaseConfiguration->buildSettings->setString("SDKROOT", "macosx");
+	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
+    releaseConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group

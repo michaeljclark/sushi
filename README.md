@@ -13,9 +13,9 @@ Work in progress...
 ## To do
 
 * Implement cflags
-* Implement define to allow compiler and sdk to be overridden
 * Implement globbing to make project definition more concise
 * Implement cross-project dependencies
+* ...
 
 ## Building
 
@@ -33,5 +33,5 @@ To create the Xcode project for Sushi:
 
 To create the Visual Studio solution for sushi:
 ```
-./build/darwin_x86_64/bin/maki sushi.sushi vs2015
+./build/darwin_x86_64/bin/maki sushi.sushi vstudio
 ```

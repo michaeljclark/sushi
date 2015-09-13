@@ -259,14 +259,16 @@ std::vector<std::string> project_root::get_tool_list()
 	return list;
 }
 
-project_config_ptr project_root::get_config(std::string name)
+project_config_ptr project_root::get_config(std::string name, bool inherit)
 {
 	project_config_ptr merged_config = std::make_shared<project_config>();
 	merged_config->config_name = name;
-	for (auto config : config_list) {
-		if (config->config_name != "*") continue;
-		for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
-		merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+	if (inherit) {
+		for (auto config : config_list) {
+			if (config->config_name != "*") continue;
+			for (auto ent : config->defines) merged_config->defines[ent.first] = ent.second;
+			merged_config->cflags.insert(merged_config->cflags.end(), config->cflags.begin(), config->cflags.end());
+		}
 	}
 	for (auto config : config_list) {
 		if (config->config_name != name) continue;
@@ -276,16 +278,18 @@ project_config_ptr project_root::get_config(std::string name)
 	return merged_config;
 }
 
-project_lib_ptr project_root::get_lib(std::string name)
+project_lib_ptr project_root::get_lib(std::string name, bool inherit)
 {
 	project_lib_ptr merged_lib = std::make_shared<project_lib>();
 	merged_lib->lib_name = name;
-	for (auto lib : lib_list) {
-		if (lib->lib_name != "*") continue;
-		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
-		for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
-		merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
-		merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
+	if (inherit) {
+		for (auto lib : lib_list) {
+			if (lib->lib_name != "*") continue;
+			if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
+			for (auto ent : lib->defines) merged_lib->defines[ent.first] = ent.second;
+			merged_lib->cflags.insert(merged_lib->cflags.end(), lib->cflags.begin(), lib->cflags.end());
+			merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
+		}
 	}
 	for (auto lib : lib_list) {
 		if (lib->lib_name != name) continue;
@@ -298,15 +302,17 @@ project_lib_ptr project_root::get_lib(std::string name)
 	return merged_lib;
 }
 
-project_tool_ptr project_root::get_tool(std::string name)
+project_tool_ptr project_root::get_tool(std::string name, bool inherit)
 {
 	project_tool_ptr merged_tool = std::make_shared<project_tool>();
 	merged_tool->tool_name = name;
-	for (auto tool : tool_list) {
-		if (tool->tool_name != "*") continue;
-		for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
-		merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
-		merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+	if (inherit) {
+		for (auto tool : tool_list) {
+			if (tool->tool_name != "*") continue;
+			for (auto ent : tool->defines) merged_tool->defines[ent.first] = ent.second;
+			merged_tool->cflags.insert(merged_tool->cflags.end(), tool->cflags.begin(), tool->cflags.end());
+			merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+		}
 	}
 	for (auto tool : tool_list) {
 		if (tool->tool_name != name) continue;

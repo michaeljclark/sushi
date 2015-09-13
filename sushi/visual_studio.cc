@@ -64,6 +64,14 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines
 	std::vector<std::string> link_libs,
 	std::vector<std::string> source)
 {
+	// find deployment target and sdk
+	std::string platformToolset = "v110";
+	std::string platformVersion = "8.1";
+	auto platformToolset_i = defines.find("x_ms_platform_toolset");
+	auto platformVersion_i = defines.find("x_ms_platform_version");
+	if (platformToolset_i != defines.end()) platformToolset = platformToolset_i->second;
+	if (platformVersion_i != defines.end()) platformVersion = platformVersion_i->second;
+
 	VSSolutionProjectPtr solutionProject = std::make_shared<VSSolutionProject>();
 
 	uuid project_uuid;
@@ -114,7 +122,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines
 	globalProperties->label = "Globals";
 	globalProperties->properties["ProjectGuid"] = std::string("{") + solutionProject->guid + std::string("}");
 	globalProperties->properties["RootNamespace"] = project_name;
-	globalProperties->properties["WindowsTargetPlatformVersion"] = "8.1";
+	globalProperties->properties["WindowsTargetPlatformVersion"] = platformVersion;
 	project->objectList.push_back(globalProperties);
 
 	VSImportPtr defaultsImport = std::make_shared<VSImport>();
@@ -127,7 +135,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> defines
 		propertyGroup->label = "Configuration";
 		propertyGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
 		propertyGroup->properties["ConfigurationType"] = project_type;
-		propertyGroup->properties["PlatformToolset"] = "v140";
+		propertyGroup->properties["PlatformToolset"] = platformToolset;
 		propertyGroup->properties["CharacterSet"] = "MultiByte";
 		if (projectConfig->configuration == "Release") {
 			propertyGroup->properties["WholeProgramOptimization"] = "true";
