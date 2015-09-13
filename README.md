@@ -31,7 +31,7 @@ To create the Xcode project for Sushi:
 ./build/darwin_x86_64/bin/maki sushi.sushi xcode 
 ```
 
-To create the Visual Studio solution for sushi:
+To create the Visual Studio solution for Sushi:
 ```
 ./build/darwin_x86_64/bin/maki sushi.sushi vstudio
 ```
