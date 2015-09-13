@@ -250,6 +250,15 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	}
 	project->objectList.push_back(sourceItemGroup);
 
+	// Create library dependencies
+	/*
+	  <ItemGroup>
+        <ProjectReference Include="..\deplib\deplib.vcxproj">
+          <Project>{ce8e3128-60e3-4683-53b8-3973921a84d3}</Project>
+        </ProjectReference>
+      </ItemGroup>
+	*/
+
 	VSImportPtr targetsImport = std::make_shared<VSImport>();
 	targetsImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.targets";
 	project->objectList.push_back(targetsImport);
