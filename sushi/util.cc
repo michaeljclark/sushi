@@ -16,8 +16,274 @@
 #include <algorithm>
 #include <functional>
 
-#include "log.h"
+#include <sys/stat.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#include <windows.h>
+#define fileno _fileno
+#define mkdir(file,mode) _mkdir(file)
+#else
+#include <dirent.h>
+#endif
+
+#include "sushi.h"
+
 #include "util.h"
+
+
+/* logging */
+
+static const int INITIAL_LOG_BUFFER_SIZE = 256;
+
+static const char* FATAL_PREFIX = "FATAL";
+static const char* ERROR_PREFIX = "ERROR";
+static const char* DEBUG_PREFIX = "DEBUG";
+static const char* INFO_PREFIX = "INFO";
+
+std::string format_string(const char* fmt, ...)
+{
+	std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
+	va_list ap;
+
+	va_start(ap, fmt);
+	int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+	va_end(ap);
+
+	std::string str;
+	if (len >= (int)buf.capacity()) {
+		buf.resize(len + 1);
+		va_start(ap, fmt);
+		vsnprintf(buf.data(), buf.capacity(), fmt, ap);
+		va_end(ap);
+	}
+	str = buf.data();
+
+	return str;
+}
+
+void log_prefix(const char* prefix, const char* fmt, va_list arg)
+{
+	std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
+
+	int len = vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+
+	if (len >= (int)buf.capacity()) {
+		buf.resize(len + 1);
+		vsnprintf(buf.data(), buf.capacity(), fmt, arg);
+	}
+
+	fprintf(stderr, "%s: %s\n", prefix, buf.data());
+}
+
+void log_fatal_exit(const char* fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(FATAL_PREFIX, fmt, ap);
+	va_end(ap);
+	exit(9);
+}
+
+void log_error(const char* fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(ERROR_PREFIX, fmt, ap);
+	va_end(ap);
+}
+
+void log_info(const char* fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(INFO_PREFIX, fmt, ap);
+	va_end(ap);
+}
+
+void log_debug(const char* fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	log_prefix(DEBUG_PREFIX, fmt, ap);
+	va_end(ap);
+}
+
+
+/* util */
+
+std::vector<char> util::read_file(std::string filename)
+{
+	std::vector<char> buf;
+	struct stat stat_buf;
+
+	FILE *file = fopen(filename.c_str(), "r");
+	if (!file) {
+		log_fatal_exit("error fopen: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	if (fstat(fileno(file), &stat_buf) < 0) {
+		log_fatal_exit("error fstat: %s: %s", filename.c_str(), strerror(errno));
+	}
+
+	buf.resize(stat_buf.st_size);
+	size_t bytes_read = fread(buf.data(), 1, stat_buf.st_size, file);
+	if (bytes_read != (size_t)stat_buf.st_size) {
+		log_fatal_exit("error fread: %s", filename.c_str());
+	}
+	fclose(file);
+
+	return buf;
+}
+
+int util::canonicalize_path(char *path)
+{
+	char *r, *w;
+	int last_was_slash = 0;
+	r = w = path;
+	while(*r != 0)
+	{
+		/* convert backslash to foward slash */
+		if (*r == '\\') *r = '/';
+		/* Ignore duplicate /'s */
+		if (*r == '/' && last_was_slash) {
+			r++;
+			continue;
+		}
+		/* Calculate /../ in a secure way */
+		if (last_was_slash && *r == '.') {
+			if (*(r+1) == '.') {
+				/* skip past .. or ../ with read pointer */
+				if (*(r+2) == '/') r += 3;
+				else if (*(r+2) == 0) r += 2;
+				/* skip back to last / with write pointer */
+				if (w > path+1) {
+					w--;
+					while(*(w-1) != '/') { w--; }
+					continue;
+				} else {
+					return -1;
+				}
+			} else if (*(r+1) == '/') {
+				r += 2;
+				continue;
+			}
+		}
+		*w = *r;
+		last_was_slash = (*r == '/');
+		r++;
+		w++;
+	}
+	*w = 0;
+
+	return 0;
+}
+
+std::vector<std::string> util::path_components(std::string path)
+{
+	std::vector<char> buf;
+	buf.resize(path.size() + 1);
+	memcpy(buf.data(), path.c_str(), path.size());
+	if (canonicalize_path(buf.data()) < 0) {
+		return std::vector<std::string>();
+	}
+	path = buf.data();
+	return util::split(path, "/", false);
+}
+
+void util::make_directories(std::string path)
+{
+	std::vector<std::string> comps = path_components(path);
+	if (comps.size() > 1) {
+		comps.pop_back();
+		for (size_t i = 1; i <= comps.size(); i++) {
+			std::vector<std::string> dirComps;
+			for (size_t j = 0; j < i; j++) dirComps.push_back(comps[j]);
+			std::string path = util::join(dirComps, "/");
+			mkdir(path.c_str(), 0777);
+		}
+	}
+}
+
+std::string util::path_relative_to_path(std::string path, std::string relative_to)
+{
+	std::vector<std::string> relative_comps = path_components(relative_to);
+	if (relative_comps.size() > 0) {
+		relative_comps.pop_back();
+	}
+	std::vector<std::string> path_comps = path_components(path);
+	relative_comps.insert(relative_comps.end(), path_comps.begin(), path_comps.end());
+	return util::join(relative_comps, "/");
+}
+
+#ifdef _WIN32
+
+bool util::list_files(std::vector<directory_entry> &files, std::string path_name)
+{
+	HANDLE dir;
+	WIN32_FIND_DATA entry;
+	memset(&entry, 0, sizeof(entry));
+	files.clear();
+	
+	if ((dir = FindFirstFile(path_name.c_str(), &entry)) == INVALID_HANDLE_VALUE) {
+		if (GetLastError() == ERROR_NO_MORE_FILES) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+		directory_entry_type_dir : directory_entry_type_file));
+	
+	BOOL ret;
+	do {
+		ret = FindNextFile(dir, &entry);
+		if (ret) {
+			files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+				directory_entry_type_dir : directory_entry_type_file));
+		} else {
+			if (GetLastError() == ERROR_NO_MORE_FILES) {
+				break;
+			} else {
+				CloseHandle(dir);
+				return false;
+			}
+		}
+	} while (ret);
+	
+	CloseHandle(dir);
+	return true;
+}
+
+#else
+
+bool util::list_files(std::vector<directory_entry> &files, std::string path_name)
+{
+	DIR *dir;
+	struct dirent entry;
+	struct dirent *result;
+	memset(&entry, 0, sizeof(entry));
+	files.clear();
+	
+	if ((dir = opendir(path_name.c_str())) == NULL) {
+		return false;
+	}
+	
+	int ret;
+	do {
+		if ((ret = readdir_r(dir, &entry, &result)) < 0) {
+			closedir(dir);
+			return false;
+		}
+		files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
+			directory_entry_type_dir : directory_entry_type_file));
+	} while (result != NULL);
+	
+	closedir(dir);
+	return true;
+}
+
+#endif
 
 
 /* utility */

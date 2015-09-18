@@ -8,6 +8,8 @@
 #include <cctype>
 #include <cstring>
 
+#include "sushi.h"
+
 #include "visual_studio_parser.h"
 
 %%{

@@ -21,11 +21,9 @@
 #include <set>
 #include <random>
 
-#include "tinyxml2.h"
+#include "sushi.h"
 
-#include "log.h"
 #include "util.h"
-#include "filesystem.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 
@@ -179,11 +177,12 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	project->objectList.push_back(empty);
 
 	std::string additionalIncludes;
-	std::string additionalLibs;
 	for (auto dependency : depends) {
 		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
 		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", dependency.c_str()));
 	}
+	
+	std::string additionalLibs;
 	for (auto link_lib : link_libs) {
 		if (additionalLibs.size() > 0) additionalLibs.append(";");
 		additionalLibs.append(link_lib);
@@ -209,7 +208,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		compileAndLink->objectList.push_back(compile);
 		VSLinkPtr link = std::make_shared<VSLink>();
 		link->properties["GenerateDebugInformation"] = "true";
-		link->properties["AdditionalLibraryDirectories"] = "$(OutDir)";
+		//link->properties["AdditionalLibraryDirectories"] = "$(OutDir);%(AdditionalLibraryDirectories)";
 		if (additionalLibs.size() > 0) {
 			link->properties["AdditionalDependencies"] = additionalLibs + ";%(AdditionalDependencies)";
 		}
@@ -221,43 +220,37 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		project->objectList.push_back(compileAndLink);
 	}
 
-	VSItemGroupPtr headerItemGroup = std::make_shared<VSItemGroup>();
+	project->headerItemGroup = std::make_shared<VSItemGroup>();
 	for (std::string source_file : source) {
 		if (source_file.find(".h") == source_file.length() - 2)
 		{
-			std::vector<std::string> comps = filesystem::path_components(source_file);
+			std::vector<std::string> comps = util::path_components(source_file);
 			comps.insert(comps.begin(), "..");
 			comps.insert(comps.begin(), "..");
 			VSClIncludePtr include = std::make_shared<VSClInclude>();
 			include->include = util::join(comps, "\\");
-			headerItemGroup->objectList.push_back(include);
+			project->headerItemGroup->objectList.push_back(include);
 		}
 	}
-	project->objectList.push_back(headerItemGroup);
+	project->objectList.push_back(project->headerItemGroup);
 
-	VSItemGroupPtr sourceItemGroup = std::make_shared<VSItemGroup>();
+	project->sourceItemGroup = std::make_shared<VSItemGroup>();
 	for (std::string source_file : source) {
 		if (source_file.find(".cc") == source_file.length() - 3 ||
 				source_file.find(".cpp") == source_file.length() - 4)
 		{
-			std::vector<std::string> comps = filesystem::path_components(source_file);
+			std::vector<std::string> comps = util::path_components(source_file);
 			comps.insert(comps.begin(), "..");
 			comps.insert(comps.begin(), "..");
 			VSClCompilePtr compile = std::make_shared<VSClCompile>();
 			compile->include = util::join(comps, "\\");
-			sourceItemGroup->objectList.push_back(compile);
+			project->sourceItemGroup->objectList.push_back(compile);
 		}
 	}
-	project->objectList.push_back(sourceItemGroup);
+	project->objectList.push_back(project->sourceItemGroup);
 
-	// Create library dependencies
-	/*
-	  <ItemGroup>
-        <ProjectReference Include="..\deplib\deplib.vcxproj">
-          <Project>{ce8e3128-60e3-4683-53b8-3973921a84d3}</Project>
-        </ProjectReference>
-      </ItemGroup>
-	*/
+	project->dependsItemGroup = std::make_shared<VSItemGroup>();
+	project->objectList.push_back(project->dependsItemGroup);
 
 	VSImportPtr targetsImport = std::make_shared<VSImport>();
 	targetsImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.targets";
@@ -300,18 +293,23 @@ void VSSolution::resolveDependencies()
 					solutionProject->dependencies.push_back(dependencyGuid);
 				}
 			}
+			VSProjectPtr project = solutionProject->project;
+			VSProjectReferencePtr projectReference = std::make_shared<VSProjectReference>();
+			projectReference->include = std::string("..\\") + dependency + "\\" + dependency + ".vcxproj";
+			projectReference->properties["Project"] = std::string("{") + dependencyGuid + std::string("}");
+			project->dependsItemGroup->objectList.push_back(projectReference);
 		}
 	}
 }
 
 void VSSolution::read(std::string solution_file)
 {
-	std::vector<char> buf = filesystem::read_file(solution_file);
+	std::vector<char> buf = util::read_file(solution_file);
 	if (!parse(buf.data(), buf.size())) {
 		log_fatal_exit("VSSolution: parse error");
 	}
 	for (auto project : projects) {
-		std::string project_file_path = filesystem::path_relative_to_path(project->path, solution_file);
+		std::string project_file_path = util::path_relative_to_path(project->path, solution_file);
 		project->project = std::make_shared<VSProject>();
 		project->project->read(project_file_path);
 	}
@@ -485,6 +483,7 @@ void VSProject::init()
 		registerFactory<VSItemDefinitionGroup>();
 		registerFactory<VSPropertyGroup>();
 		registerFactory<VSProjectConfiguration>();
+		registerFactory<VSProjectReference>();
 		registerFactory<VSClCompile>();
 		registerFactory<VSClInclude>();
 		registerFactory<VSLink>();
@@ -492,33 +491,33 @@ void VSProject::init()
 	};
 }
 
-VSProject::VSProject() : doc(false) {}
+VSProject::VSProject() {}
 
 void VSProject::read(std::string project_file)
 {
-	doc.Clear();
-	std::vector<char> buf = filesystem::read_file(project_file);
+	tinyxml2::XMLDocument doc(false);
+	std::vector<char> buf = util::read_file(project_file);
 	tinyxml2::XMLError err = doc.Parse(buf.data());
 	if (err != tinyxml2::XML_NO_ERROR) {
 		log_fatal_exit("VSProject: error reading: %s: xml_error=%d", project_file.c_str(), err);
 	}
-	xmlToProject();
+	xmlToProject(&doc);
 }
 
 void VSProject::write(std::string project_file)
 {
-	doc.Clear();
+	tinyxml2::XMLDocument doc(false);
 	doc.SetBOM(true);
-	projectToXml();
+	projectToXml(&doc);
 	tinyxml2::XMLError err = doc.SaveFile(project_file.c_str(), false);
 	if (err != tinyxml2::XML_NO_ERROR) {
 		log_fatal_exit("VSProject: error writing: xml_error=%d",  err);
 	}
 }
 
-void VSProject::xmlToProject()
+void VSProject::xmlToProject(tinyxml2::XMLDocument *doc)
 {
-	tinyxml2::XMLElement *root = doc.RootElement();
+	tinyxml2::XMLElement *root = doc->RootElement();
 	if (!root) log_fatal_exit("root element not present");
 
 	const char* defaultTargets = root->Attribute("DefaultTargets");
@@ -539,12 +538,12 @@ void VSProject::xmlToProject()
 	} while ((node = node->NextSibling()));
 }
 
-void VSProject::projectToXml()
+void VSProject::projectToXml(tinyxml2::XMLDocument *doc)
 {
-	tinyxml2::XMLDeclaration *decl = doc.NewDeclaration();
-	tinyxml2::XMLElement *root = doc.NewElement("Project");
-	doc.InsertFirstChild(root);
-	doc.InsertFirstChild(decl);
+	tinyxml2::XMLDeclaration *decl = doc->NewDeclaration();
+	tinyxml2::XMLElement *root = doc->NewElement("Project");
+	doc->InsertFirstChild(root);
+	doc->InsertFirstChild(decl);
 	root->SetAttribute("DefaultTargets", defaultTargets.c_str());
 	root->SetAttribute("ToolsVersion", toolsVersion.c_str());
 	root->SetAttribute("xmlns", xmlns.c_str());
@@ -561,6 +560,7 @@ const std::string VSItemGroup::type_name            = "ItemGroup";
 const std::string VSItemDefinitionGroup::type_name  = "ItemDefinitionGroup";
 const std::string VSPropertyGroup::type_name        = "PropertyGroup";
 const std::string VSProjectConfiguration::type_name = "ProjectConfiguration";
+const std::string VSProjectReference::type_name     = "ProjectReference";
 const std::string VSClCompile::type_name            = "ClCompile";
 const std::string VSClInclude::type_name            = "ClInclude";
 const std::string VSLink::type_name                 = "Link";
@@ -778,6 +778,43 @@ void VSProjectConfiguration::toXML(tinyxml2::XMLElement *parent)
 		tinyxml2::XMLElement *platformElement = parent->GetDocument()->NewElement("Platform");
 		platformElement->SetText(platform.c_str());
 		element->InsertEndChild(platformElement);
+	}
+}
+
+
+/* VSProjectReference */
+
+void VSProjectReference::fromXML(tinyxml2::XMLElement *element)
+{
+	const char* include = element->Attribute("Include");
+	if (include) this->include = include;
+
+	tinyxml2::XMLNode *node = element->FirstChild();
+	do {
+		if (!node) break;
+		tinyxml2::XMLElement *element = node->ToElement();
+		if (!element) continue;
+		std::string key = element->Name();
+		std::string value = element->GetText();
+		properties[key] = value;
+	} while ((node = node->NextSibling()));
+}
+
+void VSProjectReference::toXML(tinyxml2::XMLElement *parent)
+{
+	tinyxml2::XMLElement *element = parent->GetDocument()->NewElement(type_name.c_str());
+	parent->InsertEndChild(element);
+
+	if (include.length() > 0) {
+		element->SetAttribute("Include", include.c_str());
+	}
+
+	for (auto ent : properties) {
+		const std::string &key = ent.first;
+		const std::string &value = ent.second;
+		tinyxml2::XMLElement *propertyElement = parent->GetDocument()->NewElement(key.c_str());
+		propertyElement->SetText(value.c_str());
+		element->InsertEndChild(propertyElement);
 	}
 }
 

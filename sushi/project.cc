@@ -14,9 +14,9 @@
 #include <set>
 #include <functional>
 
-#include "log.h"
+#include "sushi.h"
+
 #include "util.h"
-#include "filesystem.h"
 #include "project_parser.h"
 #include "project.h"
 
@@ -76,7 +76,15 @@ void project::statement_set(project *project, statement &line)
 	config->vars[line[1]] = line[2];
 }
 
-void project::statement_define(project *project, statement &line)
+void project::statement_depends(project *project, statement &line)
+{
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		target->depends.push_back(line[i]);
+	}
+}
+
+void project::statement_defines(project *project, statement &line)
 {
 	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
@@ -84,11 +92,27 @@ void project::statement_define(project *project, statement &line)
 	}
 }
 
-void project::statement_depends(project *project, statement &line)
+void project::statement_includes(project *project, statement &line)
 {
-	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		target->depends.push_back(line[i]);
+		config->includes.push_back(line[i]);
+	}
+}
+
+void project::statement_export_defines(project *project, statement &line)
+{
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		config->export_defines.push_back(line[i]);
+	}
+}
+
+void project::statement_export_includes(project *project, statement &line)
+{
+	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	for (size_t i = 1; i < line.size(); i++) {
+		config->export_includes.push_back(line[i]);
 	}
 }
 
@@ -102,9 +126,9 @@ void project::statement_source(project *project, statement &line)
 
 void project::statement_libs(project *project, statement &line)
 {
-	auto tool = std::static_pointer_cast<project_tool>(project->item_stack.back());
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		tool->libs.push_back(line[i]);
+		target->libs.push_back(line[i]);
 	}
 }
 
@@ -117,10 +141,13 @@ void project::init()
 		block_fn_map["tool"] = block_record(2,  2, "project", &block_tool_begin);
 		statement_fn_map["type"] = statement_record(2,  2, "lib", &statement_type);
 		statement_fn_map["set"] = statement_record(3,  3, "lib|tool|config", &statement_set);
-		statement_fn_map["define"] = statement_record(2,  -1, "lib|tool|config", &statement_define);
-		statement_fn_map["depends"] = statement_record(2,  2, "lib|tool", &statement_depends);
+		statement_fn_map["defines"] = statement_record(2,  -1, "lib|tool|config", &statement_defines);
+		statement_fn_map["depends"] = statement_record(2,  -1, "lib|tool", &statement_depends);
+		statement_fn_map["includes"] = statement_record(2,  -1, "lib|tool", &statement_includes);
+		statement_fn_map["export_defines"] = statement_record(2,  2, "lib", &statement_export_defines);
+		statement_fn_map["export_includes"] = statement_record(2,  -1, "lib", &statement_export_includes);
 		statement_fn_map["source"] = statement_record(2,  -1, "lib|tool", &statement_source);
-		statement_fn_map["libs"] = statement_record(2,  -1, "tool", &statement_libs);
+		statement_fn_map["libs"] = statement_record(2,  -1, "lib|tool", &statement_libs);
 		function_map_init = true;
 	};
 }
@@ -129,7 +156,7 @@ project::project() { init(); }
 
 void project::read(std::string project_file)
 {
-	std::vector<char> buf = filesystem::read_file(project_file);
+	std::vector<char> buf = util::read_file(project_file);
 	if (!parse(buf.data(), buf.size())) {
 		log_fatal_exit("project: parse error");
 	}
@@ -259,6 +286,11 @@ std::vector<std::string> project_root::get_tool_list()
 	return list;
 }
 
+static void add_unique(std::vector<std::string> &vec, std::vector<std::string> &add)
+{
+	for (std::string str : add) if (std::find(vec.begin(), vec.end(), str) == vec.end()) vec.push_back(str);
+}
+
 project_config_ptr project_root::get_config(std::string name, bool inherit)
 {
 	project_config_ptr merged_config = std::make_shared<project_config>();
@@ -267,13 +299,13 @@ project_config_ptr project_root::get_config(std::string name, bool inherit)
 		for (auto config : config_list) {
 			if (config->config_name != "*") continue;
 			for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
-			merged_config->defines.insert(merged_config->defines.end(), config->defines.begin(), config->defines.end());
+			add_unique(merged_config->defines, config->defines);
 		}
 	}
 	for (auto config : config_list) {
 		if (config->config_name != name) continue;
 		for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
-		merged_config->defines.insert(merged_config->defines.end(), config->defines.begin(), config->defines.end());
+		add_unique(merged_config->defines, config->defines);
 	}
 	return merged_config;
 }
@@ -287,17 +319,26 @@ project_lib_ptr project_root::get_lib(std::string name, bool inherit)
 			if (lib->lib_name != "*") continue;
 			if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
 			for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
-			merged_lib->defines.insert(merged_lib->defines.end(), lib->defines.begin(), lib->defines.end());
-			merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
+			add_unique(merged_lib->depends, lib->depends);
+			add_unique(merged_lib->defines, lib->defines);
+			add_unique(merged_lib->includes, lib->includes);
+			add_unique(merged_lib->export_defines, lib->export_defines);
+			add_unique(merged_lib->export_includes, lib->export_includes);
+			add_unique(merged_lib->source, lib->source);
+			add_unique(merged_lib->libs, lib->libs);
 		}
 	}
 	for (auto lib : lib_list) {
 		if (lib->lib_name != name) continue;
 		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
 		for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
-		merged_lib->defines.insert(merged_lib->defines.end(), lib->defines.begin(), lib->defines.end());
-		merged_lib->depends.insert(merged_lib->depends.end(), lib->depends.begin(), lib->depends.end());
-		merged_lib->source.insert(merged_lib->source.end(), lib->source.begin(), lib->source.end());
+			add_unique(merged_lib->depends, lib->depends);
+			add_unique(merged_lib->defines, lib->defines);
+			add_unique(merged_lib->includes, lib->includes);
+			add_unique(merged_lib->export_defines, lib->export_defines);
+			add_unique(merged_lib->export_includes, lib->export_includes);
+			add_unique(merged_lib->source, lib->source);
+			add_unique(merged_lib->libs, lib->libs);
 	}
 	return merged_lib;
 }
@@ -310,17 +351,21 @@ project_tool_ptr project_root::get_tool(std::string name, bool inherit)
 		for (auto tool : tool_list) {
 			if (tool->tool_name != "*") continue;
 			for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
-			merged_tool->defines.insert(merged_tool->defines.end(), tool->defines.begin(), tool->defines.end());
-			merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+			add_unique(merged_tool->depends, tool->depends);
+			add_unique(merged_tool->defines, tool->defines);
+			add_unique(merged_tool->includes, tool->includes);
+			add_unique(merged_tool->source, tool->source);
+			add_unique(merged_tool->libs, tool->libs);
 		}
 	}
 	for (auto tool : tool_list) {
 		if (tool->tool_name != name) continue;
 		for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
-		merged_tool->defines.insert(merged_tool->defines.end(), tool->defines.begin(), tool->defines.end());
-		merged_tool->depends.insert(merged_tool->depends.end(), tool->depends.begin(), tool->depends.end());
-		merged_tool->source.insert(merged_tool->source.end(), tool->source.begin(), tool->source.end());
-		merged_tool->libs.insert(merged_tool->libs.end(), tool->libs.begin(), tool->libs.end());
+		add_unique(merged_tool->depends, tool->depends);
+		add_unique(merged_tool->defines, tool->defines);
+		add_unique(merged_tool->includes, tool->includes);
+		add_unique(merged_tool->source, tool->source);
+		add_unique(merged_tool->libs, tool->libs);
 	}
 	return merged_tool;
 }

@@ -27,26 +27,26 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>StaticLibrary</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>true</UseDebugLibraries>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>StaticLibrary</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>true</UseDebugLibraries>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>StaticLibrary</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>false</UseDebugLibraries>
         <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>StaticLibrary</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>false</UseDebugLibraries>
         <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
@@ -76,7 +76,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
     </ItemDefinitionGroup>
@@ -89,7 +88,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
     </ItemDefinitionGroup>
@@ -103,7 +101,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
             <GenerateDebugInformation>true</GenerateDebugInformation>
             <OptimizeReferences>true</OptimizeReferences>
@@ -119,7 +116,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
             <GenerateDebugInformation>true</GenerateDebugInformation>
             <OptimizeReferences>true</OptimizeReferences>
@@ -148,6 +144,11 @@
         <ClCompile Include="..\..\sushi\visual_studio.cc"/>
         <ClCompile Include="..\..\sushi\visual_studio_parser.cc"/>
         <ClCompile Include="..\..\sushi\xcode.cc"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\tinyxml2\tinyxml2.vcxproj">
+            <Project>{CE8E3128-60E3-4683-53B8-3973921A84D3}</Project>
+        </ProjectReference>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets"/>

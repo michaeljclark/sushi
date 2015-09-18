@@ -5,6 +5,17 @@
 #ifndef util_h
 #define util_h
 
+
+/* logging */
+
+SUSHI_LIB std::string format_string(const char* fmt, ...);
+SUSHI_LIB void log_prefix(const char* prefix, const char* fmt, va_list arg);
+SUSHI_LIB void log_fatal_exit(const char* fmt, ...);
+SUSHI_LIB void log_error(const char* fmt, ...);
+SUSHI_LIB void log_info(const char* fmt, ...);
+SUSHI_LIB void log_debug(const char* fmt, ...);
+
+
 /* utility */
 
 union uuid
@@ -18,10 +29,34 @@ union uuid
 	} val;
 };
 
-struct util
+struct directory;
+struct directory_entry;
+typedef std::shared_ptr<directory> directory_ptr;
+typedef std::shared_ptr<directory_entry> directory_entry_ptr;
+
+enum directory_entry_type {
+	directory_entry_type_file,
+	directory_entry_type_dir
+};
+
+struct SUSHI_LIB directory_entry
+{
+	std::string name;
+	directory_entry_type type;
+
+	directory_entry(std::string name, directory_entry_type type) : name(name), type(type) {}
+};
+
+struct SUSHI_LIB util
 {
 	static const char* HEX_DIGITS;
 
+	static std::vector<char> read_file(std::string filename);
+	static int canonicalize_path(char *path);
+	static std::vector<std::string> path_components(std::string path);
+	static void make_directories(std::string path);
+	static std::string path_relative_to_path(std::string path, std::string relative_to);
+	static bool list_files(std::vector<directory_entry> &files, std::string path_name);
 	static std::string ltrim(std::string s);
 	static std::string rtrim(std::string s);
 	static std::string trim(std::string s);
@@ -34,6 +69,9 @@ struct util
 	static void generate_uuid(uuid &u);
 	static std::string format_uuid(uuid &u);
 };
+
+
+/* endian */
 
 enum endian {
     endian_little = 0x03020100ul,

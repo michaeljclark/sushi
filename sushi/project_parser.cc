@@ -10,14 +10,16 @@
 #include <cctype>
 #include <cstring>
 
+#include "sushi.h"
+
 #include "project_parser.h"
 
 
-#line 40 "sushi/project_parser.rl"
+#line 42 "sushi/project_parser.rl"
 
 
 
-#line 21 "sushi/project_parser.cc"
+#line 23 "sushi/project_parser.cc"
 static const char _project_parser_actions[] = {
 	0, 1, 0, 1, 1, 1, 2, 1, 
 	3, 1, 4, 1, 5, 2, 1, 0, 
@@ -84,7 +86,7 @@ static const int project_parser_error = 0;
 static const int project_parser_en_main = 4;
 
 
-#line 43 "sushi/project_parser.rl"
+#line 45 "sushi/project_parser.rl"
 
 bool project_parser::parse(const char *buffer, size_t len)
 {
@@ -96,14 +98,14 @@ bool project_parser::parse(const char *buffer, size_t len)
 	const char *eof = pe;
 
 	
-#line 100 "sushi/project_parser.cc"
+#line 102 "sushi/project_parser.cc"
 	{
 	cs = project_parser_start;
 	}
 
-#line 54 "sushi/project_parser.rl"
+#line 56 "sushi/project_parser.rl"
 	
-#line 107 "sushi/project_parser.cc"
+#line 109 "sushi/project_parser.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -178,26 +180,26 @@ _match:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 17 "sushi/project_parser.rl"
+#line 19 "sushi/project_parser.rl"
 	{ mark = p; }
 	break;
 	case 1:
-#line 18 "sushi/project_parser.rl"
+#line 20 "sushi/project_parser.rl"
 	{ begin_block(); }
 	break;
 	case 2:
-#line 19 "sushi/project_parser.rl"
+#line 21 "sushi/project_parser.rl"
 	{ end_block(); }
 	break;
 	case 3:
-#line 20 "sushi/project_parser.rl"
+#line 22 "sushi/project_parser.rl"
 	{ symbol(mark, p - mark); }
 	break;
 	case 4:
-#line 21 "sushi/project_parser.rl"
+#line 23 "sushi/project_parser.rl"
 	{ end_statement(); }
 	break;
-#line 201 "sushi/project_parser.cc"
+#line 203 "sushi/project_parser.cc"
 		}
 	}
 
@@ -214,25 +216,25 @@ _again:
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
 	case 1:
-#line 18 "sushi/project_parser.rl"
+#line 20 "sushi/project_parser.rl"
 	{ begin_block(); }
 	break;
 	case 2:
-#line 19 "sushi/project_parser.rl"
+#line 21 "sushi/project_parser.rl"
 	{ end_block(); }
 	break;
 	case 4:
-#line 21 "sushi/project_parser.rl"
+#line 23 "sushi/project_parser.rl"
 	{ end_statement(); }
 	break;
 	case 5:
-#line 23 "sushi/project_parser.rl"
+#line 25 "sushi/project_parser.rl"
 	{ 
 		project_done();
 		{p++; goto _out; }
 	}
 	break;
-#line 236 "sushi/project_parser.cc"
+#line 238 "sushi/project_parser.cc"
 		}
 	}
 	}
@@ -240,7 +242,7 @@ _again:
 	_out: {}
 	}
 
-#line 55 "sushi/project_parser.rl"
+#line 57 "sushi/project_parser.rl"
 
 	return (cs != project_parser_error || cs == project_parser_first_final);
 }

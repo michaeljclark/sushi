@@ -9,14 +9,8 @@ struct VSSolution;
 struct VSSolutionProperty;
 struct VSSolutionProject;
 struct VSSolutionProjectConfiguration;
+
 struct VSProject;
-
-typedef std::shared_ptr<VSSolution> VSSolutionPtr;
-typedef std::shared_ptr<VSSolutionProperty> VSSolutionPropertyPtr;
-typedef std::shared_ptr<VSSolutionProject> VSSolutionProjectPtr;
-typedef std::shared_ptr<VSSolutionProjectConfiguration> VSSolutionProjectConfigurationPtr;
-typedef std::shared_ptr<VSProject> VSProjectPtr;
-
 struct VSObject;
 struct VSImport;
 struct VSImportGroup;
@@ -24,10 +18,17 @@ struct VSItemGroup;
 struct VSItemDefinitionGroup;
 struct VSPropertyGroup;
 struct VSProjectConfiguration;
+struct VSProjectReference;
 struct VSClCompile;
 struct VSClInclude;
 struct VSLink;
 
+typedef std::shared_ptr<VSSolution> VSSolutionPtr;
+typedef std::shared_ptr<VSSolutionProperty> VSSolutionPropertyPtr;
+typedef std::shared_ptr<VSSolutionProject> VSSolutionProjectPtr;
+typedef std::shared_ptr<VSSolutionProjectConfiguration> VSSolutionProjectConfigurationPtr;
+
+typedef std::shared_ptr<VSProject> VSProjectPtr;
 typedef std::shared_ptr<VSObject> VSObjectPtr;
 typedef std::shared_ptr<VSItemGroup> VSItemGroupPtr;
 typedef std::shared_ptr<VSImport> VSImportPtr;
@@ -35,11 +36,12 @@ typedef std::shared_ptr<VSImportGroup> VSImportGroupPtr;
 typedef std::shared_ptr<VSItemDefinitionGroup> VSItemDefinitionGroupPtr;
 typedef std::shared_ptr<VSPropertyGroup> VSPropertyGroupPtr;
 typedef std::shared_ptr<VSProjectConfiguration> VSProjectConfigurationPtr;
+typedef std::shared_ptr<VSProjectReference> VSProjectReferencePtr;
 typedef std::shared_ptr<VSClCompile> VSClCompilePtr;
 typedef std::shared_ptr<VSClInclude> VSClIncludePtr;
 typedef std::shared_ptr<VSLink> VSLinkPtr;
 
-struct VSSolutionProject
+struct SUSHI_LIB VSSolutionProject
 {
 	std::string type_guid;
 	std::string name;
@@ -51,7 +53,7 @@ struct VSSolutionProject
 	std::vector<std::string> dependenciesToResolve;
 };
 
-struct VSSolutionProjectConfiguration
+struct SUSHI_LIB VSSolutionProjectConfiguration
 {
 	std::string guid;
 	std::string config;
@@ -59,13 +61,13 @@ struct VSSolutionProjectConfiguration
 	std::string value;
 };
 
-struct VSSolutionProperty
+struct SUSHI_LIB VSSolutionProperty
 {
 	std::string name;
 	std::string value;
 };
 
-struct VSSolution : VisualStudioParser
+struct SUSHI_LIB VSSolution : VisualStudioParser
 {
 	static const std::string VisualCPPProjectGUID;
 
@@ -121,7 +123,7 @@ struct VSObjectFactory;
 typedef std::shared_ptr<VSObjectFactory> VSObjectFactoryPtr;
 template <typename T> struct VSObjectFactoryImpl;
 
-struct VSObjectFactory
+struct SUSHI_LIB VSObjectFactory
 {
 	virtual ~VSObjectFactory() {}
 	virtual VSObjectPtr create() = 0;
@@ -133,7 +135,7 @@ struct VSObjectFactoryImpl : VSObjectFactory
 	VSObjectPtr create() { return std::make_shared<T>(); }
 };
 
-struct VSObject
+struct SUSHI_LIB VSObject
 {
 	virtual ~VSObject() {}
 
@@ -146,7 +148,7 @@ template <typename T> struct VSObjectImpl : VSObject
 	const std::string& type_name() { return T::type_name; }
 };
 
-struct VSProject
+struct SUSHI_LIB VSProject
 {
 	static const std::string xmlns;
 
@@ -168,20 +170,22 @@ struct VSProject
 
 	VSProject();
 
-	tinyxml2::XMLDocument doc;
-
 	std::string defaultTargets;
 	std::string toolsVersion;
 	std::vector<VSObjectPtr> objectList;
 
+	VSItemGroupPtr headerItemGroup;
+	VSItemGroupPtr sourceItemGroup;
+	VSItemGroupPtr dependsItemGroup;
+
 	void read(std::string project_file);
 	void write(std::string project_file);
 
-	void xmlToProject();
-	void projectToXml();
+	void xmlToProject(tinyxml2::XMLDocument *doc);
+	void projectToXml(tinyxml2::XMLDocument *doc);
 };
 
-struct VSImport : VSObjectImpl<VSImport>
+struct SUSHI_LIB VSImport : VSObjectImpl<VSImport>
 {
 	static const std::string type_name;
 
@@ -193,7 +197,7 @@ struct VSImport : VSObjectImpl<VSImport>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSImportGroup : VSObjectImpl<VSImportGroup>
+struct SUSHI_LIB VSImportGroup : VSObjectImpl<VSImportGroup>
 {
 	static const std::string type_name;
 
@@ -205,7 +209,7 @@ struct VSImportGroup : VSObjectImpl<VSImportGroup>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSItemGroup : VSObjectImpl<VSItemGroup>
+struct SUSHI_LIB VSItemGroup : VSObjectImpl<VSItemGroup>
 {
 	static const std::string type_name;
 
@@ -216,7 +220,7 @@ struct VSItemGroup : VSObjectImpl<VSItemGroup>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSItemDefinitionGroup : VSObjectImpl<VSItemDefinitionGroup>
+struct SUSHI_LIB VSItemDefinitionGroup : VSObjectImpl<VSItemDefinitionGroup>
 {
 	static const std::string type_name;
 
@@ -227,7 +231,7 @@ struct VSItemDefinitionGroup : VSObjectImpl<VSItemDefinitionGroup>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSPropertyGroup : VSObjectImpl<VSPropertyGroup>
+struct SUSHI_LIB VSPropertyGroup : VSObjectImpl<VSPropertyGroup>
 {
 	static const std::string type_name;
 
@@ -239,7 +243,7 @@ struct VSPropertyGroup : VSObjectImpl<VSPropertyGroup>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSProjectConfiguration : VSObjectImpl<VSProjectConfiguration>
+struct SUSHI_LIB VSProjectConfiguration : VSObjectImpl<VSProjectConfiguration>
 {
 	static const std::string type_name;
 
@@ -251,7 +255,7 @@ struct VSProjectConfiguration : VSObjectImpl<VSProjectConfiguration>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSClCompile : VSObjectImpl<VSClCompile>
+struct SUSHI_LIB VSProjectReference : VSObjectImpl<VSProjectReference>
 {
 	static const std::string type_name;
 
@@ -262,7 +266,18 @@ struct VSClCompile : VSObjectImpl<VSClCompile>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSClInclude : VSObjectImpl<VSClInclude>
+struct SUSHI_LIB VSClCompile : VSObjectImpl<VSClCompile>
+{
+	static const std::string type_name;
+
+	std::string include;
+	std::map<std::string,std::string> properties;
+
+	void fromXML(tinyxml2::XMLElement *element);
+	void toXML(tinyxml2::XMLElement *parent);
+};
+
+struct SUSHI_LIB VSClInclude : VSObjectImpl<VSClInclude>
 {
 	static const std::string type_name;
 
@@ -272,7 +287,7 @@ struct VSClInclude : VSObjectImpl<VSClInclude>
 	void toXML(tinyxml2::XMLElement *parent);
 };
 
-struct VSLink : VSObjectImpl<VSLink>
+struct SUSHI_LIB VSLink : VSObjectImpl<VSLink>
 {
 	static const std::string type_name;
 

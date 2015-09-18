@@ -27,26 +27,26 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>true</UseDebugLibraries>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>true</UseDebugLibraries>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>false</UseDebugLibraries>
         <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
         <CharacterSet>MultiByte</CharacterSet>
         <ConfigurationType>Application</ConfigurationType>
-        <PlatformToolset>v140</PlatformToolset>
+        <PlatformToolset>v120</PlatformToolset>
         <UseDebugLibraries>false</UseDebugLibraries>
         <WholeProgramOptimization>true</WholeProgramOptimization>
     </PropertyGroup>
@@ -76,8 +76,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalDependencies>sushi.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
     </ItemDefinitionGroup>
@@ -90,8 +88,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalDependencies>sushi.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <GenerateDebugInformation>true</GenerateDebugInformation>
         </Link>
     </ItemDefinitionGroup>
@@ -105,8 +101,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalDependencies>sushi.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
             <GenerateDebugInformation>true</GenerateDebugInformation>
             <OptimizeReferences>true</OptimizeReferences>
@@ -122,8 +116,6 @@
             <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
-            <AdditionalDependencies>sushi.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-            <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
             <GenerateDebugInformation>true</GenerateDebugInformation>
             <OptimizeReferences>true</OptimizeReferences>
@@ -132,6 +124,14 @@
     <ItemGroup/>
     <ItemGroup>
         <ClCompile Include="..\..\test\vs_read.cc"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\sushi\sushi.vcxproj">
+            <Project>{7C45E18E-22F0-4850-7EC2-226EAA4CA802}</Project>
+        </ProjectReference>
+        <ProjectReference Include="..\tinyxml2\tinyxml2.vcxproj">
+            <Project>{CE8E3128-60E3-4683-53B8-3973921A84D3}</Project>
+        </ProjectReference>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
     <ImportGroup Label="ExtensionTargets"/>

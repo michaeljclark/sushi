@@ -5,7 +5,7 @@
 #ifndef visual_studio_parser_h
 #define visual_studio_parser_h
 
-struct VisualStudioParser
+struct SUSHI_LIB VisualStudioParser
 {
 	int cs;
 	int eof;

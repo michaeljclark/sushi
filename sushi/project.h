@@ -53,14 +53,14 @@ struct block_record
 		: minargs(minargs), maxargs(maxargs), parent_block_spec(parent_block_spec), begin_block_fn(begin_block_fn) {}
 };
 
-struct project_item
+struct SUSHI_LIB project_item
 {
 	virtual ~project_item() {}
 	virtual std::string block_name() = 0;
 	virtual bool validate() { return true; }
 };
 
-struct project_root : project_item
+struct SUSHI_LIB project_root : project_item
 {
 	virtual std::string block_name() { return "project"; }
 
@@ -78,24 +78,28 @@ struct project_root : project_item
 	project_tool_ptr get_tool(std::string name, bool inherit = true);
 };
 
-struct project_config : project_item
+struct SUSHI_LIB project_config : project_item
 {
 	virtual std::string block_name() { return "config"; }
 
 	std::string config_name;
 	std::map<std::string,std::string> vars;
 	std::vector<std::string> defines;
+	std::vector<std::string> includes;
+	std::vector<std::string> export_defines;
+	std::vector<std::string> export_includes;
 };
 
-struct project_target : project_config
+struct SUSHI_LIB project_target : project_config
 {
 	virtual std::string target_name() = 0;
 
+	std::vector<std::string> libs;
 	std::vector<std::string> source;
 	std::vector<std::string> depends;
 };
 
-struct project_lib : project_target
+struct SUSHI_LIB project_lib : project_target
 {
 	virtual std::string block_name() { return "lib"; }
 	virtual std::string target_name() { return lib_name; }
@@ -104,16 +108,15 @@ struct project_lib : project_target
 	std::string lib_type;
 };
 
-struct project_tool : project_target
+struct SUSHI_LIB project_tool : project_target
 {
 	virtual std::string block_name() { return "tool"; }
 	virtual std::string target_name() { return tool_name; }
 
 	std::string tool_name;
-	std::vector<std::string> libs;
 };
 
-struct project : project_parser
+struct SUSHI_LIB project : project_parser
 {
 	static const bool debug;
 
@@ -127,8 +130,11 @@ struct project : project_parser
 	static void block_tool_begin(project *project, statement &line);
 	static void statement_type(project *project, statement &line);
 	static void statement_set(project *project, statement &line);
-	static void statement_define(project *project, statement &line);
 	static void statement_depends(project *project, statement &line);
+	static void statement_defines(project *project, statement &line);
+	static void statement_includes(project *project, statement &line);
+	static void statement_export_defines(project *project, statement &line);
+	static void statement_export_includes(project *project, statement &line);
 	static void statement_source(project *project, statement &line);
 	static void statement_libs(project *project, statement &line);
 

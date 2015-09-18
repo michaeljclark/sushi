@@ -21,11 +21,9 @@
 #include <random>
 #include <functional>
 
-#include "tinyxml2.h"
+#include "sushi.h"
 
-#include "log.h"
 #include "util.h"
-#include "filesystem.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 #include "project_parser.h"
@@ -45,7 +43,7 @@ vs_lib_output_data project_visual_studio::lib_output(project_lib_ptr lib)
 	} else {
 		return vs_lib_output_data(
 			"DynamicLibrary",
-			lib->lib_name + ".dll"
+			lib->lib_name + ".lib" // DLL import library
 		);
 	}
 }
@@ -75,7 +73,7 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 			config->vars,
 			lib->lib_name,
 			lib_data.target_type,
-			lib->depends,
+			lib->libs,
 			std::vector<std::string>(),
 			lib->source
 		);
@@ -84,14 +82,12 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 	// create tool targets
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
-		auto depends = tool->depends;
-		depends.insert(depends.end(), tool->libs.begin(), tool->libs.end());
 		solution->createProject(
 			config->vars,
 			tool->tool_name,
 			"Application",
-			depends,
-			lib_deps(root, tool->libs),
+			tool->libs,
+			std::vector<std::string>(),
 			tool->source
 		);
 	}

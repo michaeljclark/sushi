@@ -5,7 +5,7 @@
 #ifndef prject_xcode_h
 #define prject_xcode_h
 
-struct xcode_lib_output_data
+struct SUSHI_LIB xcode_lib_output_data
 {
 	std::string file_type;
 	std::string target_type;
@@ -15,7 +15,7 @@ struct xcode_lib_output_data
 		: file_type(file_type), target_type(target_type), output_file(output_file) {}
 };
 
-struct project_xcode
+struct SUSHI_LIB project_xcode
 {
 	static xcode_lib_output_data lib_output(project_lib_ptr lib);
 	static std::vector<std::string> lib_deps(project_root_ptr root, std::vector<std::string> libs);

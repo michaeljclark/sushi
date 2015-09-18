@@ -19,7 +19,8 @@
 #include <map>
 #include <functional>
 
-#include "log.h"
+#include "sushi.h"
+
 #include "util.h"
 #include "xcode.h"
 #include "project_parser.h"

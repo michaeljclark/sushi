@@ -30,7 +30,7 @@ enum PBXType
 	PBXTypeObject
 };
 
-struct PBXKey
+struct SUSHI_LIB PBXKey
 {
 	std::string str;
 	std::string comment;
@@ -42,7 +42,7 @@ struct PBXKey
 	bool operator==(const PBXKey &o) const { return str == o.str; }
 };
 
-struct PBXValue
+struct SUSHI_LIB PBXValue
 {
 	virtual ~PBXValue() {}
 	virtual PBXType type() = 0;
@@ -60,7 +60,7 @@ union PBXIdUnion
         bool operator==(const PBXIdUnion &o) { return memcmp(this, &o, sizeof(*this)) == 0; }
 };
 
-struct PBXId : PBXValue
+struct SUSHI_LIB PBXId : PBXValue
 {
 	PBXIdUnion id;
 	std::string comment;
@@ -82,7 +82,7 @@ struct PBXId : PBXValue
 	bool operator==(const PBXId &o);
 };
 
-struct PBXMap : PBXValue
+struct SUSHI_LIB PBXMap : PBXValue
 {
 	std::map<std::string,PBXValuePtr> object_val;
 	std::vector<PBXKey> key_order;
@@ -110,7 +110,7 @@ struct PBXMap : PBXValue
 	void setMap(std::string key, PBXMapPtr map);
 };
 
-struct PBXArray : PBXValue
+struct SUSHI_LIB PBXArray : PBXValue
 {
 	std::vector<PBXValuePtr> array_val;
 
@@ -120,7 +120,7 @@ struct PBXArray : PBXValue
 	void addIdRef(PBXObjectPtr obj);
 };
 
-struct PBXLiteral : PBXValue
+struct SUSHI_LIB PBXLiteral : PBXValue
 {
 	std::string literal_val;
 
@@ -129,7 +129,7 @@ struct PBXLiteral : PBXValue
 	virtual PBXType type();
 };
 
-struct PBXObject : PBXMap
+struct SUSHI_LIB PBXObject : PBXMap
 {
 	PBXId id;
 	Xcodeproj *xcodeproj;
@@ -209,7 +209,7 @@ struct PBXObjectFactory;
 typedef std::shared_ptr<PBXObjectFactory> PBXObjectFactoryPtr;
 template <typename T> struct PBXObjectFactoryImpl;
 
-struct PBXObjectFactory
+struct SUSHI_LIB PBXObjectFactory
 {
 	virtual ~PBXObjectFactory() {}
 	virtual PBXObjectPtr create() = 0;
@@ -226,7 +226,7 @@ template <typename T> struct PBXObjectImpl : PBXObject
 	const std::string& type_name() { return T::type_name; }
 };
 
-struct Xcodeproj : PBXObjectImpl<Xcodeproj>
+struct SUSHI_LIB Xcodeproj : PBXObjectImpl<Xcodeproj>
 {
 	static const std::string type_name;
 	virtual PBXType type() { return PBXTypeXcodeproj; }
@@ -298,7 +298,7 @@ struct Xcodeproj : PBXObjectImpl<Xcodeproj>
 	}
 };
 
-struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget>
+struct SUSHI_LIB PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget>
 {
 	static const std::string type_name;
 
@@ -314,7 +314,7 @@ struct PBXAggregateTarget : PBXObjectImpl<PBXAggregateTarget>
 	void syncToMap();
 };
 
-struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase>
+struct SUSHI_LIB PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase>
 {
 	static const std::string type_name;
 
@@ -328,7 +328,7 @@ struct PBXAppleScriptBuildPhase : PBXObjectImpl<PBXAppleScriptBuildPhase>
 	void syncToMap();
 };
 
-struct PBXBuildFile : PBXObjectImpl<PBXBuildFile>
+struct SUSHI_LIB PBXBuildFile : PBXObjectImpl<PBXBuildFile>
 {
 	static const std::string type_name;
 
@@ -340,7 +340,7 @@ struct PBXBuildFile : PBXObjectImpl<PBXBuildFile>
 	void syncToMap();
 };
 
-struct PBXBuildRule : PBXObjectImpl<PBXBuildRule>
+struct SUSHI_LIB PBXBuildRule : PBXObjectImpl<PBXBuildRule>
 {
 	static const std::string type_name;
 
@@ -357,7 +357,7 @@ struct PBXBuildRule : PBXObjectImpl<PBXBuildRule>
 	void syncToMap();
 };
 
-struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle>
+struct SUSHI_LIB PBXBuildStyle : PBXObjectImpl<PBXBuildStyle>
 {
 	static const std::string type_name;
 
@@ -370,7 +370,7 @@ struct PBXBuildStyle : PBXObjectImpl<PBXBuildStyle>
 	void syncToMap();
 };
 
-struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy>
+struct SUSHI_LIB PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy>
 {
 	static const std::string type_name;
 
@@ -385,7 +385,7 @@ struct PBXContainerItemProxy : PBXObjectImpl<PBXContainerItemProxy>
 	void syncToMap();
 };
 
-struct PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase>
+struct SUSHI_LIB PBXCopyFilesBuildPhase : PBXObjectImpl<PBXCopyFilesBuildPhase>
 {
 	static const std::string type_name;
 
@@ -413,7 +413,7 @@ enum FileType
 	FileTypeApplication    = 0x0040
 };
 
-struct FileTypeMetaData
+struct SUSHI_LIB FileTypeMetaData
 {
 	std::string xcodeType;
 	uint64_t flags;
@@ -431,7 +431,7 @@ struct FileTypeMetaData
 	}
 };
 
-struct PBXFileReference : PBXObjectImpl<PBXFileReference>
+struct SUSHI_LIB PBXFileReference : PBXObjectImpl<PBXFileReference>
 {
 	static const std::string type_name;
 
@@ -485,7 +485,7 @@ struct PBXFileReference : PBXObjectImpl<PBXFileReference>
 	void syncToMap();
 };
 
-struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase>
+struct SUSHI_LIB PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase>
 {
 	static const std::string type_name;
 
@@ -499,7 +499,7 @@ struct PBXFrameworksBuildPhase : PBXObjectImpl<PBXFrameworksBuildPhase>
 	void syncToMap();
 };
 
-struct PBXGroup : PBXObjectImpl<PBXGroup>
+struct SUSHI_LIB PBXGroup : PBXObjectImpl<PBXGroup>
 {
 	static const std::string type_name;
 
@@ -515,7 +515,7 @@ struct PBXGroup : PBXObjectImpl<PBXGroup>
 	void sortChildren();
 };
 
-struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase>
+struct SUSHI_LIB PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase>
 {
 	static const std::string type_name;
 
@@ -529,7 +529,7 @@ struct PBXHeadersBuildPhase : PBXObjectImpl<PBXHeadersBuildPhase>
 	void syncToMap();
 };
 
-struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget>
+struct SUSHI_LIB PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget>
 {
 	static const std::string type_name;
 
@@ -548,7 +548,7 @@ struct PBXLegacyTarget : PBXObjectImpl<PBXLegacyTarget>
 	void syncToMap();
 };
 
-struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget>
+struct SUSHI_LIB PBXNativeTarget : PBXObjectImpl<PBXNativeTarget>
 {
 	static const std::string type_name;
 
@@ -574,7 +574,7 @@ struct PBXNativeTarget : PBXObjectImpl<PBXNativeTarget>
 	void syncToMap();
 };
 
-struct PBXProject : PBXObjectImpl<PBXProject>
+struct SUSHI_LIB PBXProject : PBXObjectImpl<PBXProject>
 {
 	static const std::string type_name;
 
@@ -597,7 +597,7 @@ struct PBXProject : PBXObjectImpl<PBXProject>
 	void syncToMap();
 };
 
-struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy>
+struct SUSHI_LIB PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy>
 {
 	static const std::string type_name;
 
@@ -612,7 +612,7 @@ struct PBXReferenceProxy : PBXObjectImpl<PBXReferenceProxy>
 	void syncToMap();
 };
 
-struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase>
+struct SUSHI_LIB PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase>
 {
 	static const std::string type_name;
 
@@ -626,7 +626,7 @@ struct PBXResourcesBuildPhase : PBXObjectImpl<PBXResourcesBuildPhase>
 	void syncToMap();
 };
 
-struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase>
+struct SUSHI_LIB PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase>
 {
 	static const std::string type_name;
 
@@ -644,7 +644,7 @@ struct PBXShellScriptBuildPhase : PBXObjectImpl<PBXShellScriptBuildPhase>
 	void syncToMap();
 };
 
-struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase>
+struct SUSHI_LIB PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase>
 {
 	static const std::string type_name;
 
@@ -658,7 +658,7 @@ struct PBXSourcesBuildPhase : PBXObjectImpl<PBXSourcesBuildPhase>
 	void syncToMap();
 };
 
-struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency>
+struct SUSHI_LIB PBXTargetDependency : PBXObjectImpl<PBXTargetDependency>
 {
 	static const std::string type_name;
 
@@ -671,7 +671,7 @@ struct PBXTargetDependency : PBXObjectImpl<PBXTargetDependency>
 	void syncToMap();
 };
 
-struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup>
+struct SUSHI_LIB PBXVariantGroup : PBXObjectImpl<PBXVariantGroup>
 {
 	static const std::string type_name;
 
@@ -686,7 +686,7 @@ struct PBXVariantGroup : PBXObjectImpl<PBXVariantGroup>
 	void syncToMap();
 };
 
-struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration>
+struct SUSHI_LIB XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration>
 {
 	static const std::string type_name;
 
@@ -699,7 +699,7 @@ struct XCBuildConfiguration : PBXObjectImpl<XCBuildConfiguration>
 	void syncToMap();
 };
 
-struct XCConfigurationList : PBXObjectImpl<XCConfigurationList>
+struct SUSHI_LIB XCConfigurationList : PBXObjectImpl<XCConfigurationList>
 {
 	static const std::string type_name;
 
@@ -713,7 +713,7 @@ struct XCConfigurationList : PBXObjectImpl<XCConfigurationList>
 	void syncToMap();
 };
 
-struct XCVersionGroup : PBXObjectImpl<XCVersionGroup>
+struct SUSHI_LIB XCVersionGroup : PBXObjectImpl<XCVersionGroup>
 {
 	static const std::string type_name;
 };
@@ -756,7 +756,7 @@ enum PBXParseError
 	PBXParseErrorExpectedWhitespace         = 7
 };
 
-struct PBXParser
+struct SUSHI_LIB PBXParser
 {
 	PBXParseError parse(std::vector<char> &buf);
 
@@ -776,7 +776,7 @@ struct PBXParser
 
 /* PBX parser implementation */
 
-struct PBXParserImpl : PBXParser
+struct SUSHI_LIB PBXParserImpl : PBXParser
 {
 	static const bool debug = false;
 
@@ -804,7 +804,7 @@ struct PBXParserImpl : PBXParser
 
 /* PBX writer */
 
-struct PBXWriter
+struct SUSHI_LIB PBXWriter
 {
 	static const char* LITERAL_CHARS;
 	static bool literal_requires_quotes(std::string str);

@@ -5,7 +5,7 @@
 #ifndef project_parser_h
 #define project_parser_h
 
-struct project_parser
+struct SUSHI_LIB project_parser
 {
 	int cs;
 	int eof;

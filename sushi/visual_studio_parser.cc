@@ -10,14 +10,16 @@
 #include <cctype>
 #include <cstring>
 
+#include "sushi.h"
+
 #include "visual_studio_parser.h"
 
 
-#line 101 "sushi/visual_studio_parser.rl"
+#line 103 "sushi/visual_studio_parser.rl"
 
 
 
-#line 21 "sushi/visual_studio_parser.cc"
+#line 23 "sushi/visual_studio_parser.cc"
 static const char _visual_studio_parser_actions[] = {
 	0, 1, 0, 1, 1, 1, 2, 1, 
 	3, 1, 4, 1, 5, 1, 6, 1, 
@@ -1079,7 +1081,7 @@ static const int visual_studio_parser_error = 0;
 static const int visual_studio_parser_en_main = 1;
 
 
-#line 104 "sushi/visual_studio_parser.rl"
+#line 106 "sushi/visual_studio_parser.rl"
 
 bool VisualStudioParser::parse(const char *buffer, size_t len)
 {
@@ -1091,14 +1093,14 @@ bool VisualStudioParser::parse(const char *buffer, size_t len)
 	const char *eof = pe;
 
 	
-#line 1095 "sushi/visual_studio_parser.cc"
+#line 1097 "sushi/visual_studio_parser.cc"
 	{
 	cs = visual_studio_parser_start;
 	}
 
-#line 115 "sushi/visual_studio_parser.rl"
+#line 117 "sushi/visual_studio_parser.rl"
 	
-#line 1102 "sushi/visual_studio_parser.cc"
+#line 1104 "sushi/visual_studio_parser.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1172,74 +1174,74 @@ _match:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 17 "sushi/visual_studio_parser.rl"
+#line 19 "sushi/visual_studio_parser.rl"
 	{ mark = p; }
 	break;
 	case 1:
-#line 18 "sushi/visual_studio_parser.rl"
+#line 20 "sushi/visual_studio_parser.rl"
 	{ FormatVersion(mark, p - mark); }
 	break;
 	case 2:
-#line 19 "sushi/visual_studio_parser.rl"
+#line 21 "sushi/visual_studio_parser.rl"
 	{ CommentVersion(mark, p - mark); }
 	break;
 	case 3:
-#line 20 "sushi/visual_studio_parser.rl"
+#line 22 "sushi/visual_studio_parser.rl"
 	{ VisualStudioVersion(mark, p - mark); }
 	break;
 	case 4:
-#line 21 "sushi/visual_studio_parser.rl"
+#line 23 "sushi/visual_studio_parser.rl"
 	{ MinimumVisualStudioVersion(mark, p - mark); }
 	break;
 	case 5:
-#line 22 "sushi/visual_studio_parser.rl"
+#line 24 "sushi/visual_studio_parser.rl"
 	{ ProjectTypeGUID(mark, p - mark); }
 	break;
 	case 6:
-#line 23 "sushi/visual_studio_parser.rl"
+#line 25 "sushi/visual_studio_parser.rl"
 	{ ProjectName(mark, p - mark); }
 	break;
 	case 7:
-#line 24 "sushi/visual_studio_parser.rl"
+#line 26 "sushi/visual_studio_parser.rl"
 	{ ProjectPath(mark, p - mark); }
 	break;
 	case 8:
-#line 25 "sushi/visual_studio_parser.rl"
+#line 27 "sushi/visual_studio_parser.rl"
 	{ ProjectGUID(mark, p - mark); }
 	break;
 	case 9:
-#line 26 "sushi/visual_studio_parser.rl"
+#line 28 "sushi/visual_studio_parser.rl"
 	{ ProjectDependsGUID(mark, p - mark); }
 	break;
 	case 10:
-#line 27 "sushi/visual_studio_parser.rl"
+#line 29 "sushi/visual_studio_parser.rl"
 	{ SolutionConfigPlatform(mark, p - mark); }
 	break;
 	case 11:
-#line 28 "sushi/visual_studio_parser.rl"
+#line 30 "sushi/visual_studio_parser.rl"
 	{ ProjectConfigPlatformGUID(mark, p - mark); }
 	break;
 	case 12:
-#line 29 "sushi/visual_studio_parser.rl"
+#line 31 "sushi/visual_studio_parser.rl"
 	{ ProjectConfigPlatformConfig(mark, p - mark); }
 	break;
 	case 13:
-#line 30 "sushi/visual_studio_parser.rl"
+#line 32 "sushi/visual_studio_parser.rl"
 	{ ProjectConfigPlatformProp(mark, p - mark); }
 	break;
 	case 14:
-#line 31 "sushi/visual_studio_parser.rl"
+#line 33 "sushi/visual_studio_parser.rl"
 	{ ProjectConfigPlatformValue(mark, p - mark); }
 	break;
 	case 15:
-#line 32 "sushi/visual_studio_parser.rl"
+#line 34 "sushi/visual_studio_parser.rl"
 	{ SolutionPropertiesKey(mark, p - mark); }
 	break;
 	case 16:
-#line 33 "sushi/visual_studio_parser.rl"
+#line 35 "sushi/visual_studio_parser.rl"
 	{ SolutionPropertiesValue(mark, p - mark); }
 	break;
-#line 1243 "sushi/visual_studio_parser.cc"
+#line 1245 "sushi/visual_studio_parser.cc"
 		}
 	}
 
@@ -1256,13 +1258,13 @@ _again:
 	while ( __nacts-- > 0 ) {
 		switch ( *__acts++ ) {
 	case 17:
-#line 35 "sushi/visual_studio_parser.rl"
+#line 37 "sushi/visual_studio_parser.rl"
 	{ 
 		Done();
 		{p++; goto _out; }
 	}
 	break;
-#line 1266 "sushi/visual_studio_parser.cc"
+#line 1268 "sushi/visual_studio_parser.cc"
 		}
 	}
 	}
@@ -1270,7 +1272,7 @@ _again:
 	_out: {}
 	}
 
-#line 116 "sushi/visual_studio_parser.rl"
+#line 118 "sushi/visual_studio_parser.rl"
 
 	return (cs != visual_studio_parser_error || cs == visual_studio_parser_first_final);
 }
