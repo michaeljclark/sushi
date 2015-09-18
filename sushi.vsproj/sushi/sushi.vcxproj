@@ -122,20 +122,17 @@
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
-        <ClInclude Include="..\..\sushi\filesystem.h"/>
-        <ClInclude Include="..\..\sushi\log.h"/>
         <ClInclude Include="..\..\sushi\project.h"/>
         <ClInclude Include="..\..\sushi\project_parser.h"/>
         <ClInclude Include="..\..\sushi\project_visual_studio.h"/>
         <ClInclude Include="..\..\sushi\project_xcode.h"/>
+        <ClInclude Include="..\..\sushi\sushi.h"/>
         <ClInclude Include="..\..\sushi\util.h"/>
         <ClInclude Include="..\..\sushi\visual_studio.h"/>
         <ClInclude Include="..\..\sushi\visual_studio_parser.h"/>
         <ClInclude Include="..\..\sushi\xcode.h"/>
     </ItemGroup>
     <ItemGroup>
-        <ClCompile Include="..\..\sushi\filesystem.cc"/>
-        <ClCompile Include="..\..\sushi\log.cc"/>
         <ClCompile Include="..\..\sushi\project.cc"/>
         <ClCompile Include="..\..\sushi\project_parser.cc"/>
         <ClCompile Include="..\..\sushi\project_visual_studio.cc"/>
