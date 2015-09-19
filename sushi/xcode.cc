@@ -483,19 +483,19 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
 	// Create Debug Build Configuration
 	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
 	debugConfiguration->name = "Debug";
-    debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-    debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
-    debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
-    debugConfiguration->buildSettings->setString("SDKROOT", sdkroot);
+	debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
+	debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+	debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
+	debugConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
 
 	// Create Release Build Configuration
 	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
 	releaseConfiguration->name = "Release";
-    releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-    releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+	releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
+	releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
 	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
-    releaseConfiguration->buildSettings->setString("SDKROOT", sdkroot);
+	releaseConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
 
 	// Create main group
