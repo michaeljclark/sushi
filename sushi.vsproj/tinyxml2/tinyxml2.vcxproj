@@ -70,9 +70,6 @@
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
         <ClCompile>
             <Optimization>Disabled</Optimization>
-            <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
             <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -81,9 +78,6 @@
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
         <ClCompile>
             <Optimization>Disabled</Optimization>
-            <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
             <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -93,9 +87,6 @@
         <ClCompile>
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <Optimization>MaxSpeed</Optimization>
-            <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -107,9 +98,6 @@
         <ClCompile>
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <Optimization>MaxSpeed</Optimization>
-            <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-            <SDLCheck>true</SDLCheck>
-            <WarningLevel>Level3</WarningLevel>
         </ClCompile>
         <Link>
             <EnableCOMDATFolding>true</EnableCOMDATFolding>
