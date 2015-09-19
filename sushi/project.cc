@@ -94,25 +94,25 @@ void project::statement_defines(project *project, statement &line)
 
 void project::statement_includes(project *project, statement &line)
 {
-	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		config->includes.push_back(line[i]);
+		target->includes.push_back(line[i]);
 	}
 }
 
 void project::statement_export_defines(project *project, statement &line)
 {
-	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		config->export_defines.push_back(line[i]);
+		target->export_defines.push_back(line[i]);
 	}
 }
 
 void project::statement_export_includes(project *project, statement &line)
 {
-	auto config = std::static_pointer_cast<project_config>(project->item_stack.back());
+	auto target = std::static_pointer_cast<project_target>(project->item_stack.back());
 	for (size_t i = 1; i < line.size(); i++) {
-		config->export_includes.push_back(line[i]);
+		target->export_includes.push_back(line[i]);
 	}
 }
 

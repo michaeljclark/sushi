@@ -85,9 +85,6 @@ struct SUSHI_LIB project_config : project_item
 	std::string config_name;
 	std::map<std::string,std::string> vars;
 	std::vector<std::string> defines;
-	std::vector<std::string> includes;
-	std::vector<std::string> export_defines;
-	std::vector<std::string> export_includes;
 };
 
 struct SUSHI_LIB project_target : project_config
@@ -97,6 +94,9 @@ struct SUSHI_LIB project_target : project_config
 	std::vector<std::string> libs;
 	std::vector<std::string> source;
 	std::vector<std::string> depends;
+	std::vector<std::string> includes;
+	std::vector<std::string> export_defines;
+	std::vector<std::string> export_includes;
 };
 
 struct SUSHI_LIB project_lib : project_target
