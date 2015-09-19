@@ -291,6 +291,23 @@ static void add_unique(std::vector<std::string> &vec, std::vector<std::string> &
 	for (std::string str : add) if (std::find(vec.begin(), vec.end(), str) == vec.end()) vec.push_back(str);
 }
 
+static void merge_config(project_config_ptr merged_config, project_config_ptr config)
+{
+	for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
+	add_unique(merged_config->defines, config->defines);
+}
+
+static void merge_target(project_target_ptr merged_target, project_target_ptr target)
+{
+	merge_config(merged_target, target);
+	add_unique(merged_target->depends, target->depends);
+	add_unique(merged_target->includes, target->includes);
+	add_unique(merged_target->export_defines, target->export_defines);
+	add_unique(merged_target->export_includes, target->export_includes);
+	add_unique(merged_target->source, target->source);
+	add_unique(merged_target->libs, target->libs);
+}
+
 project_config_ptr project_root::get_config(std::string name, bool inherit)
 {
 	project_config_ptr merged_config = std::make_shared<project_config>();
@@ -298,14 +315,12 @@ project_config_ptr project_root::get_config(std::string name, bool inherit)
 	if (inherit) {
 		for (auto config : config_list) {
 			if (config->config_name != "*") continue;
-			for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
-			add_unique(merged_config->defines, config->defines);
+			merge_config(merged_config, config);
 		}
 	}
 	for (auto config : config_list) {
 		if (config->config_name != name) continue;
-		for (auto ent : config->vars) merged_config->vars[ent.first] = ent.second;
-		add_unique(merged_config->defines, config->defines);
+		merge_config(merged_config, config);
 	}
 	return merged_config;
 }
@@ -318,27 +333,13 @@ project_lib_ptr project_root::get_lib(std::string name, bool inherit)
 		for (auto lib : lib_list) {
 			if (lib->lib_name != "*") continue;
 			if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
-			for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
-			add_unique(merged_lib->depends, lib->depends);
-			add_unique(merged_lib->defines, lib->defines);
-			add_unique(merged_lib->includes, lib->includes);
-			add_unique(merged_lib->export_defines, lib->export_defines);
-			add_unique(merged_lib->export_includes, lib->export_includes);
-			add_unique(merged_lib->source, lib->source);
-			add_unique(merged_lib->libs, lib->libs);
+			merge_target(merged_lib, lib);
 		}
 	}
 	for (auto lib : lib_list) {
 		if (lib->lib_name != name) continue;
 		if (lib->lib_type.size() > 0) merged_lib->lib_type = lib->lib_type;
-		for (auto ent : lib->vars) merged_lib->vars[ent.first] = ent.second;
-			add_unique(merged_lib->depends, lib->depends);
-			add_unique(merged_lib->defines, lib->defines);
-			add_unique(merged_lib->includes, lib->includes);
-			add_unique(merged_lib->export_defines, lib->export_defines);
-			add_unique(merged_lib->export_includes, lib->export_includes);
-			add_unique(merged_lib->source, lib->source);
-			add_unique(merged_lib->libs, lib->libs);
+		merge_target(merged_lib, lib);
 	}
 	return merged_lib;
 }
@@ -350,22 +351,12 @@ project_tool_ptr project_root::get_tool(std::string name, bool inherit)
 	if (inherit) {
 		for (auto tool : tool_list) {
 			if (tool->tool_name != "*") continue;
-			for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
-			add_unique(merged_tool->depends, tool->depends);
-			add_unique(merged_tool->defines, tool->defines);
-			add_unique(merged_tool->includes, tool->includes);
-			add_unique(merged_tool->source, tool->source);
-			add_unique(merged_tool->libs, tool->libs);
+			merge_target(merged_tool, tool);
 		}
 	}
 	for (auto tool : tool_list) {
 		if (tool->tool_name != name) continue;
-		for (auto ent : tool->vars) merged_tool->vars[ent.first] = ent.second;
-		add_unique(merged_tool->depends, tool->depends);
-		add_unique(merged_tool->defines, tool->defines);
-		add_unique(merged_tool->includes, tool->includes);
-		add_unique(merged_tool->source, tool->source);
-		add_unique(merged_tool->libs, tool->libs);
+		merge_target(merged_tool, tool);
 	}
 	return merged_tool;
 }
