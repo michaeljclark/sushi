@@ -595,7 +595,7 @@ void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
 	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
 
 	// Create PBXBuildFiles for target link libraries
-	// TODO - defer this to fix linking to targets that have not been created yet
+	// TODO - defer this and fix linking to targets that have not yet been created yet
 	for (std::string library : libraries) {
 		auto libraryFileRef = getProductReference(library);
 		if (libraryFileRef) {
