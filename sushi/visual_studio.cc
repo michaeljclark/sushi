@@ -60,7 +60,9 @@ void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	std::string project_name, std::string project_type,
 	std::vector<std::string> depends,
-	std::vector<std::string> link_libs,
+	std::vector<std::string> defines,
+	std::vector<std::string> lib_dirs,
+	std::vector<std::string> lib_files,
 	std::vector<std::string> source)
 {
 	// find deployment target and sdk
@@ -179,24 +181,42 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 
 	std::string additionalIncludes;
 	for (auto dependency : depends) {
+		// NOTE - this works because the sushi convention is that the library
+		//        directory name is the same as the library name
+		// TODO - use export_includes
 		if (additionalIncludes.size() > 0) additionalIncludes.append(";");
 		additionalIncludes.append(format_string("$(ProjectDir)\\..\\..\\%s", dependency.c_str()));
 	}
 	
-	std::string additionalLibs;
-	for (auto link_lib : link_libs) {
-		if (additionalLibs.size() > 0) additionalLibs.append(";");
-		additionalLibs.append(link_lib);
+	std::string additionalLibraryDirectories;
+	for (auto lib_dir : lib_dirs) {
+		if (additionalLibraryDirectories.size() > 0) additionalLibraryDirectories.append(";");
+		additionalLibraryDirectories.append(lib_dir);
+	}
+
+	std::string additionalDependencies;
+	for (auto lib_file : lib_files) {
+		if (additionalDependencies.size() > 0) additionalDependencies.append(";");
+		additionalDependencies.append(lib_file);
+	}
+
+	std::string preprocessorDefinitions;
+	for (auto define : defines) {
+		if (preprocessorDefinitions.size() > 0) preprocessorDefinitions.append(";");
+		preprocessorDefinitions.append(define);
 	}
 
 	for (auto config : configurations) {
 		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
 		VSItemDefinitionGroupPtr compileAndLink = std::make_shared<VSItemDefinitionGroup>();
 		compileAndLink->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
+
 		VSClCompilePtr compile = std::make_shared<VSClCompile>();
-		compile->properties["WarningLevel"] = "Level3";
-		compile->properties["SDLCheck"] = "true";
-		compile->properties["PreprocessorDefinitions"] = "_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)";
+		//compile->properties["WarningLevel"] = "Level3";
+		//compile->properties["SDLCheck"] = "true";
+		if (preprocessorDefinitions.size() > 0) {
+			compile->properties["PreprocessorDefinitions"] = preprocessorDefinitions + ";%(PreprocessorDefinitions)";
+		}
 		if (additionalIncludes.size() > 0) {
 			compile->properties["AdditionalIncludeDirectories"] = additionalIncludes + ";%(AdditionalIncludeDirectories)";
 		}
@@ -207,17 +227,21 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 			compile->properties["Optimization"] = "Disabled";
 		}
 		compileAndLink->objectList.push_back(compile);
+
 		VSLinkPtr link = std::make_shared<VSLink>();
 		link->properties["GenerateDebugInformation"] = "true";
-		//link->properties["AdditionalLibraryDirectories"] = "$(OutDir);%(AdditionalLibraryDirectories)";
-		if (additionalLibs.size() > 0) {
-			link->properties["AdditionalDependencies"] = additionalLibs + ";%(AdditionalDependencies)";
+		if (additionalLibraryDirectories.size() > 0) {
+			link->properties["AdditionalLibraryDirectories"] = additionalLibraryDirectories + ";%(AdditionalLibraryDirectories)";
+		}
+		if (additionalDependencies.size() > 0) {
+			link->properties["AdditionalDependencies"] = additionalDependencies + ";%(AdditionalDependencies)";
 		}
 		if (projectConfig->configuration == "Release") {
 			link->properties["EnableCOMDATFolding"] = "true";
 			link->properties["OptimizeReferences"] = "true";
 		}
 		compileAndLink->objectList.push_back(link);
+
 		project->objectList.push_back(compileAndLink);
 	}
 

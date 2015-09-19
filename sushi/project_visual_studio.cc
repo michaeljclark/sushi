@@ -74,6 +74,8 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 			lib_data.target_type,
 			lib->libs,
 			std::vector<std::string>(),
+			std::vector<std::string>(),
+			std::vector<std::string>(),
 			lib->source
 		);
 	}
@@ -86,6 +88,8 @@ VSSolutionPtr project_visual_studio::create_solution(project_root_ptr root)
 			tool->tool_name,
 			"Application",
 			tool->libs,
+			std::vector<std::string>(),
+			std::vector<std::string>(),
 			std::vector<std::string>(),
 			tool->source
 		);

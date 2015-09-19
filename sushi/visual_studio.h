@@ -92,10 +92,12 @@ struct SUSHI_LIB VSSolution : VisualStudioParser
 
 	void createEmptySolution(std::map<std::string,std::string> vars);
 	VSProjectPtr createProject(std::map<std::string,std::string> vars,
-                               std::string project_name, std::string project_type,
-                               std::vector<std::string> depends,
-                               std::vector<std::string> link_libs,
-                               std::vector<std::string> source);
+		std::string project_name, std::string project_type,
+		std::vector<std::string> depends,
+		std::vector<std::string> defines,
+		std::vector<std::string> lib_dirs,
+		std::vector<std::string> lib_files,
+		std::vector<std::string> source);
 
 	VSProjectConfigurationPtr legacyConfig(std::string config);
 	std::string findGuidForProject(std::string project_name);
