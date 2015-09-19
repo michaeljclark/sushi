@@ -243,6 +243,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		project->objectList.push_back(compileAndLink);
 	}
 
+	// TODO - lookup file extension metadata
 	project->headerItemGroup = std::make_shared<VSItemGroup>();
 	for (std::string source_file : source) {
 		if (source_file.find(".h") == source_file.length() - 2)
@@ -257,6 +258,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	}
 	project->objectList.push_back(project->headerItemGroup);
 
+	// TODO - lookup file extension metadata
 	project->sourceItemGroup = std::make_shared<VSItemGroup>();
 	for (std::string source_file : source) {
 		if (source_file.find(".cc") == source_file.length() - 3 ||
