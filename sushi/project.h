@@ -76,6 +76,10 @@ struct SUSHI_LIB project_root : project_item
 	project_config_ptr get_config(std::string name, bool inherit = true);
 	project_lib_ptr get_lib(std::string name, bool inherit = true);
 	project_tool_ptr get_tool(std::string name, bool inherit = true);
+
+	void resolve_target_libs(std::vector<std::string> &stack,
+		std::vector<std::string> &libs, project_target_ptr target);
+	std::vector<std::string> get_libs(project_target_ptr target);
 };
 
 struct SUSHI_LIB project_config : project_item

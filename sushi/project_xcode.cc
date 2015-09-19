@@ -88,7 +88,7 @@ XcodeprojPtr project_xcode::create_project(project_root_ptr root)
 			tool->tool_name,
 			PBXFileReference::type_executable,
 			PBXNativeTarget::type_tool,
-			lib_deps(root, tool->libs),
+			lib_deps(root, root->get_libs(tool)),
 			tool->source
 		);
 	}

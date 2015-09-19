@@ -68,7 +68,7 @@ project sushi {
 
 	# inherited by all tools
 	tool * {
-		libs sushi tinyxml2;
+		libs sushi;
 	}
 
 	tool maki {

@@ -360,3 +360,26 @@ project_tool_ptr project_root::get_tool(std::string name, bool inherit)
 	}
 	return merged_tool;
 }
+
+void project_root::resolve_target_libs(std::vector<std::string> &stack,
+		std::vector<std::string> &libs, project_target_ptr target)
+{
+	for (std::string lib : target->libs) {
+		if (std::find(stack.begin(), stack.end(), lib) != stack.end()) {
+			log_fatal_exit("resolve_target_libs: circular dependency");
+		}
+		if (std::find(libs.begin(), libs.end(), lib) == libs.end()) {
+			libs.push_back(lib);
+		}
+		stack.push_back(lib);
+		resolve_target_libs(stack, libs, get_lib(lib));
+		stack.pop_back();
+	}
+}
+
+std::vector<std::string> project_root::get_libs(project_target_ptr target)
+{
+	std::vector<std::string> stack, libs;
+	resolve_target_libs(stack, libs, target);
+	return libs;
+}

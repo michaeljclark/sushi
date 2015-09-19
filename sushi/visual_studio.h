@@ -5,6 +5,11 @@
 #ifndef visual_studio_h
 #define visual_studio_h
 
+namespace tinyxml2 {
+	class XMLDocument;
+	class XMLElement;
+}
+
 struct VSSolution;
 struct VSSolutionProperty;
 struct VSSolutionProject;

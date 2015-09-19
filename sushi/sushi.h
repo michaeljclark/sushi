@@ -37,8 +37,6 @@
 #include <random>
 #include <functional>
 
-#include "tinyxml2.h"
-
 #include "util.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"

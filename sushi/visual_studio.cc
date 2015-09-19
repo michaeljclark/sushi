@@ -20,6 +20,8 @@
 #include <map>
 #include <set>
 
+#include "tinyxml2.h"
+
 #include "sushi.h"
 
 #include "util.h"
