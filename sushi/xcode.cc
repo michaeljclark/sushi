@@ -480,6 +480,8 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
 	if (sdkroot_i != vars.end()) sdkroot = sdkroot_i->second;
 	if (target_i != vars.end()) target = target_i->second;
 
+	// TODO - use project_config
+
 	// Create Debug Build Configuration
 	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
 	debugConfiguration->name = "Debug";

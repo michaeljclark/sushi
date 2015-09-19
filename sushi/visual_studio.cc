@@ -44,6 +44,8 @@ void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 	visual_studio_version = "14.0.23107.0";
 	minimum_visual_studio_version = "10.0.40219.1";
 
+	// TODO - use project_config
+	
 	configurations.clear();
 	configurations.insert("Debug|x64");
 	configurations.insert("Debug|Win32");
