@@ -24,11 +24,6 @@ project sushi {
 	lib sushi {
 		export_includes sushi;
 
-		#dynamic {
-		#	export_defines SUSHI_IMPORT;
-		#	defines SUSHI_EXPORT;
-		#}
-
 		source
 			sushi/project.cc
 			sushi/project.h
@@ -57,7 +52,6 @@ project sushi {
 		export_includes tinyxml2;
 
 		#dynamic {
-		#	export_defines TINYXML2_IMPORT;
 		#	defines TINYXML2_EXPORT;
 		#}
 

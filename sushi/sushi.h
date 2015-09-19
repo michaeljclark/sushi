@@ -5,14 +5,8 @@
 #ifndef sushi_h
 #define sushi_h
 
-#ifdef _WIN32
-#   ifdef SUSHI_EXPORT
-#       define SUSHI_LIB __declspec(dllexport)
-#   elif defined(SUSHI_IMPORT)
-#       define SUSHI_LIB __declspec(dllimport)
-#   else
-#       define SUSHI_LIB
-#   endif
+#ifdef _WINDLL
+#   define SUSHI_LIB __declspec(dllexport)
 #else
 #   define SUSHI_LIB
 #endif
