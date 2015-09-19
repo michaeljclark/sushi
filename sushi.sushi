@@ -23,10 +23,12 @@ project sushi {
 
 	lib sushi {
 		export_includes sushi;
+
 		#dynamic {
 		#	export_defines SUSHI_IMPORT;
 		#	defines SUSHI_EXPORT;
 		#}
+
 		source
 			sushi/project.cc
 			sushi/project.h
@@ -47,15 +49,18 @@ project sushi {
 			sushi/visual_studio_parser.rl
 			sushi/xcode.cc
 			sushi/xcode.h;
+
 		libs tinyxml2;
 	}
 
 	lib tinyxml2 {
 		export_includes tinyxml2;
+
 		#dynamic {
 		#	export_defines TINYXML2_IMPORT;
 		#	defines TINYXML2_EXPORT;
 		#}
+
 		source
 			tinyxml2/tinyxml2.h
 			tinyxml2/tinyxml2.cpp;
