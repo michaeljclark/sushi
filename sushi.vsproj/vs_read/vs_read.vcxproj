@@ -69,7 +69,7 @@
     <PropertyGroup/>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
         <ClCompile>
-            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;$(ProjectDir)\..\..\tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <Optimization>Disabled</Optimization>
             <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <SDLCheck>true</SDLCheck>
@@ -81,7 +81,7 @@
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
         <ClCompile>
-            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;$(ProjectDir)\..\..\tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <Optimization>Disabled</Optimization>
             <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
             <SDLCheck>true</SDLCheck>
@@ -93,7 +93,7 @@
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
         <ClCompile>
-            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;$(ProjectDir)\..\..\tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <Optimization>MaxSpeed</Optimization>
             <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -108,7 +108,7 @@
     </ItemDefinitionGroup>
     <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <ClCompile>
-            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;$(ProjectDir)\..\..\tinyxml2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+            <AdditionalIncludeDirectories>$(ProjectDir)\..\..\sushi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
             <IntrinsicFunctions>true</IntrinsicFunctions>
             <Optimization>MaxSpeed</Optimization>
             <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -128,9 +128,6 @@
     <ItemGroup>
         <ProjectReference Include="..\sushi\sushi.vcxproj">
             <Project>{7C45E18E-22F0-4850-7EC2-226EAA4CA802}</Project>
-        </ProjectReference>
-        <ProjectReference Include="..\tinyxml2\tinyxml2.vcxproj">
-            <Project>{CE8E3128-60E3-4683-53B8-3973921A84D3}</Project>
         </ProjectReference>
     </ItemGroup>
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
