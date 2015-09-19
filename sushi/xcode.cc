@@ -21,6 +21,8 @@
 #include "sushi.h"
 
 #include "util.h"
+#include "project_parser.h"
+#include "project.h"
 #include "xcode.h"
 
 
@@ -459,6 +461,54 @@ PBXBuildFilePtr Xcodeproj::getBuildFile(PBXFileReferencePtr &fileRef, std::strin
 	return buildFile;
 }
 
+static std::vector<std::string> lib_deps(project_root_ptr root, std::vector<std::string> libs)
+{
+	std::vector<std::string> lib_deps;
+	for (auto lib_name : libs) {
+		auto lib = root->get_lib(lib_name);
+		lib_deps.push_back(lib->lib_type == "static" ? std::string("lib") + lib->lib_name + ".a" : lib->lib_name + ".dylib");
+	}
+	return lib_deps;
+}
+
+XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
+{
+	// construct empty Xcode project
+	auto config = root->get_config("*");
+	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
+	xcodeproj->createEmptyProject(config->vars, root->project_name);
+
+	// create library targets
+	for (auto lib_name : root->get_lib_list()) {
+		auto lib = root->get_lib(lib_name);
+		xcodeproj->createNativeTarget(
+			config->vars,
+			lib->lib_name,
+			lib->lib_type == "static" ? std::string("lib") + lib->lib_name + ".a" : lib->lib_name + ".dylib",
+			lib->lib_type == "static" ? PBXFileReference::type_library_archive : PBXFileReference::type_library_dylib,
+			lib->lib_type == "static" ? PBXNativeTarget::type_library_static : PBXNativeTarget::type_library_dynamic,
+			lib->lib_type == "static" ? std::vector<std::string>() : lib_deps(root, root->get_libs(lib)),
+			lib->source
+		);
+	}
+
+	// create tool targets
+	for (auto tool_name : root->get_tool_list()) {
+		auto tool = root->get_tool(tool_name);
+		xcodeproj->createNativeTarget(
+			config->vars,
+			tool->tool_name,
+			tool->tool_name,
+			PBXFileReference::type_executable,
+			PBXNativeTarget::type_tool,
+			lib_deps(root, root->get_libs(tool)),
+			tool->source
+		);
+	}
+
+	return xcodeproj;
+}
+
 void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
                             std::string projectName)
 {
@@ -545,6 +595,7 @@ void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
 	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
 
 	// Create PBXBuildFiles for target link libraries
+	// TODO - defer this to fix linking to targets that have not been created yet
 	for (std::string library : libraries) {
 		auto libraryFileRef = getProductReference(library);
 		if (libraryFileRef) {

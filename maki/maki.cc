@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	proj.read(argv[1]);
 
 	if (strcmp(argv[2], "xcode") == 0) {
-		XcodeprojPtr xcodeproj = project_xcode::create_project(proj.root);
+		XcodeprojPtr xcodeproj = Xcodeproj::createProject(proj.root);
 		std::string project_file = proj.root->project_name + ".xcodeproj/project.pbxproj";
 		std::cout << "writing " << project_file << std::endl;
 		util::make_directories(project_file);
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 		PBXWriter::write(xcodeproj, out, 0);
 		out << "\n";
 	} else if (strcmp(argv[2], "vs") == 0) {
-		VSSolutionPtr sol = project_visual_studio::create_solution(proj.root);
+		VSSolutionPtr sol = VSSolution::createSolution(proj.root);
 		std::string solution_file = proj.root->project_name + ".vsproj/" + proj.root->project_name + ".sln";
 		std::cout << "writing " << solution_file << std::endl;
 		util::make_directories(solution_file);

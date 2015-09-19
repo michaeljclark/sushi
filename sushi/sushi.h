@@ -32,12 +32,10 @@
 #include <functional>
 
 #include "util.h"
+#include "project_parser.h"
+#include "project.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 #include "xcode.h"
-#include "project_parser.h"
-#include "project.h"
-#include "project_visual_studio.h"
-#include "project_xcode.h"
 
 #endif

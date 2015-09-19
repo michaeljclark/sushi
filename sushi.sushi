@@ -30,10 +30,6 @@ project sushi {
 			sushi/project_parser.cc
 			sushi/project_parser.h
 			sushi/project_parser.rl
-			sushi/project_visual_studio.cc
-			sushi/project_visual_studio.h
-			sushi/project_xcode.cc
-			sushi/project_xcode.h
 			sushi/sushi.h
 			sushi/util.cc
 			sushi/util.h

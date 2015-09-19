@@ -25,6 +25,8 @@
 #include "sushi.h"
 
 #include "util.h"
+#include "project_parser.h"
+#include "project.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 
@@ -37,6 +39,46 @@ const std::string VSSolution::VisualCPPProjectGUID = "8BC9CEB8-8B4A-11D0-8D11-00
 
 VSSolution::VSSolution() {}
 
+VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
+{
+	// construct empty solution
+	auto config = root->get_config("*");
+	VSSolutionPtr solution = std::make_shared<VSSolution>();
+	solution->createEmptySolution(config->vars);
+
+	// create library targets
+	for (auto lib_name : root->get_lib_list()) {
+		auto lib = root->get_lib(lib_name);
+		solution->createProject(
+			config->vars,
+			lib->lib_name,
+			lib->lib_type == "static" ? "StaticLibrary" : "DynamicLibrary",
+			lib->libs,
+			std::vector<std::string>(),
+			std::vector<std::string>(),
+			std::vector<std::string>(),
+			lib->source
+		);
+	}
+
+	// create tool targets
+	for (auto tool_name : root->get_tool_list()) {
+		auto tool = root->get_tool(tool_name);
+		solution->createProject(
+			config->vars,
+			tool->tool_name,
+			"Application",
+			tool->libs,
+			std::vector<std::string>(),
+			std::vector<std::string>(),
+			std::vector<std::string>(),
+			tool->source
+		);
+	}
+
+	return solution;
+}
+
 void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 {
 	format_version = "12.00";
@@ -45,7 +87,7 @@ void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 	minimum_visual_studio_version = "10.0.40219.1";
 
 	// TODO - use project_config
-	
+
 	configurations.clear();
 	configurations.insert("Debug|x64");
 	configurations.insert("Debug|Win32");

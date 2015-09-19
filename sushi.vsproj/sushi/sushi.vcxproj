@@ -112,8 +112,6 @@
     <ItemGroup>
         <ClInclude Include="..\..\sushi\project.h"/>
         <ClInclude Include="..\..\sushi\project_parser.h"/>
-        <ClInclude Include="..\..\sushi\project_visual_studio.h"/>
-        <ClInclude Include="..\..\sushi\project_xcode.h"/>
         <ClInclude Include="..\..\sushi\sushi.h"/>
         <ClInclude Include="..\..\sushi\util.h"/>
         <ClInclude Include="..\..\sushi\visual_studio.h"/>
@@ -123,8 +121,6 @@
     <ItemGroup>
         <ClCompile Include="..\..\sushi\project.cc"/>
         <ClCompile Include="..\..\sushi\project_parser.cc"/>
-        <ClCompile Include="..\..\sushi\project_visual_studio.cc"/>
-        <ClCompile Include="..\..\sushi\project_xcode.cc"/>
         <ClCompile Include="..\..\sushi\util.cc"/>
         <ClCompile Include="..\..\sushi\visual_studio.cc"/>
         <ClCompile Include="..\..\sushi\visual_studio_parser.cc"/>

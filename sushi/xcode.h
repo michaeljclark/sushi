@@ -253,14 +253,15 @@ struct SUSHI_LIB Xcodeproj : PBXObjectImpl<Xcodeproj>
 	PBXFileReferencePtr getFileReferenceForPath(std::string path, bool create = true);
 	PBXFileReferencePtr getProductReference(std::string path);
 	PBXBuildFilePtr getBuildFile(PBXFileReferencePtr &fileRef, std::string comment);
+
+	static XcodeprojPtr createProject(project_root_ptr root);
 	
-	void createEmptyProject(std::map<std::string,std::string> defines,
-                            std::string projectName);
+	void createEmptyProject(std::map<std::string,std::string> defines, std::string projectName);
 	void createNativeTarget(std::map<std::string,std::string> defines,
-                            std::string targetName, std::string targetProduct,
-                            std::string targetType, std::string targetProductType,
-                            std::vector<std::string> libraries,
-                            std::vector<std::string> source);
+		std::string targetName, std::string targetProduct,
+		std::string targetType, std::string targetProductType,
+		std::vector<std::string> libraries,
+		std::vector<std::string> source);
 
 	void syncFromMap();
 	void syncToMap();

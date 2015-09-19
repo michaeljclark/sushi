@@ -100,8 +100,6 @@ DEP_DIR =           $(BUILD_DIR)/$(ARCH)/dep
 # target source and objects
 SUSHI_SRCS =        $(SUSHI_SRC_DIR)/project.cc \
                     $(SUSHI_SRC_DIR)/project_parser.cc \
-                    $(SUSHI_SRC_DIR)/project_xcode.cc \
-                    $(SUSHI_SRC_DIR)/project_visual_studio.cc \
                     $(SUSHI_SRC_DIR)/util.cc \
                     $(SUSHI_SRC_DIR)/visual_studio.cc \
                     $(SUSHI_SRC_DIR)/visual_studio_parser.cc \
