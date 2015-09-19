@@ -212,8 +212,6 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		compileAndLink->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
 
 		VSClCompilePtr compile = std::make_shared<VSClCompile>();
-		//compile->properties["WarningLevel"] = "Level3";
-		//compile->properties["SDLCheck"] = "true";
 		if (preprocessorDefinitions.size() > 0) {
 			compile->properties["PreprocessorDefinitions"] = preprocessorDefinitions + ";%(PreprocessorDefinitions)";
 		}
