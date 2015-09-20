@@ -479,9 +479,10 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	xcodeproj->createEmptyProject(config->vars, root->project_name);
 
 	// create library targets
+	std::map<std::string,PBXNativeTargetPtr> libTargets;
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
-		xcodeproj->createNativeTarget(
+		libTargets[lib_name] = xcodeproj->createNativeTarget(
 			config->vars,
 			lib->lib_name,
 			lib->lib_type == "static" ? std::string("lib") + lib->lib_name + ".a" : lib->lib_name + ".dylib",
@@ -491,11 +492,18 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 			lib->source
 		);
 	}
+	// link library targets
+	for (auto lib_name : root->get_lib_list()) {
+		auto lib = root->get_lib(lib_name);
+		xcodeproj->linkNativeTarget(libTargets[lib_name], lib->lib_type == "static" ?
+			std::vector<std::string>() : lib_deps(root, root->get_libs(lib)));
+	}
 
 	// create tool targets
+	std::map<std::string,PBXNativeTargetPtr> toolTargets;
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
-		xcodeproj->createNativeTarget(
+		toolTargets[tool_name] = xcodeproj->createNativeTarget(
 			config->vars,
 			tool->tool_name,
 			tool->tool_name,
@@ -504,6 +512,11 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 			lib_deps(root, root->get_libs(tool)),
 			tool->source
 		);
+	}
+	// link tool targets
+	for (auto tool_name : root->get_tool_list()) {
+		auto tool = root->get_tool(tool_name);
+		xcodeproj->linkNativeTarget(toolTargets[tool_name], lib_deps(root, root->get_libs(tool)));
 	}
 
 	return xcodeproj;
@@ -563,7 +576,7 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
 	project->productRefGroup = productsGroup->id;
 }
 
-void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
+PBXNativeTargetPtr Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
                             std::string targetName, std::string targetProduct,
                             std::string targetType, std::string targetProductType,
                             std::vector<std::string> libraries,
@@ -588,21 +601,6 @@ void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
 	releaseConfiguration->name = "Release";
 	releaseConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
-
-	// Create PBXFrameworksBuildPhase
-	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
-	frameworkBuildPhase->buildActionMask = 2147483647;
-	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
-
-	// Create PBXBuildFiles for target link libraries
-	// TODO - defer this and fix linking to targets that have not yet been created yet
-	for (std::string library : libraries) {
-		auto libraryFileRef = getProductReference(library);
-		if (libraryFileRef) {
-			auto libraryBuildFileRef = getBuildFile(libraryFileRef, libraryFileRef->id.comment + " in Frameworks");
-			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
-		}
-	}
 
 	// Create PBXSourcesBuildPhase
 	auto sourceBuildPhase = createObject<PBXSourcesBuildPhase>("Sources");
@@ -636,8 +634,28 @@ void Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
 	nativeTarget->productType = targetProductType;
 	nativeTarget->buildConfigurationList = configurationList->id;
 	nativeTarget->buildPhases->addIdRef(sourceBuildPhase);
-	nativeTarget->buildPhases->addIdRef(frameworkBuildPhase);
 	project->targets->addIdRef(nativeTarget);
+
+	return nativeTarget;
+}
+
+void Xcodeproj::linkNativeTarget(PBXNativeTargetPtr nativeTarget, std::vector<std::string> libraries)
+{
+	// Create PBXFrameworksBuildPhase
+	auto frameworkBuildPhase = createObject<PBXFrameworksBuildPhase>("Frameworks");
+	frameworkBuildPhase->buildActionMask = 2147483647;
+	frameworkBuildPhase->runOnlyForDeploymentPostprocessing = 0;
+
+	// Create PBXBuildFiles for target link libraries
+	for (std::string library : libraries) {
+		auto libraryFileRef = getProductReference(library);
+		if (libraryFileRef) {
+			auto libraryBuildFileRef = getBuildFile(libraryFileRef, libraryFileRef->id.comment + " in Frameworks");
+			frameworkBuildPhase->files->addIdRef(libraryBuildFileRef);
+		}
+	}
+
+	nativeTarget->buildPhases->addIdRef(frameworkBuildPhase);
 }
 
 void Xcodeproj::syncFromMap()
