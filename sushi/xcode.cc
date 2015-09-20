@@ -527,8 +527,7 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	return xcodeproj;
 }
 
-void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
-                            std::string projectName)
+void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars, std::string projectName)
 {
 	// Create Project
 	rootObject = PBXId::createRootId();
@@ -555,6 +554,7 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
 	debugConfiguration->name = "Debug";
 	debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
 	debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+	debugConfiguration->buildSettings->setString("GCC_OPTIMIZATION_LEVEL", "0");
 	debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
 	debugConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(debugConfiguration);
@@ -564,6 +564,7 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars,
 	releaseConfiguration->name = "Release";
 	releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
 	releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+	releaseConfiguration->buildSettings->setString("GCC_OPTIMIZATION_LEVEL", "3");
 	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
 	releaseConfiguration->buildSettings->setString("SDKROOT", sdkroot);
 	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
