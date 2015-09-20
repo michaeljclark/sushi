@@ -481,13 +481,14 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	// construct empty Xcode project
 	auto config = root->get_config("*");
 	XcodeprojPtr xcodeproj = std::make_shared<Xcodeproj>();
-	xcodeproj->createEmptyProject(config->vars, root->project_name);
+	xcodeproj->createEmptyProject(root, root->project_name);
 
 	// create library targets
 	std::map<std::string,PBXNativeTargetPtr> libTargets;
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		libTargets[lib_name] = xcodeproj->createNativeTarget(
+			root,
 			config->vars,
 			lib->lib_name,
 			lib->lib_type == "static" ? std::string("lib") + lib->lib_name + ".a" : lib->lib_name + ".dylib",
@@ -509,6 +510,7 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
 		toolTargets[tool_name] = xcodeproj->createNativeTarget(
+			root,
 			config->vars,
 			tool->tool_name,
 			tool->tool_name,
@@ -527,7 +529,7 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	return xcodeproj;
 }
 
-void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars, std::string projectName)
+void Xcodeproj::createEmptyProject(project_root_ptr root, std::string projectName)
 {
 	// Create Project
 	rootObject = PBXId::createRootId();
@@ -539,37 +541,40 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars, std::
 		("Build configuration list for PBXProject \"" + projectName + "\"");
 	project->buildConfigurationList = configurationList->id;
 
-	// find deployment target and sdk
-	std::string sdkroot = "macosx";
-	std::string target = "10.10";
-	auto sdkroot_i = vars.find("x_apple_sdkroot");
-	auto target_i = vars.find("x_apple_target");
-	if (sdkroot_i != vars.end()) sdkroot = sdkroot_i->second;
-	if (target_i != vars.end()) target = target_i->second;
+	// Create configurations
+	for (auto config_name : root->get_config_list()) {
+		auto config = root->get_config(config_name);
 
-	// TODO - use project_config
+		// Find deployment target, sdk and optimization level
+		std::string sdkroot = "macosx";
+		std::string target = "10.10";
+		std::string optimizationLevel = "3";
+		auto sdkroot_i = config->vars.find("x_apple_sdkroot");
+		auto target_i = config->vars.find("x_apple_target");
+		auto optimizationLevel_i = config->vars.find("optimization");
+		if (sdkroot_i != config->vars.end()) sdkroot = sdkroot_i->second;
+		if (target_i != config->vars.end()) target = target_i->second;
+		if (optimizationLevel_i != config->vars.end()) optimizationLevel = optimizationLevel_i->second;
 
-	// Create Debug Build Configuration
-	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
-	debugConfiguration->name = "Debug";
-	debugConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-	debugConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
-	debugConfiguration->buildSettings->setString("GCC_OPTIMIZATION_LEVEL", "0");
-	debugConfiguration->buildSettings->setString("GCC_PREPROCESSOR_DEFINITIONS", "DEBUG");
-	debugConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
-	debugConfiguration->buildSettings->setString("SDKROOT", sdkroot);
-	configurationList->buildConfigurations->addIdRef(debugConfiguration);
-
-	// Create Release Build Configuration
-	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
-	releaseConfiguration->name = "Release";
-	releaseConfiguration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
-	releaseConfiguration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
-	releaseConfiguration->buildSettings->setString("GCC_OPTIMIZATION_LEVEL", "3");
-	releaseConfiguration->buildSettings->setString("GCC_PREPROCESSOR_DEFINITIONS", "NDEBUG");
-	releaseConfiguration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
-	releaseConfiguration->buildSettings->setString("SDKROOT", sdkroot);
-	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
+		// Create configuration
+		auto configuration = createObject<XCBuildConfiguration>(config_name);
+		configuration->name = config_name;
+		configuration->buildSettings->setString("CLANG_CXX_LANGUAGE_STANDARD", "gnu++0x");
+		configuration->buildSettings->setString("GCC_C_LANGUAGE_STANDARD", "gnu11");
+		configuration->buildSettings->setString("GCC_OPTIMIZATION_LEVEL", optimizationLevel);
+		if (config->defines.size() == 1) {
+			configuration->buildSettings->setString("GCC_PREPROCESSOR_DEFINITIONS", config->defines[0]);
+		} else if (config->defines.size() > 1) {
+			PBXArrayPtr preprocessorDefinitions = std::make_shared<PBXArray>();
+			for (std::string definition : config->defines) {
+				preprocessorDefinitions->add(std::make_shared<PBXLiteral>(definition));
+			}
+			configuration->buildSettings->setArray("GCC_PREPROCESSOR_DEFINITIONS", preprocessorDefinitions);
+		}
+		configuration->buildSettings->setString("MACOSX_DEPLOYMENT_TARGET", target);
+		configuration->buildSettings->setString("SDKROOT", sdkroot);
+		configurationList->buildConfigurations->addIdRef(configuration);
+	}
 
 	// Create main group
 	auto mainGroup = createObject<PBXGroup>("");
@@ -584,11 +589,12 @@ void Xcodeproj::createEmptyProject(std::map<std::string,std::string> vars, std::
 	project->productRefGroup = productsGroup->id;
 }
 
-PBXNativeTargetPtr Xcodeproj::createNativeTarget(std::map<std::string,std::string> defines,
-                            std::string targetName, std::string targetProduct,
-                            std::string targetType, std::string targetProductType,
-                            std::vector<std::string> libraries,
-                            std::vector<std::string> source)
+PBXNativeTargetPtr Xcodeproj::createNativeTarget(project_root_ptr root, 
+	std::map<std::string,std::string> defines,
+	std::string targetName, std::string targetProduct,
+	std::string targetType, std::string targetProductType,
+	std::vector<std::string> libraries,
+	std::vector<std::string> source)
 {
 	auto project = getProject();
 	auto mainGroup = getObject<PBXGroup>(project->mainGroup);
@@ -598,17 +604,16 @@ PBXNativeTargetPtr Xcodeproj::createNativeTarget(std::map<std::string,std::strin
 	auto configurationList = createObject<XCConfigurationList>
 		("Build configuration list for PBXNativeTarget \"" + targetName + "\"");
 
-	// Create Debug Build Configuration
-	auto debugConfiguration = createObject<XCBuildConfiguration>("Debug");
-	debugConfiguration->name = "Debug";
-	debugConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
-	configurationList->buildConfigurations->addIdRef(debugConfiguration);
+	// Create Build Configurations
+	for (auto config_name : root->get_config_list()) {
+		auto config = root->get_config(config_name);
+		auto configuration = createObject<XCBuildConfiguration>(config_name);
+		configuration->name = config_name;
+		configuration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
+		configurationList->buildConfigurations->addIdRef(configuration);
 
-	// Create Release Build Configuration
-	auto releaseConfiguration = createObject<XCBuildConfiguration>("Release");
-	releaseConfiguration->name = "Release";
-	releaseConfiguration->buildSettings->setString("PRODUCT_NAME", "$(TARGET_NAME)");
-	configurationList->buildConfigurations->addIdRef(releaseConfiguration);
+		// TODO - target specific defines
+	}
 
 	// Create PBXSourcesBuildPhase
 	auto sourceBuildPhase = createObject<PBXSourcesBuildPhase>("Sources");

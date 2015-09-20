@@ -44,12 +44,13 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 	// construct empty solution
 	auto config = root->get_config("*");
 	VSSolutionPtr solution = std::make_shared<VSSolution>();
-	solution->createEmptySolution(config->vars);
+	solution->createEmptySolution(root, config->vars);
 
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
 		solution->createProject(
+			root,
 			config->vars,
 			lib->lib_name,
 			lib->lib_type == "static" ? "StaticLibrary" : "DynamicLibrary",
@@ -65,6 +66,7 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
 		solution->createProject(
+			root,
 			config->vars,
 			tool->tool_name,
 			"Application",
@@ -79,20 +81,20 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 	return solution;
 }
 
-void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
+void VSSolution::createEmptySolution(project_root_ptr root, std::map<std::string,std::string> vars)
 {
 	format_version = "12.00";
 	comment_version = "14";
 	visual_studio_version = "14.0.23107.0";
 	minimum_visual_studio_version = "10.0.40219.1";
 
-	// TODO - use project_config
-
+	// Create Build Configurations
 	configurations.clear();
-	configurations.insert("Debug|x64");
-	configurations.insert("Debug|Win32");
-	configurations.insert("Release|x64");
-	configurations.insert("Release|Win32");
+	for (auto config_name : root->get_config_list()) {
+		auto config = root->get_config(config_name);
+		configurations.insert(config_name + "|x64");
+		configurations.insert(config_name + "|Win32");
+	}
 
 	auto hideSolutionNodeProperty = std::make_shared<VSSolutionProperty>();
 	hideSolutionNodeProperty->name = "HideSolutionNode";
@@ -101,7 +103,7 @@ void VSSolution::createEmptySolution(std::map<std::string,std::string> vars)
 	properties.push_back(hideSolutionNodeProperty);
 }
 
-VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
+VSProjectPtr VSSolution::createProject(project_root_ptr root, std::map<std::string,std::string> vars,
 	std::string project_name, std::string project_type,
 	std::vector<std::string> depends,
 	std::vector<std::string> defines,
@@ -174,19 +176,24 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	defaultsImport->project = "$(VCTargetsPath)\\Microsoft.Cpp.Default.props";
 	project->objectList.push_back(defaultsImport);
 
-	for (auto config : configurations) {
-		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+	for (auto config_name : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config_name);
+		auto config = root->get_config(projectConfig->configuration);
+		std::string optimizationLevel = "3";
+		auto optimizationLevel_i = config->vars.find("optimization");
+		if (optimizationLevel_i != config->vars.end()) optimizationLevel = optimizationLevel_i->second;
+
 		VSPropertyGroupPtr propertyGroup = std::make_shared<VSPropertyGroup>();
 		propertyGroup->label = "Configuration";
 		propertyGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
 		propertyGroup->properties["ConfigurationType"] = project_type;
 		propertyGroup->properties["PlatformToolset"] = platformToolset;
 		propertyGroup->properties["CharacterSet"] = "MultiByte";
-		if (projectConfig->configuration == "Release") {
+		if (optimizationLevel == "0") {
+			propertyGroup->properties["UseDebugLibraries"] = "true"; // TODO - use different property
+		} else if (optimizationLevel == "3") {
 			propertyGroup->properties["WholeProgramOptimization"] = "true";
-			propertyGroup->properties["UseDebugLibraries"] = "false";
-		} else if (projectConfig->configuration == "Debug") {
-			propertyGroup->properties["UseDebugLibraries"] = "true";
+			propertyGroup->properties["UseDebugLibraries"] = "false"; // TODO - use different property
 		}
 		project->objectList.push_back(propertyGroup);
 	}
@@ -203,8 +210,8 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 	sharedImportGroup->label = "Shared";
 	project->objectList.push_back(sharedImportGroup);
 
-	for (auto config : configurations) {
-		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+	for (auto config_name : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config_name);
 		VSImportGroupPtr userConfigImportGroup = std::make_shared<VSImportGroup>();
 		userConfigImportGroup->label = "PropertySheets";
 		userConfigImportGroup->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
@@ -244,14 +251,21 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		additionalDependencies.append(lib_file);
 	}
 
-	std::string preprocessorDefinitions;
-	for (auto define : defines) {
-		if (preprocessorDefinitions.size() > 0) preprocessorDefinitions.append(";");
-		preprocessorDefinitions.append(define);
-	}
+	for (auto config_name : configurations) {
+		VSProjectConfigurationPtr projectConfig = legacyConfig(config_name);
+		auto config = root->get_config(projectConfig->configuration);
+		std::string optimizationLevel = "3";
+		auto optimizationLevel_i = config->vars.find("optimization");
+		if (optimizationLevel_i != config->vars.end()) optimizationLevel = optimizationLevel_i->second;
 
-	for (auto config : configurations) {
-		VSProjectConfigurationPtr projectConfig = legacyConfig(config);
+		std::string preprocessorDefinitions;
+		for (auto define : config->defines) {
+			if (preprocessorDefinitions.size() > 0) preprocessorDefinitions.append(";");
+			preprocessorDefinitions.append(define);
+		}
+		
+		// TODO - target specific defines
+
 		VSItemDefinitionGroupPtr compileAndLink = std::make_shared<VSItemDefinitionGroup>();
 		compileAndLink->condition = format_string("'$(Configuration)|$(Platform)'=='%s'", projectConfig->include.c_str());
 
@@ -262,11 +276,11 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		if (additionalIncludes.size() > 0) {
 			compile->properties["AdditionalIncludeDirectories"] = additionalIncludes + ";%(AdditionalIncludeDirectories)";
 		}
-		if (projectConfig->configuration == "Release") {
+		if (optimizationLevel == "0") {
+			compile->properties["Optimization"] = "Disabled";
+		} else if (optimizationLevel == "3") {
 			compile->properties["Optimization"] = "MaxSpeed";
 			compile->properties["IntrinsicFunctions"] = "true";
-		} else if (projectConfig->configuration == "Debug") {
-			compile->properties["Optimization"] = "Disabled";
 		}
 		compileAndLink->objectList.push_back(compile);
 
@@ -278,7 +292,7 @@ VSProjectPtr VSSolution::createProject(std::map<std::string,std::string> vars,
 		if (additionalDependencies.size() > 0) {
 			link->properties["AdditionalDependencies"] = additionalDependencies + ";%(AdditionalDependencies)";
 		}
-		if (projectConfig->configuration == "Release") {
+		if (optimizationLevel == "3") {
 			link->properties["EnableCOMDATFolding"] = "true";
 			link->properties["OptimizeReferences"] = "true";
 		}

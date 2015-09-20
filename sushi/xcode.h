@@ -256,8 +256,8 @@ struct SUSHI_LIB Xcodeproj : PBXObjectImpl<Xcodeproj>
 
 	static XcodeprojPtr createProject(project_root_ptr root);
 	
-	void createEmptyProject(std::map<std::string,std::string> defines, std::string projectName);
-	PBXNativeTargetPtr createNativeTarget(std::map<std::string,std::string> defines,
+	void createEmptyProject(project_root_ptr root, std::string projectName);
+	PBXNativeTargetPtr createNativeTarget(project_root_ptr root, std::map<std::string,std::string> defines,
 		std::string targetName, std::string targetProduct,
 		std::string targetType, std::string targetProductType,
 		std::vector<std::string> libraries,

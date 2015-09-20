@@ -92,8 +92,8 @@ struct SUSHI_LIB VSSolution : VisualStudioParser
 
 	static VSSolutionPtr createSolution(project_root_ptr root);
 
-	void createEmptySolution(std::map<std::string,std::string> vars);
-	VSProjectPtr createProject(std::map<std::string,std::string> vars,
+	void createEmptySolution(project_root_ptr root, std::map<std::string,std::string> vars);
+	VSProjectPtr createProject(project_root_ptr root, std::map<std::string,std::string> vars,
 		std::string project_name, std::string project_type,
 		std::vector<std::string> depends,
 		std::vector<std::string> defines,
