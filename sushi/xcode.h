@@ -264,6 +264,9 @@ struct SUSHI_LIB Xcodeproj : PBXObjectImpl<Xcodeproj>
 		std::vector<std::string> source);
 	void linkNativeTarget(PBXNativeTargetPtr nativeTarget, std::vector<std::string> libraries);
 
+	void write(project_root_ptr root);
+	void write(std::string project_file);
+
 	void syncFromMap();
 	void syncToMap();
 

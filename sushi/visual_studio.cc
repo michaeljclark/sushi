@@ -384,7 +384,24 @@ void VSSolution::read(std::string solution_file)
 	}
 }
 
+void VSSolution::write(project_root_ptr root)
+{
+	std::string solution_file = root->project_name + ".vsproj/" + root->project_name + ".sln";
+	write(solution_file);
+}
+
 void VSSolution::write(std::string solution_file)
+{
+	util::make_directories(solution_file);
+	write_solution(solution_file);
+	for (auto project : projects) {
+		std::string project_file_path = util::path_relative_to_path(project->path, solution_file);
+		util::make_directories(project_file_path);
+		project->project->write(project_file_path);
+	}
+}
+
+void VSSolution::write_solution(std::string solution_file)
 {
 	resolveDependencies();
 	std::ofstream out(solution_file.c_str());

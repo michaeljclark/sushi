@@ -106,7 +106,9 @@ struct SUSHI_LIB VSSolution : VisualStudioParser
 	void resolveDependencies();
 
 	void read(std::string solution_file);
+	void write(project_root_ptr root);
 	void write(std::string solution_file);
+	void write_solution(std::string solution_file);
 
 	void FormatVersion(const char *value, size_t length);
 	void CommentVersion(const char *value, size_t length);

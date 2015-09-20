@@ -26,6 +26,11 @@
 #include "xcode.h"
 
 
+/* PBX BOM */
+
+const std::string pbxproj_slash_bang = "// !$*UTF8*$!";
+
+
 /* PBXId */
 
 uint32_t PBXId::next_id = 0;
@@ -656,6 +661,34 @@ void Xcodeproj::linkNativeTarget(PBXNativeTargetPtr nativeTarget, std::vector<st
 	}
 
 	nativeTarget->buildPhases->addIdRef(frameworkBuildPhase);
+}
+
+void Xcodeproj::write(project_root_ptr root)
+{
+	std::string project_file = root->project_name + ".xcodeproj/project.pbxproj";
+	write(project_file);
+}
+
+void Xcodeproj::write(std::string project_file)
+{
+	syncToMap();
+	util::make_directories(project_file);
+	std::ofstream out(project_file.c_str());
+	out << pbxproj_slash_bang << '\n';
+	out << "{" << '\n';
+	PBXMap &map = static_cast<PBXMap&>(*this);
+	for (const PBXKey &key : map.key_order) {
+		PBXValuePtr &val = map.object_val[key.str];
+		out << "\t";
+		out << key.str;
+		if (key.comment.length() > 0) {
+			out << " /* " << key.comment << " */";
+		}
+		out << " = ";
+		PBXWriter::write(val, out, 1);
+		out << ";" << '\n';
+	}
+	out << "}\n";
 }
 
 void Xcodeproj::syncFromMap()
@@ -1458,8 +1491,6 @@ void XCConfigurationList::syncToMap()
 
 
 /* PBX parser state machine */
-
-const std::string pbxproj_slash_bang = "// !$*UTF8*$!";
 
 PBXParseError PBXParser::parse(std::vector<char> &buf)
 {
