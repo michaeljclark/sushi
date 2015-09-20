@@ -10,10 +10,12 @@ project sushi {
 
 	config Debug {
 		defines DEBUG;
+		set optimization 0;
 	}
 
 	config Release {
 		defines NDEBUG;
+		set optimization 3;
 	}
 
 	# inherited by all libraries
