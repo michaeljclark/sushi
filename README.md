@@ -16,6 +16,7 @@ Work in progress...
 * Implement globbing to make project definition more concise
 * Implement cross-project dependencies
 * Implement github dependency resolution
+* Seed sushi ports repository with commonly used packages
 * ...
 
 ## Building
