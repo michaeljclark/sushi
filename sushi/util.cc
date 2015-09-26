@@ -405,7 +405,11 @@ struct globre_matcher
 	{
 		std::vector<std::string> path_comps = util::split(globre_expression, "/", true);
 		for (std::string comp : path_comps) {
-			globre_comps.push_back(globre_component(comp));
+			if (comp == "") {
+				globre_comps.push_back(globre_component("/"));
+			} else {
+				globre_comps.push_back(globre_component(comp));
+			}
 		}
 	}
 
@@ -420,7 +424,7 @@ struct globre_matcher
 			util::list_files(dents, dir);
 			for (const directory_entry &dent : dents) {
 				if (dent.name == "." || dent.name == "..") continue;
-				if (depth < globre_comps.size() && dent.type == directory_entry_type_dir && globre_comp.match(dent.name)) {
+				if (depth < globre_comps.size() - 1 && dent.type == directory_entry_type_dir && globre_comp.match(dent.name)) {
 					prefix.push_back(dent.name);
 					accumlate_matches(prefix, depth + 1, results);
 					prefix.pop_back();
@@ -438,7 +442,7 @@ struct globre_matcher
 			struct stat stat_buf;
 			int ret = stat(file.c_str(), &stat_buf);
 			if (ret < 0) return;
-			if (depth < globre_comps.size() && stat_buf.st_mode & S_IFDIR) {
+			if (depth < globre_comps.size() - 1 && stat_buf.st_mode & S_IFDIR) {
 				prefix.push_back(globre_comp.comp);
 				accumlate_matches(prefix, depth + 1, results);
 				prefix.pop_back();
