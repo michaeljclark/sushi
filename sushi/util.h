@@ -58,6 +58,7 @@ struct SUSHI_LIB util
 	static std::string path_relative_to_path(std::string path, std::string relative_to);
 	static bool list_files(std::vector<directory_entry> &files, std::string path_name);
 	static std::vector<std::string> globre(std::string globre_expression);
+	static std::vector<std::string> globre_list(std::vector<std::string> globre_expression_list);
 	static std::string ltrim(std::string s);
 	static std::string rtrim(std::string s);
 	static std::string trim(std::string s);

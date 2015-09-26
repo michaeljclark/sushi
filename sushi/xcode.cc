@@ -487,11 +487,6 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	std::map<std::string,PBXNativeTargetPtr> libTargets;
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
-		std::vector<std::string> source;
-		for (std::string source_glob : lib->source) {
-			std::vector<std::string> source_to_add = util::globre(source_glob);
-			source.insert(source.end(), source_to_add.begin(), source_to_add.end());
-		}
 		libTargets[lib_name] = xcodeproj->createNativeTarget(
 			root,
 			config->vars,
@@ -500,7 +495,7 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 			lib->lib_type == "static" ? PBXFileReference::type_library_archive : PBXFileReference::type_library_dylib,
 			lib->lib_type == "static" ? PBXNativeTarget::type_library_static : PBXNativeTarget::type_library_dynamic,
 			lib->lib_type == "static" ? std::vector<std::string>() : lib_deps(root, root->get_libs(lib)),
-			source
+			util::globre_list(lib->source)
 		);
 	}
 	// link library targets
@@ -514,11 +509,6 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 	std::map<std::string,PBXNativeTargetPtr> toolTargets;
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
-		std::vector<std::string> source;
-		for (std::string source_glob : tool->source) {
-			std::vector<std::string> source_to_add = util::globre(source_glob);
-			source.insert(source.end(), source_to_add.begin(), source_to_add.end());
-		}
 		toolTargets[tool_name] = xcodeproj->createNativeTarget(
 			root,
 			config->vars,
@@ -527,7 +517,7 @@ XcodeprojPtr Xcodeproj::createProject(project_root_ptr root)
 			PBXFileReference::type_executable,
 			PBXNativeTarget::type_tool,
 			lib_deps(root, root->get_libs(tool)),
-			source
+			util::globre_list(tool->source)
 		);
 	}
 	// link tool targets

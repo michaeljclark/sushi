@@ -485,6 +485,16 @@ std::vector<std::string> util::globre(std::string globre_expression)
 	return results;
 }
 
+std::vector<std::string> util::globre_list(std::vector<std::string> globre_expression_list)
+{
+	std::vector<std::string> results;
+	for (std::string globre_expression : globre_expression_list) {
+		std::vector<std::string> files_to_add = util::globre(globre_expression);
+		results.insert(results.end(), files_to_add.begin(), files_to_add.end());
+	}
+	return results;
+}
+
 
 /* utility */
 
