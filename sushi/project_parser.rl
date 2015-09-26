@@ -35,6 +35,7 @@
 	not_dquote_or_escape = [^"\\];
 	symbol_special = ( '~' | '!' | '@' | '$' | '%' | '^' | '&' | '*' | '(' | ')' | '-' | '_' |
 		'=' |'+' | '[' | ']' | '|' | ':' | '<' | '>' | '.' | ',' | '/' | '?' );
+	symbol_reserverd =  ( '{' | '}' | '\\' | '#' );
 	unquote_symbol_chars = alnum | symbol_special;
 	squote_symbol = ( squote ( not_squote_or_escape | escape )* squote ) >mark %w_qsymbol;
 	dquote_symbol = ( dquote ( not_dquote_or_escape | escape )* dquote ) >mark %w_qsymbol;

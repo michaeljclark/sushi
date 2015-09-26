@@ -15,7 +15,7 @@
 #include "project_parser.h"
 
 
-#line 55 "sushi/project_parser.rl"
+#line 56 "sushi/project_parser.rl"
 
 
 
@@ -110,7 +110,7 @@ static const int project_parser_error = 0;
 static const int project_parser_en_main = 10;
 
 
-#line 58 "sushi/project_parser.rl"
+#line 59 "sushi/project_parser.rl"
 
 bool project_parser::parse(const char *buffer, size_t len)
 {
@@ -127,7 +127,7 @@ bool project_parser::parse(const char *buffer, size_t len)
 	cs = project_parser_start;
 	}
 
-#line 69 "sushi/project_parser.rl"
+#line 70 "sushi/project_parser.rl"
 	
 #line 133 "sushi/project_parser.cc"
 	{
@@ -270,7 +270,7 @@ _again:
 	_out: {}
 	}
 
-#line 70 "sushi/project_parser.rl"
+#line 71 "sushi/project_parser.rl"
 
 	return (cs != project_parser_error || cs == project_parser_first_final);
 }
