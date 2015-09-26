@@ -30,15 +30,15 @@
 
 	squote = "'";
 	dquote = '"';
+	escape = /\\./;
 	not_squote_or_escape = [^'\\];
 	not_dquote_or_escape = [^"\\];
-	escaped_something = /\\./;
-	alpha_num = [a-zA-Z0-9];
-	symbol_special = [_/\-\*\.\?\(\)\|\[\]\<\>];
-	unquote_symbol_chars = alpha_num | symbol_special;
-	squote_symbol = ( squote ( not_squote_or_escape | escaped_something )* squote ) >mark %w_qsymbol;
-	dquote_symbol = ( dquote ( not_dquote_or_escape | escaped_something )* dquote ) >mark %w_qsymbol;
-	unquote_symbol = ( unquote_symbol_chars | escaped_something )+ >mark %w_symbol;
+	symbol_special = ( '~' | '!' | '@' | '$' | '%' | '^' | '&' | '*' | '(' | ')' | '-' | '_' |
+		'=' |'+' | '[' | ']' | '|' | ':' | '<' | '>' | '.' | ',' | '/' | '?' );
+	unquote_symbol_chars = alnum | symbol_special;
+	squote_symbol = ( squote ( not_squote_or_escape | escape )* squote ) >mark %w_qsymbol;
+	dquote_symbol = ( dquote ( not_dquote_or_escape | escape )* dquote ) >mark %w_qsymbol;
+	unquote_symbol = ( unquote_symbol_chars | escape )+ >mark %w_symbol;
 	symbol = ( squote_symbol | dquote_symbol | unquote_symbol );
 
 	Eol = ';' %w_end_statement;
