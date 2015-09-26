@@ -25,37 +25,13 @@ project sushi {
 
 	lib sushi {
 		export_includes sushi;
-
-		source
-			sushi/project.cc
-			sushi/project.h
-			sushi/project_parser.cc
-			sushi/project_parser.h
-			sushi/project_parser.rl
-			sushi/sushi.h
-			sushi/util.cc
-			sushi/util.h
-			sushi/visual_studio.cc
-			sushi/visual_studio.h
-			sushi/visual_studio_parser.cc
-			sushi/visual_studio_parser.h
-			sushi/visual_studio_parser.rl
-			sushi/xcode.cc
-			sushi/xcode.h;
-
+		source sushi/*.(cc|h|rl);
 		libs tinyxml2;
 	}
 
 	lib tinyxml2 {
 		export_includes tinyxml2;
-
-		#dynamic {
-		#	defines TINYXML2_EXPORT;
-		#}
-
-		source
-			tinyxml2/tinyxml2.h
-			tinyxml2/tinyxml2.cpp;
+		source tinyxml2/tinyxml2.(cpp|h);
 	}
 
 	# inherited by all tools

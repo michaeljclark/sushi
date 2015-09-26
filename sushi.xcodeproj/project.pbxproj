@@ -311,35 +311,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000002A8EE1457CF0225058 /* tinyxml2.cpp in Sources */,
+				000000298EE1457CF0225058 /* tinyxml2.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		000000278EE1457CF0225058 /* tinyxml2 */ = {
 			isa = PBXGroup;
 			children = (
-				000000298EE1457CF0225058 /* tinyxml2.cpp */,
-				000000288EE1457CF0225058 /* tinyxml2.h */,
+				000000288EE1457CF0225058 /* tinyxml2.cpp */,
+				0000002A8EE1457CF0225058 /* tinyxml2.h */,
 			);
 			name = tinyxml2;
 			path = tinyxml2;
 			sourceTree = "<group>";
 		};
-		000000288EE1457CF0225058 /* tinyxml2.h */ = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = tinyxml2.h;
-			sourceTree = "<group>";
-		};
-		000000298EE1457CF0225058 /* tinyxml2.cpp */ = {
+		000000288EE1457CF0225058 /* tinyxml2.cpp */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = tinyxml2.cpp;
 			sourceTree = "<group>";
 		};
-		0000002A8EE1457CF0225058 /* tinyxml2.cpp in Sources */ = {
+		000000298EE1457CF0225058 /* tinyxml2.cpp in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 000000298EE1457CF0225058 /* tinyxml2.cpp */;
+			fileRef = 000000288EE1457CF0225058 /* tinyxml2.cpp */;
+		};
+		0000002A8EE1457CF0225058 /* tinyxml2.h */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = tinyxml2.h;
+			sourceTree = "<group>";
 		};
 		0000002B8EE1457CF0225058 /* libtinyxml2.a */ = {
 			isa = PBXFileReference;
