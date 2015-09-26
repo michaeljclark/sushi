@@ -326,7 +326,6 @@ struct globre_component
 		/*
 		 * globre is a hybrid glob using several regular expression features
 		 * globre is designed so that simple .* glob expressions are compatible 
-		 * globre ? operator uses the regular expression question mark operator
 		 *
 		 * The following transformations are applied to each directory component
 		 *
