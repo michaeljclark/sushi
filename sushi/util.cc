@@ -226,21 +226,22 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 	WIN32_FIND_DATA entry;
 	memset(&entry, 0, sizeof(entry));
 	files.clear();
-	
+
 	path_name = path_name + "\\*";
 	if ((dir = FindFirstFile(path_name.c_str(), &entry)) == INVALID_HANDLE_VALUE) {
 		return false;
 	}
-	
+
 	BOOL ret;
-	do {
+	for (;;) {
 		files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
 			directory_entry_type_dir : directory_entry_type_file));
-	} while ((ret = FindNextFile(dir, &entry)));
+		if (!(ret = FindNextFile(dir, &entry))) break;
+	}
 
 	DWORD dwError = GetLastError();
 	FindClose(dir);
-	return dwError != ERROR_NO_MORE_FILES;
+	return (dwError != ERROR_NO_MORE_FILES);
 }
 
 #else
@@ -252,25 +253,20 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 	struct dirent *result;
 	memset(&entry, 0, sizeof(entry));
 	files.clear();
-	
+
 	if ((dir = opendir(path_name.c_str())) == NULL) {
 		return false;
 	}
-	
+
 	int ret;
-	do {
-		if ((ret = readdir_r(dir, &entry, &result)) < 0) {
-			closedir(dir);
-			return false;
-		}
-		if (result) {
-			files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
-				directory_entry_type_dir : directory_entry_type_file));
-		}
-	} while (result != NULL);
-	
+	for (;;) {
+		if ((ret = readdir_r(dir, &entry, &result)) < 0 || !result) break;
+		files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
+			directory_entry_type_dir : directory_entry_type_file));
+	}
+
 	closedir(dir);
-	return true;
+	return (ret == 0);
 }
 
 #endif
