@@ -366,7 +366,7 @@ struct globre_component
 		 */
 		std::stringstream ss;
 		ss << "^";
-		char last_c;
+		char last_c = 0;
 		for (char c : comp) {
 			if (last_c == '\\' && c == '.') {
 				ss << ".";
