@@ -392,61 +392,87 @@ struct globre_matcher
 		}
 	}
 
-	void accumlate_matches(std::vector<std::string> &prefix, size_t depth, std::vector<std::string> &results)
+	void accumlate_matches_scan(std::vector<std::string> &prefix,
+		size_t depth, std::vector<std::string> &results)
+	{
+		globre_component &globre_comp = globre_comps[depth];
+
+		// reconstruct directory name from current prefix
+		std::vector<std::string> dir_comps = prefix;
+		dir_comps.push_back(".");
+		std::string dir = util::join(dir_comps, "/");
+
+		// read directory contents
+		std::vector<directory_entry> dents;
+		util::list_files(dents, dir);
+
+		// check for matches in this directory
+		for (const directory_entry &dent : dents) {
+			if (dent.name == "." || dent.name == "..") continue;
+			if (depth < globre_comps.size() - 1 &&
+					dent.type == directory_entry_type_dir &&
+					globre_comp.match(dent.name))
+			{
+				// recurse to next level deep
+				prefix.push_back(dent.name);
+				accumlate_matches(prefix, depth + 1, results);
+				prefix.pop_back();
+			} else if (depth == globre_comps.size() - 1 &&
+					globre_comp.match(dent.name))
+			{
+				// full depth, accumulate results
+				std::vector<std::string> file_comps = prefix;
+				file_comps.push_back(dent.name);
+				std::string file = util::join(file_comps, "/");
+				results.push_back(file);
+			}
+		}
+	}
+
+	void accumlate_matches_static(std::vector<std::string> &prefix,
+		size_t depth, std::vector<std::string> &results)
+	{
+		globre_component &globre_comp = globre_comps[depth];
+
+		// reconstruct file or directory name from current prefix
+		std::vector<std::string> file_comps = prefix;
+		file_comps.push_back(globre_comp.comp);
+		std::string file = util::join(file_comps, "/");
+
+		// handle absolute directory paths
+		if (depth == 0 && globre_comp.comp.size() == 0) {
+			file = "/";
+		}
+#ifdef _WIN32
+		if (depth == 0 && globre_comp.comp.size() == 2 && globre_comp.comp[1] == ':') {
+			file = file + "/";
+		}
+#endif
+		// check this path component exists
+		struct stat stat_buf;
+		int ret = stat(file.c_str(), &stat_buf);
+		if (ret < 0) return;
+		if (depth < globre_comps.size() - 1 && stat_buf.st_mode & S_IFDIR) {
+			// recurse to next level deep
+			prefix.push_back(globre_comp.comp);
+			accumlate_matches(prefix, depth + 1, results);
+			prefix.pop_back();
+		} else if (depth == globre_comps.size() - 1) {
+			// full depth, accumulate results
+			results.push_back(file);
+		}
+	}
+
+	void accumlate_matches(std::vector<std::string> &prefix,
+		size_t depth, std::vector<std::string> &results)
 	{
 		globre_component &globre_comp = globre_comps[depth];
 		if (globre_comp.has_regex()) {
-			// we have a regular expression path component so we list files and check for matches
-
-			// reconstruct directory name from current prefix
-			std::vector<std::string> dir_comps = prefix;
-			dir_comps.push_back(".");
-			std::string dir = util::join(dir_comps, "/");
-			std::vector<directory_entry> dents;
-			util::list_files(dents, dir);
-
-			// search for matches in this directory
-			for (const directory_entry &dent : dents) {
-				if (dent.name == "." || dent.name == "..") continue;
-				if (depth < globre_comps.size() - 1 && dent.type == directory_entry_type_dir && globre_comp.match(dent.name)) {
-					prefix.push_back(dent.name);
-					accumlate_matches(prefix, depth + 1, results); // recurse
-					prefix.pop_back();
-				} else if (depth == globre_comps.size() - 1 && globre_comp.match(dent.name)) {
-					std::vector<std::string> file_comps = prefix;
-					file_comps.push_back(dent.name);
-					std::string file = util::join(file_comps, "/");
-					results.push_back(file);
-				}
-			}
+			// regular expression path component so we scan files and check for matches
+			accumlate_matches_scan(prefix, depth, results);
 		} else {
-			// we have a fixed path component so we stat the entry to check that it exists
-
-			// reconstruct file or directory name from current prefix
-			std::vector<std::string> file_comps = prefix;
-			file_comps.push_back(globre_comp.comp);
-			std::string file = util::join(file_comps, "/");
-
-			// handle absolute directory paths
-			if (depth == 0 && globre_comp.comp.size() == 0) {
-				file = "/";
-			}
-#ifdef _WIN32
-			if (depth == 0 && globre_comp.comp.size() == 2 && globre_comp.comp[1] == ':') {
-				file = file + "/";
-			}
-#endif
-			// check this path component exists
-			struct stat stat_buf;
-			int ret = stat(file.c_str(), &stat_buf);
-			if (ret < 0) return;
-			if (depth < globre_comps.size() - 1 && stat_buf.st_mode & S_IFDIR) {
-				prefix.push_back(globre_comp.comp);
-				accumlate_matches(prefix, depth + 1, results); // recurse
-				prefix.pop_back();
-			} else if (depth == globre_comps.size() - 1) {
-				results.push_back(file);
-			}
+			// fixed path component so we stat the entry to check that it exists
+			accumlate_matches_static(prefix, depth, results);
 		}
 	}
 };
