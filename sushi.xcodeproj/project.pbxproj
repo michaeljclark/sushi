@@ -25,9 +25,10 @@
 			targets = (
 				000000228EE1457CF0225058 /* sushi */,
 				0000002C8EE1457CF0225058 /* tinyxml2 */,
-				000000378EE1457CF0225058 /* maki */,
-				000000408EE1457CF0225058 /* pbx_read */,
-				000000488EE1457CF0225058 /* vs_read */,
+				000000378EE1457CF0225058 /* globre */,
+				000000408EE1457CF0225058 /* maki */,
+				000000488EE1457CF0225058 /* pbx_read */,
+				000000508EE1457CF0225058 /* vs_read */,
 			);
 		};
 		000000028EE1457CF0225058 /* Build configuration list for PBXProject "sushi" */ = {
@@ -67,9 +68,9 @@
 			isa = PBXGroup;
 			children = (
 				000000068EE1457CF0225058 /* Products */,
-				000000338EE1457CF0225058 /* maki */,
+				0000003C8EE1457CF0225058 /* maki */,
 				0000000B8EE1457CF0225058 /* sushi */,
-				0000003C8EE1457CF0225058 /* test */,
+				000000338EE1457CF0225058 /* test */,
 				000000278EE1457CF0225058 /* tinyxml2 */,
 			);
 			sourceTree = "<group>";
@@ -77,11 +78,12 @@
 		000000068EE1457CF0225058 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				000000368EE1457CF0225058 /* globre */,
 				000000218EE1457CF0225058 /* libsushi.a */,
 				0000002B8EE1457CF0225058 /* libtinyxml2.a */,
-				000000368EE1457CF0225058 /* maki */,
-				0000003F8EE1457CF0225058 /* pbx_read */,
-				000000478EE1457CF0225058 /* vs_read */,
+				0000003F8EE1457CF0225058 /* maki */,
+				000000478EE1457CF0225058 /* pbx_read */,
+				0000004F8EE1457CF0225058 /* vs_read */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -376,7 +378,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0000002F8EE1457CF0225058 /* Build configuration list for PBXNativeTarget "maki" */ = {
+		0000002F8EE1457CF0225058 /* Build configuration list for PBXNativeTarget "globre" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				000000308EE1457CF0225058 /* Debug */,
@@ -403,53 +405,55 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				000000358EE1457CF0225058 /* maki.cc in Sources */,
+				000000358EE1457CF0225058 /* globre.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		000000338EE1457CF0225058 /* maki */ = {
+		000000338EE1457CF0225058 /* test */ = {
 			isa = PBXGroup;
 			children = (
-				000000348EE1457CF0225058 /* maki.cc */,
+				000000348EE1457CF0225058 /* globre.cc */,
+				000000458EE1457CF0225058 /* pbx_read.cc */,
+				0000004D8EE1457CF0225058 /* vs_read.cc */,
 			);
-			name = maki;
-			path = maki;
+			name = test;
+			path = test;
 			sourceTree = "<group>";
 		};
-		000000348EE1457CF0225058 /* maki.cc */ = {
+		000000348EE1457CF0225058 /* globre.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
-			path = maki.cc;
+			path = globre.cc;
 			sourceTree = "<group>";
 		};
-		000000358EE1457CF0225058 /* maki.cc in Sources */ = {
+		000000358EE1457CF0225058 /* globre.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 000000348EE1457CF0225058 /* maki.cc */;
+			fileRef = 000000348EE1457CF0225058 /* globre.cc */;
 		};
-		000000368EE1457CF0225058 /* maki */ = {
+		000000368EE1457CF0225058 /* globre */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
-			path = maki;
+			path = globre;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		000000378EE1457CF0225058 /* maki */ = {
+		000000378EE1457CF0225058 /* globre */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0000002F8EE1457CF0225058 /* Build configuration list for PBXNativeTarget "maki" */;
+			buildConfigurationList = 0000002F8EE1457CF0225058 /* Build configuration list for PBXNativeTarget "globre" */;
 			buildPhases = (
 				000000328EE1457CF0225058 /* Sources */,
-				000000498EE1457CF0225058 /* Frameworks */,
+				000000518EE1457CF0225058 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = maki;
-			productName = maki;
-			productReference = 000000368EE1457CF0225058 /* maki */;
+			name = globre;
+			productName = globre;
+			productReference = 000000368EE1457CF0225058 /* globre */;
 			productType = "com.apple.product-type.tool";
 		};
-		000000388EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
+		000000388EE1457CF0225058 /* Build configuration list for PBXNativeTarget "maki" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				000000398EE1457CF0225058 /* Debug */,
@@ -476,54 +480,53 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000003E8EE1457CF0225058 /* pbx_read.cc in Sources */,
+				0000003E8EE1457CF0225058 /* maki.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0000003C8EE1457CF0225058 /* test */ = {
+		0000003C8EE1457CF0225058 /* maki */ = {
 			isa = PBXGroup;
 			children = (
-				0000003D8EE1457CF0225058 /* pbx_read.cc */,
-				000000458EE1457CF0225058 /* vs_read.cc */,
+				0000003D8EE1457CF0225058 /* maki.cc */,
 			);
-			name = test;
-			path = test;
+			name = maki;
+			path = maki;
 			sourceTree = "<group>";
 		};
-		0000003D8EE1457CF0225058 /* pbx_read.cc */ = {
+		0000003D8EE1457CF0225058 /* maki.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
-			path = pbx_read.cc;
+			path = maki.cc;
 			sourceTree = "<group>";
 		};
-		0000003E8EE1457CF0225058 /* pbx_read.cc in Sources */ = {
+		0000003E8EE1457CF0225058 /* maki.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 0000003D8EE1457CF0225058 /* pbx_read.cc */;
+			fileRef = 0000003D8EE1457CF0225058 /* maki.cc */;
 		};
-		0000003F8EE1457CF0225058 /* pbx_read */ = {
+		0000003F8EE1457CF0225058 /* maki */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
-			path = pbx_read;
+			path = maki;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		000000408EE1457CF0225058 /* pbx_read */ = {
+		000000408EE1457CF0225058 /* maki */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000388EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */;
+			buildConfigurationList = 000000388EE1457CF0225058 /* Build configuration list for PBXNativeTarget "maki" */;
 			buildPhases = (
 				0000003B8EE1457CF0225058 /* Sources */,
-				0000004C8EE1457CF0225058 /* Frameworks */,
+				000000548EE1457CF0225058 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = pbx_read;
-			productName = pbx_read;
-			productReference = 0000003F8EE1457CF0225058 /* pbx_read */;
+			name = maki;
+			productName = maki;
+			productReference = 0000003F8EE1457CF0225058 /* maki */;
 			productType = "com.apple.product-type.tool";
 		};
-		000000418EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */ = {
+		000000418EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				000000428EE1457CF0225058 /* Debug */,
@@ -550,33 +553,97 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				000000468EE1457CF0225058 /* vs_read.cc in Sources */,
+				000000468EE1457CF0225058 /* pbx_read.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		000000458EE1457CF0225058 /* vs_read.cc */ = {
+		000000458EE1457CF0225058 /* pbx_read.cc */ = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = pbx_read.cc;
+			sourceTree = "<group>";
+		};
+		000000468EE1457CF0225058 /* pbx_read.cc in Sources */ = {
+			isa = PBXBuildFile;
+			fileRef = 000000458EE1457CF0225058 /* pbx_read.cc */;
+		};
+		000000478EE1457CF0225058 /* pbx_read */ = {
+			isa = PBXFileReference;
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			path = pbx_read;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		000000488EE1457CF0225058 /* pbx_read */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000418EE1457CF0225058 /* Build configuration list for PBXNativeTarget "pbx_read" */;
+			buildPhases = (
+				000000448EE1457CF0225058 /* Sources */,
+				000000558EE1457CF0225058 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pbx_read;
+			productName = pbx_read;
+			productReference = 000000478EE1457CF0225058 /* pbx_read */;
+			productType = "com.apple.product-type.tool";
+		};
+		000000498EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0000004A8EE1457CF0225058 /* Debug */,
+				0000004B8EE1457CF0225058 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0000004A8EE1457CF0225058 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0000004B8EE1457CF0225058 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		0000004C8EE1457CF0225058 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0000004E8EE1457CF0225058 /* vs_read.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0000004D8EE1457CF0225058 /* vs_read.cc */ = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = vs_read.cc;
 			sourceTree = "<group>";
 		};
-		000000468EE1457CF0225058 /* vs_read.cc in Sources */ = {
+		0000004E8EE1457CF0225058 /* vs_read.cc in Sources */ = {
 			isa = PBXBuildFile;
-			fileRef = 000000458EE1457CF0225058 /* vs_read.cc */;
+			fileRef = 0000004D8EE1457CF0225058 /* vs_read.cc */;
 		};
-		000000478EE1457CF0225058 /* vs_read */ = {
+		0000004F8EE1457CF0225058 /* vs_read */ = {
 			isa = PBXFileReference;
 			explicitFileType = "compiled.mach-o.executable";
 			includeInIndex = 0;
 			path = vs_read;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		000000488EE1457CF0225058 /* vs_read */ = {
+		000000508EE1457CF0225058 /* vs_read */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 000000418EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */;
+			buildConfigurationList = 000000498EE1457CF0225058 /* Build configuration list for PBXNativeTarget "vs_read" */;
 			buildPhases = (
-				000000448EE1457CF0225058 /* Sources */,
-				0000004D8EE1457CF0225058 /* Frameworks */,
+				0000004C8EE1457CF0225058 /* Sources */,
+				000000568EE1457CF0225058 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -584,41 +651,50 @@
 			);
 			name = vs_read;
 			productName = vs_read;
-			productReference = 000000478EE1457CF0225058 /* vs_read */;
+			productReference = 0000004F8EE1457CF0225058 /* vs_read */;
 			productType = "com.apple.product-type.tool";
 		};
-		000000498EE1457CF0225058 /* Frameworks */ = {
+		000000518EE1457CF0225058 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000004A8EE1457CF0225058 /* libsushi.a in Frameworks */,
-				0000004B8EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
+				000000528EE1457CF0225058 /* libsushi.a in Frameworks */,
+				000000538EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0000004A8EE1457CF0225058 /* libsushi.a in Frameworks */ = {
+		000000528EE1457CF0225058 /* libsushi.a in Frameworks */ = {
 			isa = PBXBuildFile;
 			fileRef = 000000218EE1457CF0225058 /* libsushi.a */;
 		};
-		0000004B8EE1457CF0225058 /* libtinyxml2.a in Frameworks */ = {
+		000000538EE1457CF0225058 /* libtinyxml2.a in Frameworks */ = {
 			isa = PBXBuildFile;
 			fileRef = 0000002B8EE1457CF0225058 /* libtinyxml2.a */;
 		};
-		0000004C8EE1457CF0225058 /* Frameworks */ = {
+		000000548EE1457CF0225058 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000004A8EE1457CF0225058 /* libsushi.a in Frameworks */,
-				0000004B8EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
+				000000528EE1457CF0225058 /* libsushi.a in Frameworks */,
+				000000538EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0000004D8EE1457CF0225058 /* Frameworks */ = {
+		000000558EE1457CF0225058 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0000004A8EE1457CF0225058 /* libsushi.a in Frameworks */,
-				0000004B8EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
+				000000528EE1457CF0225058 /* libsushi.a in Frameworks */,
+				000000538EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000568EE1457CF0225058 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				000000528EE1457CF0225058 /* libsushi.a in Frameworks */,
+				000000538EE1457CF0225058 /* libtinyxml2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

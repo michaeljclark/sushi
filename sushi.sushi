@@ -67,6 +67,10 @@ project sushi {
 		source maki/maki.cc;
 	}
 
+	tool globre {
+		source test/globre.cc;
+	}
+
 	tool pbx_read {
 		source test/pbx_read.cc;
 	}

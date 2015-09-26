@@ -15,6 +15,7 @@
 #include <random>
 #include <algorithm>
 #include <functional>
+#include <regex>
 
 #include <sys/stat.h>
 
@@ -145,6 +146,7 @@ int util::canonicalize_path(char *path)
 	{
 		/* convert backslash to foward slash */
 		if (*r == '\\') *r = '/';
+
 		/* Ignore duplicate /'s */
 		if (*r == '/' && last_was_slash) {
 			r++;
@@ -275,8 +277,10 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 			closedir(dir);
 			return false;
 		}
-		files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
-			directory_entry_type_dir : directory_entry_type_file));
+		if (result) {
+			files.push_back(directory_entry(entry.d_name, entry.d_type & DT_DIR ?
+				directory_entry_type_dir : directory_entry_type_file));
+		}
 	} while (result != NULL);
 	
 	closedir(dir);
@@ -284,6 +288,174 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 }
 
 #endif
+
+struct globre_component
+{
+	static const std::string GLOB_CHARS;
+
+	std::string comp;
+	bool compiled;
+	bool has_re;
+	std::string re_str;
+	std::regex comp_regex;
+
+	globre_component() : comp(), compiled(false), has_re(false) {}
+	globre_component(std::string comp) : comp(comp), compiled(false), has_re(false) {}
+	globre_component(const globre_component &o) : comp(o.comp), compiled(false), has_re(false) {}
+
+	void compile()
+	{
+		if (!compiled) {
+			if ((has_re = test_globre_chars())) {
+				compile_globre();
+			}
+			compiled = true;
+		}
+	}
+
+	bool has_regex()
+	{
+		compile();
+		return has_re;
+	}
+
+	bool match(std::string s)
+	{
+		compile();
+		if (has_re) {
+			return (std::regex_match(s, comp_regex)); 
+		} else {
+			return s == comp;
+		}
+	}
+
+	bool test_globre_chars()
+	{
+		for (char c : comp) {
+			if (GLOB_CHARS.find(c) != std::string::npos) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void compile_globre()
+	{
+		/*
+		 * globre is a hybrid glob using several regular expression features
+		 * globre is designed so that simple .* glob expressions are compatible 
+		 * globre ? operator uses the regular expression question mark operator
+		 *
+		 * The following transformations are applied to each directory component
+		 *
+		 *   add anchors at start and end ^ $
+		 *   translate . into \.
+		 *   translate * into .*
+		 *   translate ? into .?
+		 *   translate \. into .
+		 *   translate \* into *
+		 *   translate \? into ?
+		 *
+		 * e.g.
+		 *
+		 *   foo.*            =     ^foo\..*$
+		 *   foo.(c|h)        =     ^foo\.(c|h)$
+		 *   *.(c|h)          =     ^.*\.(c|h)$
+		 *   foo(_x86)?.cc    =     ^foo(_x86)?\.cc$
+		 *
+		 */
+		std::stringstream ss;
+		ss << "^";
+		char last_c;
+		for (char c : comp) {
+			if (last_c == '\\' && c == '.') {
+				ss << ".";
+			} else if (last_c == '\\' && c == '*') {
+				ss << "*";
+			} else if (last_c == '\\' && c == '?') {
+				ss << "?";
+			} else if (last_c == '\\') {
+				ss << "\\" << c;
+			} else if (c == '\\') {
+
+			} else if (c == '.') {
+				ss << "\\.";
+			} else if (c == '*') {
+				ss << ".*";
+			} else if (c == '?') {
+				ss << ".?";
+			} else {
+				ss << c;
+			}
+			last_c = c;
+		}
+		ss << "$";
+		re_str = ss.str();
+		comp_regex = std::regex(ss.str());
+	}
+};
+
+const std::string globre_component::GLOB_CHARS = "()[]{}*?\\";
+
+struct globre_matcher
+{
+	std::vector<globre_component> globre_comps;
+
+	globre_matcher(std::string globre_expression)
+	{
+		std::vector<std::string> path_comps = util::split(globre_expression, "/", true);
+		for (std::string comp : path_comps) {
+			globre_comps.push_back(globre_component(comp));
+		}
+	}
+
+	void accumlate_matches(std::vector<std::string> &prefix, size_t depth, std::vector<std::string> &results)
+	{
+		globre_component &globre_comp = globre_comps[depth];
+		if (globre_comp.has_regex()) {
+			std::vector<std::string> dir_comps = prefix;
+			dir_comps.push_back(".");
+			std::string dir = util::join(dir_comps, "/");
+			std::vector<directory_entry> dents;
+			util::list_files(dents, dir);
+			for (const directory_entry &dent : dents) {
+				if (dent.name == "." || dent.name == "..") continue;
+				if (depth < globre_comps.size() && dent.type == directory_entry_type_dir && globre_comp.match(dent.name)) {
+					prefix.push_back(dent.name);
+					accumlate_matches(prefix, depth + 1, results);
+					prefix.pop_back();
+				} else if (depth == globre_comps.size() - 1 && globre_comp.match(dent.name)) {
+					std::vector<std::string> file_comps = prefix;
+					file_comps.push_back(dent.name);
+					std::string file = util::join(file_comps, "/");
+					results.push_back(file);
+				}
+			}
+		} else {
+			std::vector<std::string> file_comps = prefix;
+			file_comps.push_back(globre_comp.comp);
+			std::string file = util::join(file_comps, "/");
+			struct stat stat_buf;
+			int ret = stat(file.c_str(), &stat_buf);
+			if (ret < 0) return;
+			if (depth < globre_comps.size() && stat_buf.st_mode & S_IFDIR) {
+				prefix.push_back(globre_comp.comp);
+				accumlate_matches(prefix, depth + 1, results);
+				prefix.pop_back();
+			} else if (depth == globre_comps.size() - 1) {
+				results.push_back(file);
+			}
+		}
+	}
+};
+
+std::vector<std::string> util::globre(std::string globre_expression)
+{
+	std::vector<std::string> results, prefix;
+	globre_matcher matcher(globre_expression);
+	matcher.accumlate_matches(prefix, 0, results);
+	return results;
+}
 
 
 /* utility */

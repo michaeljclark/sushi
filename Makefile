@@ -111,6 +111,10 @@ TINYXML2_SRCS =		$(TINYXML2_SRC_DIR)/tinyxml2.cpp
 TINYXML2_OBJS =     $(addprefix $(OBJ_DIR)/,$(subst .cpp,.o,$(TINYXML2_SRCS)))
 TINYXML2_LIB =      $(LIB_DIR)/libtinyxml2.a
 
+GLOBRE_SRCS =       $(TEST_SRC_DIR)/globre.cc
+GLOBRE_OBJS =       $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(GLOBRE_SRCS)))
+GLOBRE_BIN =        $(BIN_DIR)/globre
+
 PBXREAD_SRCS =      $(TEST_SRC_DIR)/pbx_read.cc
 PBXREAD_OBJS =      $(addprefix $(OBJ_DIR)/,$(subst .cc,.o,$(PBXREAD_SRCS)))
 PBXREAD_BIN =       $(BIN_DIR)/pbx_read
@@ -125,7 +129,7 @@ MAKI_BIN =          $(BIN_DIR)/maki
 
 APP_SRCS =          $(PBXREAD_SRCS) $(VSREAD_SRCS) $(MAKI_SRCS)
 BINARIES =          $(MAKI_BIN)
-TESTS =             $(PBXREAD_BIN) $(VSREAD_BIN)
+TESTS =             $(GLOBRE_BIN) $(PBXREAD_BIN) $(VSREAD_BIN)
 
 
 # build rules
@@ -142,6 +146,7 @@ dist: clean ; dir=$$(basename $$(pwd)) ; cd .. && tar --exclude .git -czf $${dir
 $(SUSHI_LIB): $(SUSHI_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(TINYXML2_LIB): $(TINYXML2_OBJS) ; $(call cmd, AR $@, $(AR) cr $@ $^)
 $(PBXCREATE_BIN): $(PBXCREATE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
+$(GLOBRE_BIN): $(GLOBRE_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(PBXREAD_BIN): $(PBXREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(VSREAD_BIN): $(VSREAD_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)
 $(UUID_BIN): $(UUID_OBJS) $(SUSHI_LIB) $(TINYXML2_LIB) ; $(call cmd, LD $@, $(LD) $(CXXFLAGS) $(LDFLAGS) $^ -o $@)

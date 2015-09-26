@@ -19,7 +19,7 @@
         </ProjectConfiguration>
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <ProjectGuid>{D637BD9A-2C03-40C2-B595-2A10CF06A28F}</ProjectGuid>
+        <ProjectGuid>{DB08DB9C-0214-46DF-5AA3-828CDDD0A6FE}</ProjectGuid>
         <RootNamespace>maki</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     </PropertyGroup>

@@ -19,7 +19,7 @@
         </ProjectConfiguration>
     </ItemGroup>
     <PropertyGroup Label="Globals">
-        <ProjectGuid>{56119C93-5B80-436B-0EFD-7C6F228FEE7D}</ProjectGuid>
+        <ProjectGuid>{81D6BB90-0BC7-4E88-A1F1-92C12FE17978}</ProjectGuid>
         <RootNamespace>vs_read</RootNamespace>
         <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
     </PropertyGroup>
