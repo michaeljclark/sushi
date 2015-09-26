@@ -343,7 +343,7 @@ struct globre_component
 		 *   foo.*            =     ^foo\..*$
 		 *   foo.(c|h)        =     ^foo\.(c|h)$
 		 *   *.(c|h)          =     ^.*\.(c|h)$
-		 *   foo(_x86)?.cc    =     ^foo(_x86)?\.cc$
+		 *   foo(_x86)\?.cc   =     ^foo(_x86)?\.cc$
 		 *
 		 */
 		std::stringstream ss;
