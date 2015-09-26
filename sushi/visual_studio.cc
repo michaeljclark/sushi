@@ -49,6 +49,11 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 	// create library targets
 	for (auto lib_name : root->get_lib_list()) {
 		auto lib = root->get_lib(lib_name);
+		std::vector<std::string> source;
+		for (std::string source_glob : lib->source) {
+			std::vector<std::string> source_to_add = util::globre(source_glob);
+			source.insert(source.end(), source_to_add.begin(), source_to_add.end());
+		}
 		solution->createProject(
 			root,
 			config->vars,
@@ -58,13 +63,18 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 			std::vector<std::string>(),
 			std::vector<std::string>(),
 			std::vector<std::string>(),
-			lib->source
+			source
 		);
 	}
 
 	// create tool targets
 	for (auto tool_name : root->get_tool_list()) {
 		auto tool = root->get_tool(tool_name);
+		std::vector<std::string> source;
+		for (std::string source_glob : tool->source) {
+			std::vector<std::string> source_to_add = util::globre(source_glob);
+			source.insert(source.end(), source_to_add.begin(), source_to_add.end());
+		}
 		solution->createProject(
 			root,
 			config->vars,
@@ -74,7 +84,7 @@ VSSolutionPtr VSSolution::createSolution(project_root_ptr root)
 			std::vector<std::string>(),
 			std::vector<std::string>(),
 			std::vector<std::string>(),
-			tool->source
+			source
 		);
 	}
 
