@@ -227,34 +227,20 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 	memset(&entry, 0, sizeof(entry));
 	files.clear();
 	
+	path_name = path_name + "\\*";
 	if ((dir = FindFirstFile(path_name.c_str(), &entry)) == INVALID_HANDLE_VALUE) {
-		if (GetLastError() == ERROR_NO_MORE_FILES) {
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
-	files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
-		directory_entry_type_dir : directory_entry_type_file));
 	
 	BOOL ret;
 	do {
-		ret = FindNextFile(dir, &entry);
-		if (ret) {
-			files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
-				directory_entry_type_dir : directory_entry_type_file));
-		} else {
-			if (GetLastError() == ERROR_NO_MORE_FILES) {
-				break;
-			} else {
-				CloseHandle(dir);
-				return false;
-			}
-		}
-	} while (ret);
-	
-	CloseHandle(dir);
-	return true;
+		files.push_back(directory_entry(entry.cFileName, entry.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+			directory_entry_type_dir : directory_entry_type_file));
+	} while ((ret = FindNextFile(dir, &entry)));
+
+	DWORD dwError = GetLastError();
+	FindClose(dir);
+	return dwError != ERROR_NO_MORE_FILES;
 }
 
 #else
@@ -406,7 +392,11 @@ struct globre_matcher
 		std::vector<std::string> path_comps = util::split(globre_expression, "/", true);
 		for (std::string comp : path_comps) {
 			if (comp == "") {
+#ifdef _WIN32
+				globre_comps.push_back(globre_component("\\"));
+#else
 				globre_comps.push_back(globre_component("/"));
+#endif
 			} else {
 				globre_comps.push_back(globre_component(comp));
 			}
@@ -419,7 +409,11 @@ struct globre_matcher
 		if (globre_comp.has_regex()) {
 			std::vector<std::string> dir_comps = prefix;
 			dir_comps.push_back(".");
+#ifdef _WIN32
+			std::string dir = util::join(dir_comps, "\\");
+#else
 			std::string dir = util::join(dir_comps, "/");
+#endif
 			std::vector<directory_entry> dents;
 			util::list_files(dents, dir);
 			for (const directory_entry &dent : dents) {
@@ -438,7 +432,11 @@ struct globre_matcher
 		} else {
 			std::vector<std::string> file_comps = prefix;
 			file_comps.push_back(globre_comp.comp);
+#ifdef _WIN32
+			std::string file = util::join(file_comps, "\\");
+#else
 			std::string file = util::join(file_comps, "/");
+#endif
 			struct stat stat_buf;
 			int ret = stat(file.c_str(), &stat_buf);
 			if (ret < 0) return;
