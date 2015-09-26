@@ -20,6 +20,7 @@
 	action w_begin_block    { begin_block(); }
 	action w_end_block      { end_block(); }
 	action w_symbol         { symbol(mark, fpc - mark); }
+	action w_qsymbol        { symbol(mark + 1, fpc - mark - 2); }
 	action w_end_statement  { end_statement(); }
 
 	action done { 
@@ -27,11 +28,23 @@
 		fbreak;
 	}
 
+	squote = "'";
+	dquote = '"';
+	not_squote_or_escape = [^'\\];
+	not_dquote_or_escape = [^"\\];
+	escaped_something = /\\./;
+	alpha_num = [a-zA-Z0-9];
+	symbol_special = [_/\-\*\.\?\(\)\|\[\]\<\>];
+	unquote_symbol_chars = alpha_num | symbol_special;
+	squote_symbol = ( squote ( not_squote_or_escape | escaped_something )* squote ) >mark %w_qsymbol;
+	dquote_symbol = ( dquote ( not_dquote_or_escape | escaped_something )* dquote ) >mark %w_qsymbol;
+	unquote_symbol = ( unquote_symbol_chars | escaped_something )+ >mark %w_symbol;
+	symbol = ( squote_symbol | dquote_symbol | unquote_symbol );
+
 	Eol = ';' %w_end_statement;
 	newline = ('\r' '\n' ) | '\n';
 	ws = (' ' | '\t' | '\r' | '\n' )+;
 	comment = '#' ( any - '\n' )* '\n';
-	symbol = ( any - ';' - ws - '{' - '}' - '#' )+ >mark %w_symbol;
 	statement = ( symbol ( ws symbol)* ) ws* Eol;
 	begin_block = ( symbol ( ws symbol)* ) ws+ '{' %w_begin_block;
 	end_block = '}' %w_end_block;

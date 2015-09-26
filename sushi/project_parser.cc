@@ -15,78 +15,109 @@
 #include "project_parser.h"
 
 
-#line 42 "sushi/project_parser.rl"
+#line 55 "sushi/project_parser.rl"
 
 
 
 #line 23 "sushi/project_parser.cc"
 static const char _project_parser_actions[] = {
 	0, 1, 0, 1, 1, 1, 2, 1, 
-	3, 1, 4, 1, 5, 2, 1, 0, 
-	2, 1, 5, 2, 2, 0, 2, 2, 
-	5, 2, 4, 0, 2, 4, 5
+	3, 1, 4, 1, 5, 1, 6, 2, 
+	1, 0, 2, 1, 6, 2, 2, 0, 
+	2, 2, 6, 2, 5, 0, 2, 5, 
+	6
 };
 
 static const char _project_parser_key_offsets[] = {
-	0, 0, 8, 16, 17, 25, 33, 41
+	0, 0, 2, 7, 28, 30, 30, 49, 
+	50, 50, 50, 72, 94, 116
 };
 
 static const char _project_parser_trans_keys[] = {
-	13, 32, 35, 59, 123, 125, 9, 10, 
-	13, 32, 35, 59, 123, 125, 9, 10, 
-	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 13, 32, 35, 59, 123, 125, 9, 
-	10, 0
+	34, 92, 13, 32, 59, 9, 10, 13, 
+	32, 34, 39, 59, 60, 92, 95, 123, 
+	9, 10, 40, 42, 45, 57, 62, 63, 
+	65, 93, 97, 124, 39, 92, 13, 32, 
+	59, 60, 92, 95, 124, 9, 10, 40, 
+	42, 45, 57, 62, 63, 65, 93, 97, 
+	122, 10, 13, 32, 34, 35, 39, 60, 
+	92, 95, 124, 125, 9, 10, 40, 42, 
+	45, 57, 62, 63, 65, 93, 97, 122, 
+	13, 32, 34, 35, 39, 60, 92, 95, 
+	124, 125, 9, 10, 40, 42, 45, 57, 
+	62, 63, 65, 93, 97, 122, 13, 32, 
+	34, 35, 39, 60, 92, 95, 124, 125, 
+	9, 10, 40, 42, 45, 57, 62, 63, 
+	65, 93, 97, 122, 13, 32, 34, 35, 
+	39, 60, 92, 95, 124, 125, 9, 10, 
+	40, 42, 45, 57, 62, 63, 65, 93, 
+	97, 122, 0
 };
 
 static const char _project_parser_single_lengths[] = {
-	0, 6, 6, 1, 6, 6, 6, 6
+	0, 2, 3, 9, 2, 0, 7, 1, 
+	0, 0, 10, 10, 10, 10
 };
 
 static const char _project_parser_range_lengths[] = {
-	0, 1, 1, 0, 1, 1, 1, 1
+	0, 0, 1, 6, 0, 0, 6, 0, 
+	0, 0, 6, 6, 6, 6
 };
 
 static const char _project_parser_index_offsets[] = {
-	0, 0, 8, 16, 18, 26, 34, 42
+	0, 0, 3, 8, 24, 27, 28, 42, 
+	44, 45, 46, 63, 80, 97
 };
 
 static const char _project_parser_indicies[] = {
-	1, 1, 2, 3, 2, 2, 1, 0, 
-	5, 5, 2, 6, 7, 2, 5, 4, 
-	9, 8, 9, 9, 8, 2, 2, 10, 
-	9, 4, 12, 12, 13, 2, 2, 14, 
-	12, 11, 16, 16, 17, 2, 2, 18, 
-	16, 15, 20, 20, 21, 2, 2, 22, 
-	20, 19, 0
+	1, 2, 0, 3, 3, 5, 3, 4, 
+	6, 6, 7, 8, 10, 9, 11, 9, 
+	12, 6, 9, 9, 9, 9, 9, 4, 
+	1, 14, 13, 13, 15, 15, 17, 16, 
+	18, 16, 16, 15, 16, 16, 16, 16, 
+	16, 4, 20, 19, 16, 0, 20, 20, 
+	7, 19, 8, 9, 11, 9, 9, 21, 
+	20, 9, 9, 9, 9, 9, 4, 22, 
+	22, 23, 24, 25, 26, 27, 26, 26, 
+	28, 22, 26, 26, 26, 26, 26, 4, 
+	29, 29, 30, 31, 32, 33, 34, 33, 
+	33, 35, 29, 33, 33, 33, 33, 33, 
+	4, 36, 36, 37, 38, 39, 40, 41, 
+	40, 40, 42, 36, 40, 40, 40, 40, 
+	40, 4, 0
 };
 
 static const char _project_parser_trans_targs[] = {
-	1, 2, 0, 5, 1, 2, 5, 7, 
-	3, 4, 6, 1, 4, 3, 6, 1, 
-	4, 3, 6, 1, 4, 3, 6
+	1, 2, 9, 3, 0, 11, 3, 1, 
+	4, 6, 11, 8, 13, 4, 5, 3, 
+	6, 11, 8, 7, 10, 12, 10, 1, 
+	7, 4, 6, 8, 12, 10, 1, 7, 
+	4, 6, 8, 12, 10, 1, 7, 4, 
+	6, 8, 12
 };
 
 static const char _project_parser_trans_actions[] = {
-	0, 7, 0, 7, 1, 0, 0, 0, 
-	0, 0, 0, 25, 9, 9, 9, 19, 
-	5, 5, 5, 13, 3, 3, 3
+	0, 0, 0, 9, 0, 9, 0, 1, 
+	1, 1, 0, 1, 0, 0, 0, 7, 
+	0, 7, 0, 0, 0, 0, 11, 27, 
+	11, 27, 27, 27, 11, 5, 21, 5, 
+	21, 21, 21, 5, 3, 15, 3, 15, 
+	15, 15, 3
 };
 
 static const char _project_parser_eof_actions[] = {
-	0, 0, 0, 0, 11, 28, 22, 16
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 13, 30, 24, 18
 };
 
-static const int project_parser_start = 4;
-static const int project_parser_first_final = 4;
+static const int project_parser_start = 10;
+static const int project_parser_first_final = 10;
 static const int project_parser_error = 0;
 
-static const int project_parser_en_main = 4;
+static const int project_parser_en_main = 10;
 
 
-#line 45 "sushi/project_parser.rl"
+#line 58 "sushi/project_parser.rl"
 
 bool project_parser::parse(const char *buffer, size_t len)
 {
@@ -98,14 +129,14 @@ bool project_parser::parse(const char *buffer, size_t len)
 	const char *eof = pe;
 
 	
-#line 102 "sushi/project_parser.cc"
+#line 133 "sushi/project_parser.cc"
 	{
 	cs = project_parser_start;
 	}
 
-#line 56 "sushi/project_parser.rl"
+#line 69 "sushi/project_parser.rl"
 	
-#line 109 "sushi/project_parser.cc"
+#line 140 "sushi/project_parser.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -197,9 +228,13 @@ _match:
 	break;
 	case 4:
 #line 23 "sushi/project_parser.rl"
+	{ symbol(mark + 1, p - mark - 2); }
+	break;
+	case 5:
+#line 24 "sushi/project_parser.rl"
 	{ end_statement(); }
 	break;
-#line 203 "sushi/project_parser.cc"
+#line 238 "sushi/project_parser.cc"
 		}
 	}
 
@@ -223,18 +258,18 @@ _again:
 #line 21 "sushi/project_parser.rl"
 	{ end_block(); }
 	break;
-	case 4:
-#line 23 "sushi/project_parser.rl"
+	case 5:
+#line 24 "sushi/project_parser.rl"
 	{ end_statement(); }
 	break;
-	case 5:
-#line 25 "sushi/project_parser.rl"
+	case 6:
+#line 26 "sushi/project_parser.rl"
 	{ 
 		project_done();
 		{p++; goto _out; }
 	}
 	break;
-#line 238 "sushi/project_parser.cc"
+#line 273 "sushi/project_parser.cc"
 		}
 	}
 	}
@@ -242,7 +277,7 @@ _again:
 	_out: {}
 	}
 
-#line 57 "sushi/project_parser.rl"
+#line 70 "sushi/project_parser.rl"
 
 	return (cs != project_parser_error || cs == project_parser_first_final);
 }
