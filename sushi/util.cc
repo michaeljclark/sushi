@@ -273,12 +273,11 @@ bool util::list_files(std::vector<directory_entry> &files, std::string path_name
 
 struct globre_component
 {
-	static const std::string GLOB_CHARS;
+	static const std::string GLOBRE_CHARS;
 
 	std::string comp;
 	bool compiled;
 	bool has_re;
-	std::string re_str;
 	std::regex comp_regex;
 
 	globre_component() : comp(), compiled(false), has_re(false) {}
@@ -314,7 +313,7 @@ struct globre_component
 	bool test_globre_chars()
 	{
 		for (char c : comp) {
-			if (GLOB_CHARS.find(c) != std::string::npos) {
+			if (GLOBRE_CHARS.find(c) != std::string::npos) {
 				return true;
 			}
 		}
@@ -327,7 +326,8 @@ struct globre_component
 		 * globre is a hybrid glob using several regular expression features
 		 * globre is designed so that simple .* glob expressions are compatible 
 		 *
-		 * The following transformations are applied to each directory component
+		 * The following transformations are applied to each path component
+		 * if any of the following characters are present: ()[]{}*?\
 		 *
 		 *   add anchors at start and end ^ $
 		 *   translate . into \.
@@ -339,12 +339,13 @@ struct globre_component
 		 *
 		 * e.g.
 		 *
-		 *   globre                 Regular Expression
+		 *   globre                  Regular Expression
 		 *
-		 *   foo.*            =     ^foo\..*$
-		 *   foo.(c|h)        =     ^foo\.(c|h)$
-		 *   *.(c|h)          =     ^.*\.(c|h)$
-		 *   foo(_x86)\?.cc   =     ^foo(_x86)?\.cc$
+		 *   foo.*             =     ^foo\..*$
+		 *   foo.?             =     ^foo\..?$
+		 *   foo.(c|cc|h)      =     ^foo\.(c|cc|h)$
+		 *   *.(c|cc|h)        =     ^.*\.(c|cc|h)$
+		 *   foo(_x86)\?.cc    =     ^foo(_x86)?\.cc$
 		 *
 		 */
 		std::stringstream ss;
@@ -373,12 +374,11 @@ struct globre_component
 			last_c = c;
 		}
 		ss << "$";
-		re_str = ss.str();
 		comp_regex = std::regex(ss.str());
 	}
 };
 
-const std::string globre_component::GLOB_CHARS = "()[]{}*?\\";
+const std::string globre_component::GLOBRE_CHARS = "()[]{}*?\\";
 
 struct globre_matcher
 {
@@ -396,7 +396,7 @@ struct globre_matcher
 	{
 		globre_component &globre_comp = globre_comps[depth];
 		if (globre_comp.has_regex()) {
-			// we have a regular expression component so we list files and check for matches
+			// we have a regular expression path component so we list files and check for matches
 
 			// reconstruct directory name from current prefix
 			std::vector<std::string> dir_comps = prefix;
@@ -420,7 +420,7 @@ struct globre_matcher
 				}
 			}
 		} else {
-			// we have a fixed path component so we stat the entry to check it exists
+			// we have a fixed path component so we stat the entry to check that it exists
 
 			// reconstruct file or directory name from current prefix
 			std::vector<std::string> file_comps = prefix;
