@@ -24,8 +24,10 @@
 #include <windows.h>
 #define fileno _fileno
 #define mkdir(file,mode) _mkdir(file)
+#define DIR_SEPARATOR "\\"
 #else
 #include <dirent.h>
+#define DIR_SEPARATOR "/"
 #endif
 
 #include "sushi.h"
@@ -387,11 +389,8 @@ struct globre_matcher
 		std::vector<std::string> path_comps = util::split(globre_expression, "/", true);
 		for (std::string comp : path_comps) {
 			if (comp == "") {
-#ifdef _WIN32
-				globre_comps.push_back(globre_component("\\"));
-#else
+				// TODO - fix handling of absolute paths
 				globre_comps.push_back(globre_component("/"));
-#endif
 			} else {
 				globre_comps.push_back(globre_component(comp));
 			}
@@ -404,11 +403,7 @@ struct globre_matcher
 		if (globre_comp.has_regex()) {
 			std::vector<std::string> dir_comps = prefix;
 			dir_comps.push_back(".");
-#ifdef _WIN32
-			std::string dir = util::join(dir_comps, "\\");
-#else
-			std::string dir = util::join(dir_comps, "/");
-#endif
+			std::string dir = util::join(dir_comps, DIR_SEPARATOR);
 			std::vector<directory_entry> dents;
 			util::list_files(dents, dir);
 			for (const directory_entry &dent : dents) {
@@ -427,11 +422,7 @@ struct globre_matcher
 		} else {
 			std::vector<std::string> file_comps = prefix;
 			file_comps.push_back(globre_comp.comp);
-#ifdef _WIN32
-			std::string file = util::join(file_comps, "\\");
-#else
-			std::string file = util::join(file_comps, "/");
-#endif
+			std::string file = util::join(file_comps, DIR_SEPARATOR);
 			struct stat stat_buf;
 			int ret = stat(file.c_str(), &stat_buf);
 			if (ret < 0) return;
