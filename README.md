@@ -12,7 +12,7 @@ Work in progress...
 
 ## To do
 
-* Implement condition predicates for blocks
+* Implement conditional blocks
 * Implement cross-project dependencies
 * Implement github dependency resolution
 * Seed sushi ports repository with commonly used packages
