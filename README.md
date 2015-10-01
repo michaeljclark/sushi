@@ -23,7 +23,8 @@ Work in progress...
 * Tested with GCC 4.9, Clang 3.3 and MSC v110 (Visual Studio 2012)
 * Currently requires gmake and GCC 4.9 on FreeBSD, OpenBSD and NetBSD
 * Builds on Windows using Visual Studio 2012, 2013 or 2015
-* Builds on OS X using gmake or Xcode
+* Builds on OS X using Xcode or gmake (default make on OS X)
+* Will be more useful when Ninja support has been added
 
 
 ```
