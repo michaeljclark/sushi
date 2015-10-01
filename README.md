@@ -20,6 +20,9 @@ Work in progress...
 
 ## Building
 
+* Tested with GCC 4.9, Clang 3.3 and MSC v110 (Visual Studio 2012)
+* Requires gmake on FreeBSD, OpenBSD and NetBSD
+
 ```
 git submodule update --init
 make -j4
