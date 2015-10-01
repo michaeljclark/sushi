@@ -21,7 +21,7 @@ Work in progress...
 ## Building
 
 * Tested with GCC 4.9, Clang 3.3 and MSC v110 (Visual Studio 2012)
-* Makefile currently requires gmake on FreeBSD, OpenBSD and NetBSD
+* Currently requires gmake and GCC 4.9 on FreeBSD, OpenBSD and NetBSD
 * Builds on Windows using Visual Studio 2012, 2013 or 2015
 * Builds on OS X using gmake or Xcode
 
