@@ -22,6 +22,9 @@ int main(int argc, char **argv)
 	} else if (strcmp(argv[2], "vs") == 0) {
 		VSSolutionPtr solution = VSSolution::createSolution(proj.root);
 		solution->write(proj.root);
+	} else if (strcmp(argv[2], "ninja") == 0) {
+		NinjaPtr ninja = Ninja::createBuild(proj.root);
+		ninja->write(proj.root);
 	} else {
 		fprintf(stderr, "unknown project format: %s\n", argv[2]);
 	}

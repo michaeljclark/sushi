@@ -31,9 +31,11 @@
 #include <random>
 #include <functional>
 
+#include "arch.h"
 #include "util.h"
 #include "project_parser.h"
 #include "project.h"
+#include "ninja.h"
 #include "visual_studio_parser.h"
 #include "visual_studio.h"
 #include "xcode.h"

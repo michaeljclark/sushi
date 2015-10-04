@@ -98,7 +98,9 @@ OBJ_DIR =           $(BUILD_DIR)/$(ARCH)/obj
 DEP_DIR =           $(BUILD_DIR)/$(ARCH)/dep
 
 # target source and objects
-SUSHI_SRCS =        $(SUSHI_SRC_DIR)/project.cc \
+SUSHI_SRCS =        $(SUSHI_SRC_DIR)/arch.cc \
+                    $(SUSHI_SRC_DIR)/ninja.cc \
+                    $(SUSHI_SRC_DIR)/project.cc \
                     $(SUSHI_SRC_DIR)/project_parser.cc \
                     $(SUSHI_SRC_DIR)/util.cc \
                     $(SUSHI_SRC_DIR)/visual_studio.cc \

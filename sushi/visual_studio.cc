@@ -319,7 +319,8 @@ VSProjectPtr VSSolution::createProject(project_root_ptr root, std::map<std::stri
 	// TODO - lookup file extension metadata
 	project->sourceItemGroup = std::make_shared<VSItemGroup>();
 	for (std::string source_file : source) {
-		if (source_file.find(".cc") == source_file.length() - 3 ||
+		if (source_file.find(".c") == source_file.length() - 2 ||
+				source_file.find(".cc") == source_file.length() - 3 ||
 				source_file.find(".cpp") == source_file.length() - 4)
 		{
 			std::vector<std::string> comps = util::path_components(source_file);

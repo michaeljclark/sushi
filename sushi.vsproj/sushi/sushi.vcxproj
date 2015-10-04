@@ -114,6 +114,8 @@
         </Link>
     </ItemDefinitionGroup>
     <ItemGroup>
+        <ClInclude Include="..\..\sushi\arch.h"/>
+        <ClInclude Include="..\..\sushi\ninja.h"/>
         <ClInclude Include="..\..\sushi\project.h"/>
         <ClInclude Include="..\..\sushi\project_parser.h"/>
         <ClInclude Include="..\..\sushi\sushi.h"/>
@@ -123,6 +125,8 @@
         <ClInclude Include="..\..\sushi\xcode.h"/>
     </ItemGroup>
     <ItemGroup>
+        <ClCompile Include="..\..\sushi\arch.cc"/>
+        <ClCompile Include="..\..\sushi\ninja.cc"/>
         <ClCompile Include="..\..\sushi\project.cc"/>
         <ClCompile Include="..\..\sushi\project_parser.cc"/>
         <ClCompile Include="..\..\sushi\util.cc"/>
