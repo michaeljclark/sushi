@@ -110,12 +110,27 @@ void Ninja::createEmptyBuild(project_root_ptr root, std::map<std::string,std::st
 	NinjaVarPtr ar_var = std::make_shared<NinjaVar>("ar", "link");
 	NinjaVarPtr cc_var = std::make_shared<NinjaVar>("cc", "cl");
 	NinjaVarPtr cxx_var = std::make_shared<NinjaVar>("cxx", "cl");	
-	NinjaVarPtr cflags_var = std::make_shared<NinjaVar>("cflags", "/nologo /Zi /FS /Gm- /O2 /Gd /Oi /MT /WX- /EHsc /DNDEBUG -I.");
-	NinjaVarPtr cxxflags_var = std::make_shared<NinjaVar>("cxxflags", "");
-	NinjaVarPtr ldflags_var = std::make_shared<NinjaVar>("ldflags", "/DEBUG /OPT:REF /OPT:ICF");
+	NinjaVarPtr cflags_var = std::make_shared<NinjaVar>("cflags",
+		"/nologo "  /* Supress banner */
+		"/Zi "      /* Enable Debug Information */
+		"/FS "      /* Write to program database */
+		"/Ox "      /* Maximum optimization */
+		"/GL "      /* Whole program optimization */
+		"/MT "      /* link with LIBCMT.LIB */
+		"/DNDEBUG"  /* Define NDEBUG */
+	);
+	NinjaVarPtr cxxflags_var = std::make_shared<NinjaVar>("cxxflags",
+		"/EHsc"     /* Enable C++ exception */
+	);
+	NinjaVarPtr ldflags_var = std::make_shared<NinjaVar>("ldflags",
+		"/DEBUG "   /* Creates debugging information */
+		"/OPT:REF " /* Eliminate unreferenced code and data */
+		"/OPT:ICF " /* Perform identical COMDAT folding */
+		"/LTCG"     /* Enable Link Time Code Generation */
+	);
 	NinjaRulePtr cc_rule = std::make_shared<NinjaRule>("cc", "$cxx $cflags -c $in /Fo$out", "CC $out");
 	cc_rule->properties["deps"] = "msvc";
-	NinjaRulePtr cxx_rule = std::make_shared<NinjaRule>("cxx", "$cxx $cflags -c $in /Fo$out", "CXX $out");
+	NinjaRulePtr cxx_rule = std::make_shared<NinjaRule>("cxx", "$cxx $cflags $cxxflags -c $in /Fo$out", "CXX $out");
 	cxx_rule->properties["deps"] = "msvc";
 	NinjaRulePtr ar_rule = std::make_shared<NinjaRule>("ar", "lib /nologo /ltcg /out:$out $in", "LIB $out");
 	NinjaRulePtr link_rule = std::make_shared<NinjaRule>("link", "$cxx $in $libs /nologo /link $ldflags /out:$out", "LINK $out");
