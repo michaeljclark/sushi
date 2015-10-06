@@ -99,7 +99,7 @@ NinjaPtr Ninja::createBuild(project_root_ptr root)
 
 void Ninja::createEmptyBuild(project_root_ptr root, std::map<std::string,std::string> vars)
 {
-	// TODO - currently hard coded to gcc
+	// TODO - add detection: currently hard coded to MSC and GCC
 	NinjaVarPtr arch_var = std::make_shared<NinjaVar>("arch", arch::get().literal());
 	NinjaVarPtr sourcedir_var = std::make_shared<NinjaVar>("sourcedir", ".");
 	NinjaVarPtr builddir_var = std::make_shared<NinjaVar>("builddir", "build");
