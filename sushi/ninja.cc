@@ -50,7 +50,7 @@ static std::vector<std::string> lib_deps(project_root_ptr root, std::vector<std:
 	std::vector<std::string> lib_deps;
 	for (auto lib_name : libs) {
 		auto lib = root->get_lib(lib_name);
-		lib_deps.push_back(std::string("lib") + lib->lib_name + ".a");
+		lib_deps.push_back(std::string("lib") + lib->lib_name + "$lib");
 	}
 	return lib_deps;
 }
@@ -103,9 +103,29 @@ void Ninja::createEmptyBuild(project_root_ptr root, std::map<std::string,std::st
 	NinjaVarPtr arch_var = std::make_shared<NinjaVar>("arch", arch::get().literal());
 	NinjaVarPtr sourcedir_var = std::make_shared<NinjaVar>("sourcedir", ".");
 	NinjaVarPtr builddir_var = std::make_shared<NinjaVar>("builddir", "build");
+#if defined (_WIN32)
+	NinjaVarPtr obj_var = std::make_shared<NinjaVar>("obj", ".obj");
+	NinjaVarPtr lib_var = std::make_shared<NinjaVar>("lib", ".lib");
+	NinjaVarPtr exe_var = std::make_shared<NinjaVar>("exe", ".exe");
+	NinjaVarPtr ar_var = std::make_shared<NinjaVar>("ar", "link");
+	NinjaVarPtr cc_var = std::make_shared<NinjaVar>("cc", "cl");
+	NinjaVarPtr cxx_var = std::make_shared<NinjaVar>("cxx", "cl");	
+	NinjaVarPtr cflags_var = std::make_shared<NinjaVar>("cflags", "/nologo /Zi /FS /Gm- /O2 /Gd /Oi /MT /WX- /EHsc /DNDEBUG -I.");
+	NinjaVarPtr cxxflags_var = std::make_shared<NinjaVar>("cxxflags", "");
+	NinjaVarPtr ldflags_var = std::make_shared<NinjaVar>("ldflags", "/DEBUG /OPT:REF /OPT:ICF");
+	NinjaRulePtr cc_rule = std::make_shared<NinjaRule>("cc", "$cxx $cflags -c $in /Fo$out", "CC $out");
+	cc_rule->properties["deps"] = "msvc";
+	NinjaRulePtr cxx_rule = std::make_shared<NinjaRule>("cxx", "$cxx $cflags -c $in /Fo$out", "CXX $out");
+	cxx_rule->properties["deps"] = "msvc";
+	NinjaRulePtr ar_rule = std::make_shared<NinjaRule>("ar", "lib /nologo /ltcg /out:$out $in", "LIB $out");
+	NinjaRulePtr link_rule = std::make_shared<NinjaRule>("link", "$cxx $in $libs /nologo /link $ldflags /out:$out", "LINK $out");
+#else
+	NinjaVarPtr obj_var = std::make_shared<NinjaVar>("obj", ".o");
+	NinjaVarPtr lib_var = std::make_shared<NinjaVar>("lib", ".a");
+	NinjaVarPtr exe_var = std::make_shared<NinjaVar>("exe", "");
 	NinjaVarPtr ar_var = std::make_shared<NinjaVar>("ar", "ar");
 	NinjaVarPtr cc_var = std::make_shared<NinjaVar>("cc", "gcc");
-	NinjaVarPtr cxx_var = std::make_shared<NinjaVar>("cxx", "g++");
+	NinjaVarPtr cxx_var = std::make_shared<NinjaVar>("cxx", "g++");	
 	NinjaVarPtr cflags_var = std::make_shared<NinjaVar>("cflags", "-Wall -Wpedantic");
 	NinjaVarPtr cxxflags_var = std::make_shared<NinjaVar>("cxxflags", "-std=c++11");
 	NinjaVarPtr ldflags_var = std::make_shared<NinjaVar>("ldflags", "-L$builddir");
@@ -117,9 +137,13 @@ void Ninja::createEmptyBuild(project_root_ptr root, std::map<std::string,std::st
 	cxx_rule->properties["deps"] = "gcc";
 	NinjaRulePtr ar_rule = std::make_shared<NinjaRule>("ar", "rm -f $out && $ar crs $out $in", "AR $out");
 	NinjaRulePtr link_rule = std::make_shared<NinjaRule>("link", "$cxx $ldflags -o $out $in $libs", "LINK $out");
+#endif
 	ninjaVarList.push_back(arch_var);
 	ninjaVarList.push_back(sourcedir_var);
 	ninjaVarList.push_back(builddir_var);
+	ninjaVarList.push_back(obj_var);
+	ninjaVarList.push_back(lib_var);
+	ninjaVarList.push_back(exe_var);
 	ninjaVarList.push_back(ar_var);
 	ninjaVarList.push_back(cc_var);
 	ninjaVarList.push_back(cxx_var);
@@ -163,18 +187,18 @@ void Ninja::createTarget(project_root_ptr root, std::map<std::string,std::string
 	for (auto sourceFile : source) {
 		auto nameExt = file_ext(sourceFile);
 		if (nameExt.second == "c") {			
-			std::string outputFile = "$builddir/$arch/obj/" + nameExt.first + ".o";
+			std::string outputFile = "$builddir/$arch/obj/" + nameExt.first + "$obj";
 			NinjaBuildPtr buildFile = std::make_shared<NinjaBuild>(outputFile, "cc", sourceFile);
 			if (additionalIncludes.size() > 0) {
-				buildFile->properties["cflags"] = additionalIncludes;
+				buildFile->properties["cflags"] = "$cflags " + additionalIncludes;
 			}
 			ninjaBuildList.push_back(buildFile);
 			objectFiles.push_back(outputFile);
 		} else if (nameExt.second == "cc" || nameExt.second == "cpp") {
-			std::string outputFile = "$builddir/$arch/obj/" + nameExt.first + ".o";
+			std::string outputFile = "$builddir/$arch/obj/" + nameExt.first + "$obj";
 			NinjaBuildPtr buildFile = std::make_shared<NinjaBuild>(outputFile, "cxx", sourceFile);
 			if (additionalIncludes.size() > 0) {
-				buildFile->properties["cflags"] = additionalIncludes;
+				buildFile->properties["cflags"] = "$cflags " + additionalIncludes;
 			}
 			ninjaBuildList.push_back(buildFile);
 			objectFiles.push_back(outputFile);
@@ -184,11 +208,11 @@ void Ninja::createTarget(project_root_ptr root, std::map<std::string,std::string
 		for (std::string lib_file : lib_files) {
 			objectFiles.push_back(std::string("$builddir/$arch/lib/") + lib_file);
 		}
-		std::string outputFile = "$builddir/$arch/bin/" + target_name;
+		std::string outputFile = "$builddir/$arch/bin/" + target_name + "$exe";
 		NinjaBuildPtr buildFile = std::make_shared<NinjaBuild>(outputFile, "link", util::join(objectFiles, " "));
 		ninjaBuildList.push_back(buildFile);
 	} else if (target_type == "StaticLibrary") {
-		std::string outputFile = std::string("$builddir/$arch/lib/") + std::string("lib") + target_name + ".a";
+		std::string outputFile = std::string("$builddir/$arch/lib/") + std::string("lib") + target_name + "$lib";
 		NinjaBuildPtr buildFile = std::make_shared<NinjaBuild>(outputFile, "ar", util::join(objectFiles, " "));
 		ninjaBuildList.push_back(buildFile);
 	} else if (target_type == "DynamicLibrary") {
