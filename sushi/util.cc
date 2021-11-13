@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <cerrno>
 #include <ctime>
+#include <cassert>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -44,23 +45,22 @@ static const char* INFO_PREFIX = "INFO";
 
 std::string format_string(const char* fmt, ...)
 {
-	std::vector<char> buf(INITIAL_LOG_BUFFER_SIZE);
-	va_list ap;
+	std::vector<char> buf;
+	va_list args1, args2;
+	int len, ret;
 
-	va_start(ap, fmt);
-	int len = vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-	va_end(ap);
+	va_start(args1, fmt);
+	len = vsnprintf(NULL, 0, fmt, args1);
+	assert(len >= 0);
+	va_end(args1);
 
-	std::string str;
-	if (len >= (int)buf.capacity()) {
-		buf.resize(len + 1);
-		va_start(ap, fmt);
-		vsnprintf(buf.data(), buf.capacity(), fmt, ap);
-		va_end(ap);
-	}
-	str = buf.data();
+	buf.resize(len + 1);
+	va_start(args2, fmt);
+	ret = vsnprintf(buf.data(), buf.capacity(), fmt, args2);
+	assert(len == ret);
+	va_end(args2);
 
-	return str;
+	return std::string(buf.data(), len);
 }
 
 void log_prefix(const char* prefix, const char* fmt, va_list arg)
